@@ -1,0 +1,31 @@
+#! /usr/bin/python
+
+import os, glob, sys
+libraryName='sndfile.so'
+
+options = Variables('options.cache', ARGUMENTS)
+options.Add(PathVariable('prefix', 'Installation prefix (normally /usr)', '/usr/local', validator=PathVariable.PathAccept))
+
+env = Environment(ENV=os.environ, options=options)
+options.Save('options.cache', env) # do not save options in NetworkEditor generated plugins
+Help(options.GenerateHelpText(env))
+env.SConsignFile() # Single signature file
+
+InstallDir = env['prefix']
+
+env.ParseConfig("python-config --cflags")
+env.ParseConfig("python-config --libs")
+env.ParseConfig("pkg-config sndfile --libs --cflags")
+
+
+sources = glob.glob("sndfile.cxx")
+
+env.Append( CCFLAGS=['-g','-O3','-Wall'] )
+libraries = [
+	env.SharedLibrary(target=libraryName, source = sources, SHLIBPREFIX=''),
+	]
+install = env.Install(os.path.join(InstallDir,'lib','python'), libraries)
+env.Alias('install', install)
+env.Default(libraries)
+
+

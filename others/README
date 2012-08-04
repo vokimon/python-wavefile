@@ -1,0 +1,19 @@
+
+To install normally:
+
+scons prefix=/usr/
+sudo scons install
+
+To install for development:
+
+export PYTHONPATH=~/local/lib/python
+mkdir -p ~/local
+scons prefix=~/local
+
+To run the tests:
+
+./sndfiletest.py
+
+
+
+
