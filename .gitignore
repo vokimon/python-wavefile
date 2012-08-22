@@ -1,0 +1,6 @@
+*.so
+*.os
+*.pyc
+options.cache
+.sconsign.dblite
+*.sw?
