@@ -12,26 +12,33 @@ is implemented with some helper methods.
 Requires numpy and ctypes. Tested under windows only.
 """
 
+import sys
 try:
     import ctypes as ct
 except ImportError:
     print "this module requires ctypes"
-    import sys
     sys.exit(-1)
 try:
     import numpy as np
 except ImportError:
     print "this module requires numpy"
-    import sys
     sys.exit(-1)
 
-dllName = 'libsndfile-1'
+if sys.platform == "win32" :
+    dllName = 'libsndfile-1'
+elif sys.platform == "linux2" :
+    dllName = 'libsndfile.so'
+else :
+    dllName = 'libsndfile'
 
 _lib=None
 try:
     from ctypes.util import find_library
     #does the user already have libsamplerate installed?
-    dllPath = find_library(dllName)
+    if sys.platform == 'win32' :
+		dllPath = find_library(dllName)
+    else :
+        dllPath = dllName
     _lib = ct.CDLL(dllPath)
 except:
     try:
