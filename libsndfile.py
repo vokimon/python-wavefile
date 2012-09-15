@@ -36,7 +36,7 @@ try:
     from ctypes.util import find_library
     #does the user already have libsamplerate installed?
     if sys.platform == 'win32' :
-		dllPath = find_library(dllName)
+        dllPath = find_library(dllName)
     else :
         dllPath = dllName
     _lib = ct.CDLL(dllPath)
