@@ -107,14 +107,14 @@ class WaveMetadata(object) :
 	def __getattr__(self, name) :
 		if name not in self.strings :
 			raise AttributeError(name)
-		stringid = self.strings.index(name)
+		stringid = self.strings.index(name)+1
 		return _lib.sf_get_string(self._sndfile, stringid)
 
 	def __setattr__(self, name, value) :
 		if name not in self.strings :
 			return object.__setattr__(self, name, value)
 
-		stringid = self.strings.index(name)
+		stringid = self.strings.index(name)+1
 		error = _lib.sf_set_string(self._sndfile, stringid, value)
 		if error : print ValueError(
 			self.strings[stringid],
