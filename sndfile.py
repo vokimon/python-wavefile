@@ -81,7 +81,7 @@ class Format :
 
 
 
-class wavemetadata(object) :
+class WaveMetadata(object) :
 	strings = [
 		'title',
 		'copyright',
@@ -112,17 +112,15 @@ class wavemetadata(object) :
 
 	def __setattr__(self, name, value) :
 		if name not in self.strings :
-#			print "Regular access to", name
 			return object.__setattr__(self, name, value)
 
 		stringid = self.strings.index(name)
-#		print "Assigning %s(%i)='%s'"%(name, stringid, value)
 		error = _lib.sf_set_string(self._sndfile, stringid, value)
 		if error : print ValueError(
 			self.strings[stringid],
 			error, _lib.sf_error_number(error))
 
-class writer(object) :
+class WaveWriter(object) :
 	def __init__(self,
 				filename,
 				samplerate = 44100,
@@ -136,7 +134,7 @@ class writer(object) :
 				format = format
 			)
 		self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_WRITE, self._info)
-		self._metadata = wavemetadata(self._sndfile)
+		self._metadata = WaveMetadata(self._sndfile)
 
 	def __enter__(self) :
 		return self
@@ -163,7 +161,7 @@ class writer(object) :
 			raise TypeError("Please choose a correct dtype")
 
 
-class reader(object) :
+class WaveReader(object) :
 	def __init__(self,
 				filename,
 				samplerate = 0,
@@ -177,7 +175,7 @@ class reader(object) :
 				format = format
 			)
 		self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
-		self._metadata = wavemetadata(self._sndfile)
+		self._metadata = WaveMetadata(self._sndfile)
 
 	def __enter__(self) :
 		return self
@@ -195,6 +193,8 @@ class reader(object) :
 	def format(self) : return self._info.format
 	@property
 	def samplerate(self) : return self._info.samplerate
+	@property
+	def frames(self) : return self._info.frames
 
 	def read(self, data) :
 		assert data.shape[1] == self.channels
@@ -212,7 +212,7 @@ class reader(object) :
 
 if __name__ == '__main__' :
 
-	with writer('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+	with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 		# TODO: Metadata is not working!
 		w.metadata.title = "La casa perdida"
 		w.metadata.artist = "Me"
@@ -226,7 +226,7 @@ if __name__ == '__main__' :
 	import sys
 	import pyaudio
 	p = pyaudio.PyAudio()
-	with reader('MamaLadilla-TuBar.ogg', channels=2) as r :
+	with WaveReader('MamaLadilla-TuBar.ogg', channels=2) as r :
 		# open stream
 		stream = p.open(
 				format = pyaudio.paFloat32,
@@ -234,7 +234,7 @@ if __name__ == '__main__' :
 				rate = r.samplerate,
 				frames_per_buffer = 512,
 				output = True)
-		with writer('Elvis-float.wav', channels=r.channels, samplerate=r.samplerate) as w :
+		with WaveWriter('Elvis-float.wav', channels=r.channels, samplerate=r.samplerate) as w :
 			data = np.zeros((512,r.channels), np.float32)
 			nframes = r.read(data)
 			print "Title:", r.metadata.title
