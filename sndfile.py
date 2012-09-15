@@ -226,7 +226,7 @@ if __name__ == '__main__' :
 	import sys
 	import pyaudio
 	p = pyaudio.PyAudio()
-	with WaveReader('MamaLadilla-TuBar.ogg', channels=2) as r :
+	with WaveReader(sys.argv[1], channels=2) as r :
 		# open stream
 		stream = p.open(
 				format = pyaudio.paFloat32,
