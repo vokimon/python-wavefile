@@ -181,6 +181,10 @@ def __init_lib_methods():
     #const char* sf_strerror (SNDFILE *sndfile) ;
     _lib.sf_strerror.restype = ct.c_char_p
     _lib.sf_strerror.argtypes = [SNDFILE]
+
+    #const char* sf_error_number (int ) ;
+    _lib.sf_error_number.restype = ct.c_char_p
+    _lib.sf_error_number.argtypes = [ct.c_int]
     
     #int		sf_format_check	(const SF_INFO *info) ;
     _lib.sf_format_check.restype = ct.c_int
@@ -196,8 +200,8 @@ def __init_lib_methods():
     
     #int         sf_set_string    (SNDFILE *sndfile, int str_type, const char* str) ;
     #TODO
-    #_lib.sf_set_string.restype = ct.c_int
-    #_lib.sf_set_string.argtypes = [SNDFILE, ct.c_int, ct.c_char_p]
+    _lib.sf_set_string.restype = ct.c_int
+    _lib.sf_set_string.argtypes = [SNDFILE, ct.c_int, ct.c_char_p]
     
     #sf_count_t	sf_read_raw		(SNDFILE *sndfile, void *ptr, sf_count_t bytes) ;
     _lib.sf_read_raw.restype = sf_count_t
