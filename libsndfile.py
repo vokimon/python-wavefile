@@ -155,7 +155,7 @@ SF_ERR_UNSUPPORTED_ENCODING	= 4
 
 
 #other definitions :
-sf_count_t = ct.c_longlong
+sf_count_t = ct.c_int64
 
 
 #structs:
