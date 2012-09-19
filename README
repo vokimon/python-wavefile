@@ -1,0 +1,60 @@
+TODO:
+	Handling different physical np layouts
+		use a view, assert or reshape
+	sndfile command interface
+	Seeking
+	Use extension to deduce main format
+	Use main format to deduce subformat
+
+
+Existing alternatives (what i like an dislike):
+
+- Standard wave module:
+	http://docs.python.org/library/wave.html
+
+	I think this is the main reason why there are many
+	wrappers around. The standard module to do wave file
+	loading is crap.
+
+	Based on sndfile but it just writes .wav files.
+	It lacks support for floating point samples, patch provided
+	but ignored see http://bugs.python.org/issue1144504
+	getX() instead of properties.
+	no numpy integration
+
+- scikits.audiolab
+	git clone https://github.com/cournape/audiolab
+	Cython based + python layer
+	Dual interface: matlab like and OO
+	Property accessors to samplerate...
+	Numpy integration
+	Inplace processing?
+	Not in Ubuntu
+	Within a big library
+
+- pysndfile
+	http://savannah.nongnu.org/projects/pysndfile/
+	It is a Swig based wrapper.
+
+- libsndfile-python
+	http://code.google.com/p/libsndfile-python/
+	svn checkout http://libsndfile-python.googlecode.com/svn/trunk/ libsndfile-python-read-only
+	in cpython
+	numpy support
+	cpython purely wraps the library
+	wrappers build the interface
+	double layered lib and pythonic interface (not that pythonic but supports numpy)
+	Implements command
+
+- libsndfilectypes
+	http://code.google.com/p/pyzic/wiki/LibSndFilectypes
+	ctypes based
+	No compilation required
+	numpy supported
+	Windows only setup (fixable)
+	long access to constants
+	Not inplace read (creates an array every time)
+
+
+
+
