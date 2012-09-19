@@ -224,6 +224,8 @@ if __name__ == '__main__' :
 			w.write(data)
 
 	import sys
+	if len(sys.argv)<2 : sys.exit(0)
+
 	import pyaudio
 	p = pyaudio.PyAudio()
 	with WaveReader(sys.argv[1], channels=2) as r :
