@@ -196,6 +196,14 @@ class WaveReader(object) :
 	@property
 	def frames(self) : return self._info.frames
 
+	def read_iter(self, size=512) :
+		data = np.zeros((size,self.channels), np.float32)
+		nframes = self.read(data)
+		while nframes :
+			yield data[:nframes,:]
+			nframes = self.read(data)
+		raise StopIteration
+
 	def read(self, data) :
 		assert data.shape[1] == self.channels
 		if data.dtype==np.float64 :
@@ -212,10 +220,10 @@ class WaveReader(object) :
 
 if __name__ == '__main__' :
 
+	# Writting example
 	with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
-		# TODO: Metadata is not working!
-		w.metadata.title = "La casa perdida"
-		w.metadata.artist = "Me"
+		w.metadata.title = "Some Noise"
+		w.metadata.artist = "The Artists"
 		data = np.zeros((512,2), np.float32)
 		for x in xrange(100) :
 			data[:,0] = (x*np.arange(512, dtype=np.float32)%512/512)
@@ -223,34 +231,50 @@ if __name__ == '__main__' :
 			data[:512-x,1] = -1
 			w.write(data)
 
-	import sys
-	if len(sys.argv)<2 : sys.exit(0)
-
-	import pyaudio
+	# Playback example (using pyaudio)
+	import pyaudio, sys
 	p = pyaudio.PyAudio()
-	with WaveReader(sys.argv[1], channels=2) as r :
-		# open stream
+	with WaveReader(sys.argv[1]) as r :
+
+		# Print info
+		print "Title:", r.metadata.title
+		print "Artist:", r.metadata.artist
+		print "Channels:", r.channels
+		print "Format: 0x%x"%r.format
+		print "Sample Rate:", r.samplerate
+
+		# open pyaudio stream
 		stream = p.open(
 				format = pyaudio.paFloat32,
 				channels = r.channels,
 				rate = r.samplerate,
 				frames_per_buffer = 512,
 				output = True)
-		with WaveWriter('Elvis-float.wav', channels=r.channels, samplerate=r.samplerate) as w :
+
+		# iterator interface (reuses one array)
+		# beware of the frame size, not always 512, but 512 at least
+		for frame in r.read_iter(size=512) :
+			stream.write(frame, frame.shape[0])
+			sys.stdout.write("."); sys.stdout.flush()
+
+		stream.close()
+
+	# Processing example (using read, instead of read_iter but just to show how it is used)
+	with WaveReader(sys.argv[1], channels=2) as r :
+		with WaveWriter(
+				'output.wav',
+				channels=r.channels,
+				samplerate=r.samplerate,
+				) as w :
+			w.metadata.title = r.metadata.title + " II"
+			w.metadata.artist = r.metadata.artist
+
 			data = np.zeros((512,r.channels), np.float32)
 			nframes = r.read(data)
-			print "Title:", r.metadata.title
-			print "Artist:", r.metadata.artist
-			print "Channels:", r.channels
-			print "Format: 0x%x"%r.format
-			print "Sample Rate:", r.samplerate
 			while nframes :
-				sys.stdout.write(".")
-				sys.stdout.flush()
-				stream.write(data[:nframes,:], nframes)
-				w.write(data[:nframes]*.8)
+				sys.stdout.write("."); sys.stdout.flush()
+				w.write(.8*data[:nframes])
 				nframes = r.read(data)
-	stream.close()
 
 
 

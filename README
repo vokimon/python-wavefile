@@ -1,13 +1,103 @@
+python-wavefile
+===============
+
+'wavefile' python module to read and write audio files.
+It is a pythonic wrapper to the sndfile library featuring:
+* Attribute access to format, channels, length, samplerate...
+* Numpy interface using inplace arrays (optimal for block processing)
+* Works as context manager
+* Different objects for reading and writting (no modes)
+* Shortded constants accessing for formats and the like
+
 TODO:
-	Handling different physical np layouts
-		use a view, assert or reshape
-	sndfile command interface
-	Seeking
-	Use extension to deduce main format
-	Use main format to deduce subformat
+* Handling different physical np layouts: use a view, assert or reshape
+* sndfile command interface
+* Seeking
+* Use file name extension to deduce main format, if not specified
+* Use main format to deduce subformat if not specified
+* Providing strings for formats
+
+Example
+-------
+
+	# Writting
+
+	with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+		w.metadata.title = "What"
+		w.metadata.artist = "Me"
+		data = np.zeros((512,2), np.float32) # preallocating buffer
+		for x in xrange(100) :
+			data[:,0] = (x*np.arange(512, dtype=np.float32)%512/512)
+			data[512-x:,1] =  1
+			data[:512-x,1] = -1
+			w.write(data)
+
+	# Playing (with python-audio)
+
+	import pyaudio, sys
+	p = pyaudio.PyAudio()
+	with WaveReader(sys.argv[1], channels=2) as r :
+
+		# Print info
+		print "Title:", r.metadata.title
+		print "Artist:", r.metadata.artist
+		print "Channels:", r.channels
+		print "Format: 0x%x"%r.format
+		print "Sample Rate:", r.samplerate
+
+		# open pyaudio stream
+		stream = p.open(
+				format = pyaudio.paFloat32,
+				channels = r.channels,
+				rate = r.samplerate,
+				frames_per_buffer = 512,
+				output = True)
+
+		for frame in r.read(size=512) :
+			stream.write(frame, nframes)
+			sys.stdout.write(".") and sys.stdout.flush()
+
+		stream.close()
+
+		nframes = r.read(data)
+		while nframes :
+			sys.stdout.write(".")
+			sys.stdout.flush()
+			stream.write(data[:nframes,:], nframes)
+			nframes = r.read(data)
 
 
-Existing alternatives (what i like an dislike):
+	import pyaudio
+	p = pyaudio.PyAudio()
+	with WaveReader(sys.argv[1], channels=2) as r :
+		# open stream
+		stream = p.open(
+				format = pyaudio.paFloat32,
+				channels = r.channels,
+				rate = r.samplerate,
+				frames_per_buffer = 512,
+				output = True)
+		with WaveWriter('Elvis-float.wav', channels=r.channels, samplerate=r.samplerate) as w :
+			data = np.zeros((512,r.channels), np.float32)
+			nframes = r.read(data)
+			print "Title:", r.metadata.title
+			print "Artist:", r.metadata.artist
+			print "Channels:", r.channels
+			print "Format: 0x%x"%r.format
+			print "Sample Rate:", r.samplerate
+			while nframes :
+				sys.stdout.write(".")
+				sys.stdout.flush()
+				stream.write(data[:nframes,:], nframes)
+				w.write(data[:nframes]*.8)
+				nframes = r.read(data)
+	stream.close()
+
+
+
+
+Existing alternatives (what i like and dislike)
+-----------------------------------------------
 
 - Standard wave module:
 	http://docs.python.org/library/wave.html
