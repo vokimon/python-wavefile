@@ -221,7 +221,7 @@ class WaveReader(object) :
 if __name__ == '__main__' :
 
 	# Writting example
-	with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+	with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 		w.metadata.title = "Some Noise"
 		w.metadata.artist = "The Artists"
 		data = np.zeros((512,2), np.float32)
