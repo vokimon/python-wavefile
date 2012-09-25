@@ -217,6 +217,35 @@ class WaveReader(object) :
 		else:
 			raise TypeError("Please choose a correct dtype")
 
+def loadWave(filename) :
+	with WaveReader(filename) as r :
+		blockSize = 512
+		data = np.empty((r.frames, r.channels), dtype=np.float32)
+		fullblocks = r.frames // blockSize
+		lastBlockSize = r.frames % blockSize
+		for i in xrange(fullblocks) :
+			readframes = r.read(data[i*blockSize:(i+1)*blockSize,:])
+			assert readframes == blockSize
+		if lastBlockSize :
+			readframes = r.read(data[fullblocks*blockSize:,:])
+			assert readframes == lastBlockSize
+		return r.samplerate, data
+
+def saveWave(filename, data, samplerate, verbose=False) :
+	if verbose: print "Saving wave file:",filename
+	blockSize = 512
+	frames, channels = data.shape
+	fullblocks = frames // blockSize
+	lastBlockSize = frames % blockSize
+	with WaveWriter(filename, channels=channels, samplerate=samplerate) as w :
+		assert data.dtype == np.float32
+		for i in xrange(fullblocks) :
+			w.write(data[blockSize*i:blockSize*(i+1)])
+		if lastBlockSize :
+			w.write(data[fullblocks*blockSize:])
+
+
+
 
 if __name__ == '__main__' :
 
