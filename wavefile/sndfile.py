@@ -260,6 +260,9 @@ if __name__ == '__main__' :
 			data[:512-x,1] = -1
 			w.write(data)
 
+	import sys
+	if len(sys.argv)<2 : sys.exit(0)
+
 	# Playback example (using pyaudio)
 	import pyaudio, sys
 	p = pyaudio.PyAudio()
@@ -289,7 +292,7 @@ if __name__ == '__main__' :
 		stream.close()
 
 	# Processing example (using read, instead of read_iter but just to show how it is used)
-	with WaveReader(sys.argv[1], channels=2) as r :
+	with WaveReader(sys.argv[1]) as r :
 		with WaveWriter(
 				'output.wav',
 				channels=r.channels,
