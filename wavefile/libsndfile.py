@@ -83,48 +83,48 @@ class FILE_FORMATS():
     SF_FORMAT_OGG			= 0x200000	# Xiph OGG container
     SF_FORMAT_MPC2K			= 0x210000	# Akai MPC 2000 sampler
     SF_FORMAT_RF64			= 0x220000	# RF64 WAV file
-    
+
     # Subtypes from here on.
-    
+
     SF_FORMAT_PCM_S8		= 0x0001	# Signed 8 bit data
     SF_FORMAT_PCM_16		= 0x0002	# Signed 16 bit data
     SF_FORMAT_PCM_24		= 0x0003	# Signed 24 bit data
     SF_FORMAT_PCM_32		= 0x0004	# Signed 32 bit data
-    
+
     SF_FORMAT_PCM_U8		= 0x0005	# Unsigned 8 bit data (WAV and RAW only)
-    
+
     SF_FORMAT_FLOAT		= 0x0006	# 32 bit float data
     SF_FORMAT_DOUBLE		= 0x0007	# 64 bit float data
-    
+
     SF_FORMAT_ULAW		= 0x0010	# U-Law encoded.
     SF_FORMAT_ALAW		= 0x0011	# A-Law encoded.
     SF_FORMAT_IMA_ADPCM		= 0x0012	# IMA ADPCM.
     SF_FORMAT_MS_ADPCM		= 0x0013	# Microsoft ADPCM.
-    
+
     SF_FORMAT_GSM610		= 0x0020	# GSM 6.10 encoding.
     SF_FORMAT_VOX_ADPCM		= 0x0021	# OKI / Dialogix ADPCM
-    
+
     SF_FORMAT_G721_32		= 0x0030	# 32kbs G721 ADPCM encoding.
     SF_FORMAT_G723_24		= 0x0031	# 24kbs G723 ADPCM encoding.
     SF_FORMAT_G723_40		= 0x0032	# 40kbs G723 ADPCM encoding.
-    
+
     SF_FORMAT_DWVW_12		= 0x0040	# 12 bit Delta Width Variable Word encoding.
     SF_FORMAT_DWVW_16		= 0x0041	# 16 bit Delta Width Variable Word encoding.
     SF_FORMAT_DWVW_24		= 0x0042	# 24 bit Delta Width Variable Word encoding.
     SF_FORMAT_DWVW_N		= 0x0043	# N bit Delta Width Variable Word encoding.
-    
+
     SF_FORMAT_DPCM_8		= 0x0050	# 8 bit differential PCM (XI only)
     SF_FORMAT_DPCM_16		= 0x0051	# 16 bit differential PCM (XI only)
-    
+
     SF_FORMAT_VORBIS		= 0x0060	# Xiph Vorbis encoding.
-    
+
     # Endian-ness options.
-    
+
     SF_ENDIAN_FILE		= 0x00000000    # Default file endian-ness.
     SF_ENDIAN_LITTLE		= 0x10000000    # Force little endian-ness.
     SF_ENDIAN_BIG		= 0x20000000    # Force big endian-ness.
     SF_ENDIAN_CPU		= 0x30000000    # Force CPU endian-ness.
-    
+
     SF_FORMAT_SUBMASK		= 0x0000FFFF
     SF_FORMAT_TYPEMASK		= 0x0FFF0000
     SF_FORMAT_ENDMASK		= 0x30000000
@@ -169,15 +169,15 @@ class SF_INFO(ct.Structure):
 
 def __init_lib_methods():
     SNDFILE = ct.c_int
-    
+
     #SNDFILE* 	sf_open		(const char *path, int mode, SF_INFO *sfinfo) ;
     _lib.sf_open.restype = SNDFILE
     _lib.sf_open.argtypes = [ct.c_char_p, ct.c_int, ct.POINTER(SF_INFO)]
-    
+
     #int		sf_error		(SNDFILE *sndfile) ;
     _lib.sf_error.restype = ct.c_int
     _lib.sf_error.argtypes = [SNDFILE]
-    
+
     #const char* sf_strerror (SNDFILE *sndfile) ;
     _lib.sf_strerror.restype = ct.c_char_p
     _lib.sf_strerror.argtypes = [SNDFILE]
@@ -185,28 +185,28 @@ def __init_lib_methods():
     #const char* sf_error_number (int ) ;
     _lib.sf_error_number.restype = ct.c_char_p
     _lib.sf_error_number.argtypes = [ct.c_int]
-    
+
     #int		sf_format_check	(const SF_INFO *info) ;
     _lib.sf_format_check.restype = ct.c_int
     _lib.sf_format_check.argtypes = [ct.POINTER(SF_INFO)]
-    
+
     #sf_count_t	sf_seek 		(SNDFILE *sndfile, sf_count_t frames, int whence) ;
     _lib.sf_seek.restype = sf_count_t
     _lib.sf_seek.argtypes = [SNDFILE, sf_count_t, ct.c_int]
-    
+
     #const char* sf_get_string (SNDFILE *sndfile, int str_type) ;
     _lib.sf_get_string.restype = ct.c_char_p
     _lib.sf_get_string.argtypes = [SNDFILE, ct.c_int]
-    
+
     #int         sf_set_string    (SNDFILE *sndfile, int str_type, const char* str) ;
     #TODO
     _lib.sf_set_string.restype = ct.c_int
     _lib.sf_set_string.argtypes = [SNDFILE, ct.c_int, ct.c_char_p]
-    
+
     #sf_count_t	sf_read_raw		(SNDFILE *sndfile, void *ptr, sf_count_t bytes) ;
     _lib.sf_read_raw.restype = sf_count_t
     _lib.sf_read_raw.argtypes = [SNDFILE, ct.c_void_p, sf_count_t]
-    
+
     # Functions for reading and writing the data chunk in terms of frames.
     # The number of items actually read/written = frames * number of channels.
     #     sf_xxxx_raw		read/writes the raw data bytes from/to the file
@@ -224,15 +224,15 @@ def __init_lib_methods():
     _lib.sf_read_short.argtypes = [SNDFILE, ct.POINTER(ct.c_short), sf_count_t]
     _lib.sf_read_int.restype = sf_count_t
     _lib.sf_read_int.argtypes = [SNDFILE, ct.POINTER(ct.c_int), sf_count_t]
-    
+
     #sf_count_t	sf_write_raw 	(SNDFILE *sndfile, const void *ptr, sf_count_t bytes) ;
     _lib.sf_write_raw.restype = sf_count_t
     _lib.sf_write_raw.argtypes = [SNDFILE, ct.c_void_p, sf_count_t]
-    
+
     #int		sf_close		(SNDFILE *sndfile) ;
     _lib.sf_close.restype = ct.c_int
     _lib.sf_close.argtypes = [SNDFILE]
-    
+
     #writing functions
     #sf_count_t  sf_write_short   (SNDFILE *sndfile, short *ptr, sf_count_t items) ;
     #sf_count_t  sf_write_int     (SNDFILE *sndfile, int *ptr, sf_count_t items) ;
@@ -264,7 +264,7 @@ class SEEK_MODES():
 
 class SndFile(object):
     """ Main Class of the wrapper, provides easy access to audio file contents """
-    
+
     def __init__(self, filename, open_mode=OPEN_MODES.SFM_READ,
                  writeSamplerate = 48000,
                  writeFormat = FILE_FORMATS.SF_FORMAT_WAV^FILE_FORMATS.SF_FORMAT_PCM_16,
@@ -282,7 +282,7 @@ class SndFile(object):
         self._SNDFILE = self._lib.sf_open(filename, open_mode, self._sf_info)
         if self._lib.sf_error(self._SNDFILE)!=0:
             raise Exception(self._lib.sf_strerror(self._SNDFILE))
-    
+
     @property
     def nbFrames(self):
         """ the total number of frames for each channels """
@@ -303,10 +303,10 @@ class SndFile(object):
     def nbChannels(self):
         """ the number of channels """
         return self._sf_info.channels
-    
+
     def __enter__(self):
         return self
-    
+
     def __exit__(self, type, value, traceback):
         if type!=None:
             print "an exception occured while in the with statement"
@@ -314,7 +314,7 @@ class SndFile(object):
         if self._SNDFILE != None:
             if self._lib.sf_close(self._SNDFILE)!=0:
                 print "Could not close the file on exit"
-    
+
     def __str__(self):
         s = """
         audio file  : %s
@@ -326,7 +326,7 @@ class SndFile(object):
         """%(self._filename, self.nbFrames, self.samplerate,
              self.nbChannels, self.format, self.isSeekable)
         return s
-    
+
     def write(self, data):
         """ write all the provided data to the file with the parameters
         specified when opening the file """
@@ -340,7 +340,7 @@ class SndFile(object):
             return data, self._lib.sf_read_int(self._SNDFILE, data.ctypes.data_as(ct.POINTER(ct.c_int)), data.size)
         else:
             raise TypeError("Please choose a correct dtype")
-    
+
     def read(self, nbFrames=None, dtype=np.float32):
         """ returns a numpy array of dimension (nbFrames, nbChannels) and of type dtype
         reads nbFrames for each channels if provided, else reads the entire file
@@ -354,7 +354,7 @@ class SndFile(object):
         except TypeError, te:
             raise te
         return data, nbFramesRead
-    
+
     def seek(self, frame_position, whence=SEEK_MODES.SEEK_SET):
         """ seek to a position in the audio file, seek modes are those
         specified in SEEK_MODES.
@@ -364,7 +364,7 @@ class SndFile(object):
         if offset==-1:
             raise Exception(self._lib.sf_strerror(self._SNDFILE))
         return offset
-    
+
     def _read(self, nbFrames, dtype):
         """ class internal common part of read and readFromTo """
         data = np.empty((nbFrames, self.nbChannels), dtype)
@@ -378,7 +378,7 @@ class SndFile(object):
             return data, self._lib.sf_read_int(self._SNDFILE, data.ctypes.data_as(ct.POINTER(ct.c_int)), nbFrames*self.nbChannels)/self.nbChannels
         else:
             raise TypeError("Please choose a correct dtype")
-    
+
     def readFromTo(self, startFrame, stopFrame, dtype=np.float32):
         """ helper read method to specify the start and ending frame of reading.
         Raises an exception if startFrame<0 or stopFrame<startFrame.
@@ -395,7 +395,7 @@ class SndFile(object):
         except TypeError, te:
             raise te
         return data, nbFramesRead
-    
+
     def get_string(self, what_string):
         """ returns the queried string value if the file format supports it.
         the available string queries are specified in FILE_STRINGS """
@@ -411,21 +411,21 @@ if __name__=="__main__":
         #read from 1 to 3 seconds
         data, nbFramesRead = f.readFromTo(1*f.samplerate, 3*f.samplerate, dtype=np.float64)
         print "nb frames read:",nbFramesRead
-        
+
         #get the left channel
         lChannel = data[:,0]
-        
+
         from scipy.signal import butter, lfilter
         cutoffL=200.
         # Low-pass filter on the left channel at 200 Hz
         b,a = butter(3, cutoffL/(f.samplerate/2), btype="low")
         lChannelFiltered = lfilter(b, a, lChannel)
-        
+
         #write the 2 seconds read as an ogg file
         with SndFile("output.ogg", OPEN_MODES.SFM_WRITE,
                      writeFormat=FILE_FORMATS.SF_FORMAT_OGG^FILE_FORMATS.SF_FORMAT_VORBIS) as fo:
             fo.write(data)
-        
+
         import matplotlib.pyplot as plt
         plt.plot(np.arange(len(data), dtype=np.float)*1000./f.samplerate, lChannel, label="left channel")
         plt.plot(np.arange(len(data), dtype=np.float)*1000./f.samplerate, lChannelFiltered, label="filtered left channel")

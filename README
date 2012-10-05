@@ -10,7 +10,7 @@ It is a pythonic wrapper to the sndfile library featuring:
 * Shortded constants accessing for formats and the like
 
 TODO:
-* Handling different physical np layouts: use a view, assert or reshape
+* Handling properly different physical np layouts: use a view, assert or reshape
 * sndfile command interface
 * Seeking
 * Use file name extension to deduce main format, if not specified
