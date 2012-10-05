@@ -1,1 +1,1 @@
-from sndfile import *
+from wavefile import *
