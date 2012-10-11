@@ -63,13 +63,13 @@ with WaveReader(sys.argv[1]) as r :
 	stream.close()
 ```
 
-### Processing example (using read instead of read_iter
+### Processing example (using read instead of read_iter)
 
 read_iter is simpler and recommended but still you can use
 the read function which is closer to the .
 
 ```python
-with WaveReader(sys.argv[1], channels=2) as r :
+with WaveReader(sys.argv[1]) as r :
 	with WaveWriter(
 			'output.wav',
 			channels=r.channels,
@@ -88,7 +88,7 @@ with WaveReader(sys.argv[1], channels=2) as r :
 The same code using read_iter will look like this
 
 ```python
-with WaveReader(sys.argv[1], channels=2) as r :
+with WaveReader(sys.argv[1]) as r :
 	with WaveWriter(
 			'output.wav',
 			channels=r.channels,
