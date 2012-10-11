@@ -3,19 +3,41 @@ python-wavefile
 
 'wavefile' python module to read and write audio files.
 It is a pythonic wrapper to the sndfile library featuring:
-* Attribute access to format, channels, length, samplerate...
-* Numpy interface using inplace arrays (optimal for block processing)
+* Attribute access to format, channels, length, sample rate...
+* Numpy interface using in place arrays (optimal for block processing)
 * Works as context manager
-* Different objects for reading and writting (no modes)
-* Shortned constants accessing for formats and the like
+* Different objects for reading and writing (no modes, consistent interface)
+* Shortened constants accessing for formats and the like
+* Matlab like whole file interface (not recommended but convenient)
+
+You can find the latest version at:
+https://github.com/vokimon/python-wavefile
 
 TODO:
-* Handling properly different physical np layouts: use a view, assert or reshape
+* Handling properly different physical numpy layouts: use a view, assert or reshape
 * sndfile command interface
 * Seeking
 * Use file name extension to deduce main format, if not specified
 * Use main format to deduce subformat if not specified
 * Providing strings for formats
+
+Installation
+------------
+
+A setup.py script is provided so the common procedure for
+installing python packages in you platfrom will work.
+For example in Debian/Ubuntu systems:
+```bash
+sudo python setup install
+```
+And for per-user installation:
+```bash
+python setup install --home=~/local
+```
+provided that you have PTYHON_PATH set properly.
+
+Copying the wavefile directory to your project is also ok.
+
 
 Examples
 --------
@@ -63,10 +85,26 @@ with WaveReader(sys.argv[1]) as r :
 	stream.close()
 ```
 
-### Processing example (using read instead of read_iter)
+### Processing example
 
-read_iter is simpler and recommended but still you can use
-the read function which is closer to the .
+```python
+with WaveReader(sys.argv[1]) as r :
+	with WaveWriter(
+			'output.wav',
+			channels=r.channels,
+			samplerate=r.samplerate,
+			) as w :
+		w.metadata.title = r.metadata.title + " II"
+		w.metadata.artist = r.metadata.artist
+
+		for data in r.read_iter(size=512) :
+			sys.stdout.write("."); sys.stdout.flush()
+			w.write(.8*data)
+```
+
+While read_iter is simpler and recommended,
+you can still use the read function,
+which is closer to the C one.
 
 ```python
 with WaveReader(sys.argv[1]) as r :
@@ -85,31 +123,28 @@ with WaveReader(sys.argv[1]) as r :
 			w.write(.8*data[:nframes])
 			nframes = r.read(data)
 ```
-The same code using read_iter will look like this
 
-```python
-with WaveReader(sys.argv[1]) as r :
-	with WaveWriter(
-			'output.wav',
-			channels=r.channels,
-			samplerate=r.samplerate,
-			) as w :
-		w.metadata.title = r.metadata.title + " II"
-		w.metadata.artist = r.metadata.artist
-
-		# no need to preallocate data the iterator does
-		# the code just has one read in the for
-		for data in r.read_iter(size=512) :
-			sys.stdout.write("."); sys.stdout.flush()
-			# data is already sliced for the last incomplete block
-			w.write(.8*data)
-```
+Notice that with ```read``` you have to reallocate the data yourself,
+the loop structure is somewhat more complex,
+and you have to slice to the actual ```nframes``` because
+the last block usually does not have the size you asked for.
+```read_iter``` simplifies the code by transparently
+allocating the data block for you, reusing it for each block
+and slicing it as you get the data.
 
 
 Existing alternatives (what i like and dislike)
 -----------------------------------------------
 
-- Standard wave module:
+This is 'yet another' wrapper for sndfile.
+A lot of them appeared just because the standard
+'wave' module is quite limited on what and how it does.
+But none of the wrappers I found around fully suit my
+needs and that's because I wrote this small and incomplete one,
+to fit my needs.
+So this is a summary of what I found, just in case it is useful to anyone.
+
+- Standard 'wave' module:
 	- http://docs.python.org/library/wave.html
 	- I think this is the main reason why there are many
 	- wrappers around. The standard module to do wave file
@@ -117,9 +152,10 @@ Existing alternatives (what i like and dislike)
 
 	- Based on sndfile but it just writes .wav files.
 	- It lacks support for floating point samples, patch provided
-	- but ignored see http://bugs.python.org/issue1144504
-	- getX() instead of properties.
+	  but ignored see http://bugs.python.org/issue1144504
+	- unreadable getX() methods instead of properties.
 	- no numpy integration
+	- no whole file shortcuts
 
 - scikits.audiolab
 	- git clone https://github.com/cournape/audiolab
@@ -133,25 +169,27 @@ Existing alternatives (what i like and dislike)
 
 - pysndfile
 	- http://savannah.nongnu.org/projects/pysndfile/
-	- It is a Swig based wrapper.
+	- Swig based wrapper.
+	- Direct lib library + python object wrappers
+	- Unusable because it is not finished (empty read/write methods in wrapper!)
 
 - libsndfile-python
 	- http://code.google.com/p/libsndfile-python/
 	- svn checkout http://libsndfile-python.googlecode.com/svn/trunk/ libsndfile-python-read-only
-	- in cpython
+	- Implemented in CPython
 	- numpy support
 	- cpython purely wraps the library
 	- wrappers build the interface
 	- double layered lib and pythonic interface (not that pythonic but supports numpy)
-	- Implements command
+	- Implements 'command' sndfile interface
 
 - libsndfilectypes
 	- http://code.google.com/p/pyzic/wiki/LibSndFilectypes
-	- ctypes based
+	- ctypes based wrapper
 	- No compilation required
 	- numpy supported
 	- Windows only setup (fixable)
-	- long access to constants
+	- Long access to constants
 	- Not inplace read (creates an array every time)
 
 
