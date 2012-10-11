@@ -17,117 +17,142 @@ TODO:
 * Use main format to deduce subformat if not specified
 * Providing strings for formats
 
-Example
--------
+Examples
+--------
 
-	# Writting example
-	with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
-		w.metadata.title = "Some Noise"
-		w.metadata.artist = "The Artists"
-		data = np.zeros((512,2), np.float32)
-		for x in xrange(100) :
-			data[:,0] = (x*np.arange(512, dtype=np.float32)%512/512)
-			data[512-x:,1] =  1
-			data[:512-x,1] = -1
-			w.write(data)
+### Writting example
+```python
+with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+	w.metadata.title = "Some Noise"
+	w.metadata.artist = "The Artists"
+	data = np.zeros((512,2), np.float32)
+	for x in xrange(100) :
+		data[:,0] = (x*np.arange(512, dtype=np.float32)%512/512)
+		data[512-x:,1] =  1
+		data[:512-x,1] = -1
+		w.write(data)
+```
 
-	# Playback example (using pyaudio)
-	import pyaudio, sys
-	p = pyaudio.PyAudio()
-	with WaveReader(sys.argv[1]) as r :
+### Playback example (using pyaudio)
+```python
+import pyaudio, sys
+p = pyaudio.PyAudio()
+with WaveReader(sys.argv[1]) as r :
 
-		# Print info
-		print "Title:", r.metadata.title
-		print "Artist:", r.metadata.artist
-		print "Channels:", r.channels
-		print "Format: 0x%x"%r.format
-		print "Sample Rate:", r.samplerate
+	# Print info
+	print "Title:", r.metadata.title
+	print "Artist:", r.metadata.artist
+	print "Channels:", r.channels
+	print "Format: 0x%x"%r.format
+	print "Sample Rate:", r.samplerate
 
-		# open pyaudio stream
-		stream = p.open(
-				format = pyaudio.paFloat32,
-				channels = r.channels,
-				rate = r.samplerate,
-				frames_per_buffer = 512,
-				output = True)
+	# open pyaudio stream
+	stream = p.open(
+			format = pyaudio.paFloat32,
+			channels = r.channels,
+			rate = r.samplerate,
+			frames_per_buffer = 512,
+			output = True)
 
-		# iterator interface (reuses one array)
-		# beware of the frame size, not always 512, but 512 at least
-		for frame in r.read_iter(size=512) :
-			stream.write(frame, frame.shape[0])
+	# iterator interface (reuses one array)
+	# beware of the frame size, not always 512, but 512 at least
+	for frame in r.read_iter(size=512) :
+		stream.write(frame, frame.shape[0])
+		sys.stdout.write("."); sys.stdout.flush()
+
+	stream.close()
+```
+
+### Processing example (using read instead of read_iter
+
+read_iter is simpler and recommended but still you can use
+the read function which is closer to the .
+
+```python
+with WaveReader(sys.argv[1], channels=2) as r :
+	with WaveWriter(
+			'output.wav',
+			channels=r.channels,
+			samplerate=r.samplerate,
+			) as w :
+		w.metadata.title = r.metadata.title + " II"
+		w.metadata.artist = r.metadata.artist
+
+		data = np.zeros((512,r.channels), np.float32)
+		nframes = r.read(data)
+		while nframes :
 			sys.stdout.write("."); sys.stdout.flush()
-
-		stream.close()
-
-	# Processing example (using read, instead of read_iter but just to show how it is used)
-	with WaveReader(sys.argv[1], channels=2) as r :
-		with WaveWriter(
-				'output.wav',
-				channels=r.channels,
-				samplerate=r.samplerate,
-				) as w :
-			w.metadata.title = r.metadata.title + " II"
-			w.metadata.artist = r.metadata.artist
-
-			data = np.zeros((512,r.channels), np.float32)
+			w.write(.8*data[:nframes])
 			nframes = r.read(data)
-			while nframes :
-				sys.stdout.write("."); sys.stdout.flush()
-				w.write(.8*data[:nframes])
-				nframes = r.read(data)
+```
+The same code using read_iter will look like this
 
+```python
+with WaveReader(sys.argv[1], channels=2) as r :
+	with WaveWriter(
+			'output.wav',
+			channels=r.channels,
+			samplerate=r.samplerate,
+			) as w :
+		w.metadata.title = r.metadata.title + " II"
+		w.metadata.artist = r.metadata.artist
 
-
+		# no need to preallocate data the iterator does
+		# the code just has one read in the for
+		for data in r.read_iter(size=512) :
+			sys.stdout.write("."); sys.stdout.flush()
+			# data is already sliced for the last incomplete block
+			w.write(.8*data)
+```
 
 
 Existing alternatives (what i like and dislike)
 -----------------------------------------------
 
 - Standard wave module:
-	http://docs.python.org/library/wave.html
+	- http://docs.python.org/library/wave.html
+	- I think this is the main reason why there are many
+	- wrappers around. The standard module to do wave file
+	- loading is crap.
 
-	I think this is the main reason why there are many
-	wrappers around. The standard module to do wave file
-	loading is crap.
-
-	Based on sndfile but it just writes .wav files.
-	It lacks support for floating point samples, patch provided
-	but ignored see http://bugs.python.org/issue1144504
-	getX() instead of properties.
-	no numpy integration
+	- Based on sndfile but it just writes .wav files.
+	- It lacks support for floating point samples, patch provided
+	- but ignored see http://bugs.python.org/issue1144504
+	- getX() instead of properties.
+	- no numpy integration
 
 - scikits.audiolab
-	git clone https://github.com/cournape/audiolab
-	Cython based + python layer
-	Dual interface: matlab like and OO
-	Property accessors to samplerate...
-	Numpy integration
-	Inplace processing?
-	Not in Ubuntu
-	Within a big library
+	- git clone https://github.com/cournape/audiolab
+	- Cython based + python layer
+	- Dual interface: matlab like and OO
+	- Property accessors to samplerate...
+	- Numpy integration
+	- Inplace processing?
+	- Not in Ubuntu
+	- Within a big library
 
 - pysndfile
-	http://savannah.nongnu.org/projects/pysndfile/
-	It is a Swig based wrapper.
+	- http://savannah.nongnu.org/projects/pysndfile/
+	- It is a Swig based wrapper.
 
 - libsndfile-python
-	http://code.google.com/p/libsndfile-python/
-	svn checkout http://libsndfile-python.googlecode.com/svn/trunk/ libsndfile-python-read-only
-	in cpython
-	numpy support
-	cpython purely wraps the library
-	wrappers build the interface
-	double layered lib and pythonic interface (not that pythonic but supports numpy)
-	Implements command
+	- http://code.google.com/p/libsndfile-python/
+	- svn checkout http://libsndfile-python.googlecode.com/svn/trunk/ libsndfile-python-read-only
+	- in cpython
+	- numpy support
+	- cpython purely wraps the library
+	- wrappers build the interface
+	- double layered lib and pythonic interface (not that pythonic but supports numpy)
+	- Implements command
 
 - libsndfilectypes
-	http://code.google.com/p/pyzic/wiki/LibSndFilectypes
-	ctypes based
-	No compilation required
-	numpy supported
-	Windows only setup (fixable)
-	long access to constants
-	Not inplace read (creates an array every time)
+	- http://code.google.com/p/pyzic/wiki/LibSndFilectypes
+	- ctypes based
+	- No compilation required
+	- numpy supported
+	- Windows only setup (fixable)
+	- long access to constants
+	- Not inplace read (creates an array every time)
 
 
 
