@@ -7,7 +7,7 @@ setup(
 	description = "Pythonic wave file reader and writer",
 	author = "David Garcia Garzon",
 	author_email = "voki@canvoki.net",
-	url = 'https://github.com/vokimon/thesis/tree/master/src/python-sndfile',
+	url = 'https://github.com/vokimon/python-wavefile',
 	packages=[
 		'wavefile',
 		],
