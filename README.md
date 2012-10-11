@@ -7,7 +7,7 @@ It is a pythonic wrapper to the sndfile library featuring:
 * Numpy interface using inplace arrays (optimal for block processing)
 * Works as context manager
 * Different objects for reading and writting (no modes)
-* Shortded constants accessing for formats and the like
+* Shortned constants accessing for formats and the like
 
 TODO:
 * Handling properly different physical np layouts: use a view, assert or reshape
