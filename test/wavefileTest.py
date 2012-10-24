@@ -19,15 +19,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys
-sys.path.append("../")
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 
 from wavefile import *
 import unittest
 import numpy as np
 from numpy.testing import assert_equal as np_assert_equal
 
-class MultiChannelDiffTests(unittest.TestCase) :
+class LibSndfileTest(unittest.TestCase) :
 
 	def setUp(self) :
 		self.filestoremove = []
@@ -93,6 +93,16 @@ class MultiChannelDiffTests(unittest.TestCase) :
 			self.assertEqual( (
 				"Error opening 'badfile.wav': File contains data in an unknown format.",
 			), e.args)
+
+	def test_writter_withWrongPath(self) :
+		try :
+			r = wavefile.WaveWriter("/badpath/file.wav")
+			self.fail("Exception expected")
+		except IOError, e :
+			self.assertEqual( (
+				"Error opening '/badpath/file.wav': System error.",
+			), e.args)
+
 
 
 
