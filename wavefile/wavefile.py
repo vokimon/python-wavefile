@@ -195,6 +195,8 @@ class WaveReader(object) :
 				format = format
 			)
 		self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
+		if not self._sndfile :
+			raise IOError("Error opening '%s': %s"%(filename, _lib.sf_error_number(_lib.sf_error(0))))
 		self._metadata = WaveMetadata(self._sndfile)
 
 	def __enter__(self) :
