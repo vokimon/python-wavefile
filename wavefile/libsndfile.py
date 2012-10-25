@@ -168,7 +168,7 @@ class SF_INFO(ct.Structure):
                 ("seekable", ct.c_int)]
 
 def __init_lib_methods():
-    SNDFILE = ct.c_int
+    SNDFILE = ct.c_void_p
 
     #SNDFILE* 	sf_open		(const char *path, int mode, SF_INFO *sfinfo) ;
     _lib.sf_open.restype = SNDFILE

@@ -137,7 +137,7 @@ class WaveMetadata(object) :
 		stringid = self.strings.index(name)+1
 		error = _lib.sf_set_string(self._sndfile, stringid, value)
 		if error : print ValueError(
-			self.strings[stringid],
+			name,
 			error, _lib.sf_error_number(error))
 
 class WaveWriter(object) :
@@ -174,7 +174,8 @@ class WaveWriter(object) :
 		return self._metadata
 
 	def write(self, data) :
-		nframes, channels = data.shape
+		channels, nframes = data.shape
+		data = data.ravel('F')
 		assert channels == self._info.channels
 		if data.dtype==np.float64 :
 			return _lib.sf_writef_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), nframes)
@@ -211,8 +212,11 @@ class WaveReader(object) :
 	def __enter__(self) :
 		return self
 	def __exit__(self, type, value, traceback) :
-		_lib.sf_close( self._sndfile)
+		self.close()
 		if value: raise
+
+	def close(self) :
+		_lib.sf_close( self._sndfile)
 
 	@property
 	def metadata(self) :
@@ -227,24 +231,38 @@ class WaveReader(object) :
 	@property
 	def frames(self) : return self._info.frames
 
-	def read_iter(self, size=512) :
-		data = np.zeros((size,self.channels), np.float32)
+	def read_iter(self, size=512, buffer=None) :
+		data = buffer
+		if data is None :
+			data = self.buffer(size)
+		else :
+			assert buffer.shape[0] == self.channels
+			size = buffer.shape[1]
 		nframes = self.read(data)
 		while nframes :
-			yield data[:nframes,:]
+			yield data[:,:nframes]
 			nframes = self.read(data)
 		raise StopIteration
 
+	def buffer(self, size, dtype=np.float32) :
+		"""Provides a properly constructed buffer to read data"""
+		return np.zeros((self.channels, size), dtype, order='F')
+
 	def read(self, data) :
-		assert data.shape[1] == self.channels
+		channels, frames = data.shape
+		assert channels == self.channels, \
+			"Buffer has room for %i channels, wave file has %i channels"%(
+				channels, self.channels)
+		assert data.strides[0]*channels == data.strides[1], \
+			"Buffer storage be column-major order. Consider using buffer(size)"
 		if data.dtype==np.float64 :
-			return _lib.sf_readf_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), data.shape[0])
+			return _lib.sf_readf_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), frames)
 		elif data.dtype==np.float32 :
-			return _lib.sf_readf_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), data.shape[0])
+			return _lib.sf_readf_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), frames)
 		elif data.dtype==np.int16 :
-			return _lib.sf_readf_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), data.shape[0])
+			return _lib.sf_readf_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), frames)
 		elif data.dtype==np.int32 :
-			return _lib.sf_readf_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), data.shape[0])
+			return _lib.sf_readf_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), frames)
 		else:
 			raise TypeError("Please choose a correct dtype")
 
