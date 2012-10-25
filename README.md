@@ -44,14 +44,14 @@ Examples
 
 ### Writting example
 ```python
-with WaveWriter('lala.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 	w.metadata.title = "Some Noise"
 	w.metadata.artist = "The Artists"
-	data = np.zeros((512,2), np.float32)
+	data = np.zeros((2,512), np.float32)
 	for x in xrange(100) :
-		data[:,0] = (x*np.arange(512, dtype=np.float32)%512/512)
-		data[512-x:,1] =  1
-		data[:512-x,1] = -1
+		data[0,:] = (x*np.arange(512, dtype=np.float32)%512/512)
+		data[1,512-x:] =  1
+		data[1,:512-x] = -1
 		w.write(data)
 ```
 
@@ -79,7 +79,7 @@ with WaveReader(sys.argv[1]) as r :
 	# iterator interface (reuses one array)
 	# beware of the frame size, not always 512, but 512 at least
 	for frame in r.read_iter(size=512) :
-		stream.write(frame, frame.shape[0])
+		stream.write(frame, frame.shape[1])
 		sys.stdout.write("."); sys.stdout.flush()
 
 	stream.close()
@@ -116,11 +116,11 @@ with WaveReader(sys.argv[1]) as r :
 		w.metadata.title = r.metadata.title + " II"
 		w.metadata.artist = r.metadata.artist
 
-		data = np.zeros((512,r.channels), np.float32)
+		data = np.zeros((r.channels,512), np.float32, order='F')
 		nframes = r.read(data)
 		while nframes :
 			sys.stdout.write("."); sys.stdout.flush()
-			w.write(.8*data[:nframes])
+			w.write(.8*data[:,:nframes])
 			nframes = r.read(data)
 ```
 
