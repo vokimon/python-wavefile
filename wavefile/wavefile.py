@@ -163,8 +163,11 @@ class WaveWriter(object) :
 	def __enter__(self) :
 		return self
 	def __exit__(self, type, value, traceback) :
-		_lib.sf_close( self._sndfile)
+		self.close()
 		if value: raise
+
+	def close(self) :
+		_lib.sf_close( self._sndfile)
 
 	@property
 	def metadata(self) :

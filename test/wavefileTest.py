@@ -96,13 +96,126 @@ class LibSndfileTest(unittest.TestCase) :
 
 	def test_writter_withWrongPath(self) :
 		try :
-			r = wavefile.WaveWriter("/badpath/file.wav")
+			w = wavefile.WaveWriter("/badpath/file.wav")
 			self.fail("Exception expected")
 		except IOError, e :
 			self.assertEqual( (
 				"Error opening '/badpath/file.wav': System error.",
 			), e.args)
 
+	def test_readed_generatedByWaveWriter(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav")
+		r = wavefile.WaveReader("file.wav")
+
+	def test_format_byDefault(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav")
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(
+			hex(
+				wavefile.Format.WAV |
+				wavefile.Format.FLOAT |
+				0),
+			hex(r.format))
+
+	def test_format_whenOgg(self) :
+		self.toRemove("file.ogg")
+		w = wavefile.WaveWriter("file.ogg",
+			format= wavefile.Format.OGG | wavefile.Format.VORBIS)
+		w.close()
+		r = wavefile.WaveReader("file.ogg")
+		self.assertEqual(
+			hex(
+				wavefile.Format.OGG |
+				wavefile.Format.VORBIS |
+				0),
+			hex(r.format))
+
+	def test_channels_byDefault(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav")
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(1, r.channels)
+
+	def test_channels_set(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav", channels=4)
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(4, r.channels)
+
+	def test_samplerate_byDefault(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav")
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(44100, r.samplerate)
+
+	def test_sampelrate_set(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav", samplerate=22050)
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(22050, r.samplerate)
+
+	def test_metadata_default(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav", samplerate=22050)
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		self.assertEqual(None, r.metadata.title)
+		self.assertEqual(None, r.metadata.copyright)
+		self.assertEqual(None, r.metadata.software)
+		self.assertEqual(None, r.metadata.artist)
+		self.assertEqual(None, r.metadata.comment)
+		self.assertEqual(None, r.metadata.date)
+		self.assertEqual(None, r.metadata.album)
+		self.assertEqual(None, r.metadata.license)
+		self.assertEqual(None, r.metadata.tracknumber)
+		self.assertEqual(None, r.metadata.genre)
+
+	def test_metadata_illegalAttribute(self) :
+		self.toRemove("file.wav")
+		w = wavefile.WaveWriter("file.wav", samplerate=22050)
+		w.close()
+		r = wavefile.WaveReader("file.wav")
+		try :
+			self.assertEqual(None, r.metadata.illegalAttribute)
+			self.fail("Exception expected")
+		except AttributeError, e :
+			self.assertEqual( (
+				"illegalAttribute",
+			), e.args)
+
+
+	def test_metadata_set(self) :
+		self.toRemove("file.ogg")
+		w = wavefile.WaveWriter("file.ogg")
+		w.metadata.title = 'mytitle'
+		w.metadata.copyright = 'mycopyright'
+		w.metadata.software = 'mysoftware'
+		w.metadata.artist = 'myartist'
+		w.metadata.comment = 'mycomment'
+		w.metadata.date = 'mydate'
+		w.metadata.album = 'myalbum'
+		w.metadata.license = 'mylicense'
+		w.metadata.tracknumber = '77'
+#		w.metadata.genre = 'mygenre'
+		w.close()
+		r = wavefile.WaveReader("file.ogg")
+		self.assertEqual("mytitle", r.metadata.title)
+		self.assertEqual("mycopyright", r.metadata.copyright)
+		self.assertEqual("mysoftware (libsndfile-1.0.25)", r.metadata.software)
+		self.assertEqual("myartist", r.metadata.artist)
+		self.assertEqual("mycomment", r.metadata.comment)
+		self.assertEqual("mydate", r.metadata.date)
+#		self.assertEqual("myalbum", r.metadata.album)
+#		self.assertEqual("mylicense", r.metadata.license)
+#		self.assertEqual("77", r.metadata.tracknumber)
+#		self.assertEqual("mygenre", r.metadata.genre)
 
 
 
