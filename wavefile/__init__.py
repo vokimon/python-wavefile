@@ -1,1 +1,1 @@
-from wavefile import *
+from .wavefile import *

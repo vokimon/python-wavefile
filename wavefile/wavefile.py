@@ -23,9 +23,9 @@ import numpy as np
 import ctypes
 
 
-from libsndfile import _lib
+from .libsndfile import _lib
 
-from libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
+from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
 
 class Format :
 	WAV    = 0x010000	# Microsoft WAV format (little endian default).
@@ -136,9 +136,9 @@ class WaveMetadata(object) :
 
 		stringid = self.strings.index(name)+1
 		error = _lib.sf_set_string(self._sndfile, stringid, value)
-		if error : print ValueError(
+		if error : print(ValueError(
 			name,
-			error, _lib.sf_error_number(error))
+			error, _lib.sf_error_number(error)))
 
 class WaveWriter(object) :
 	def __init__(self,
@@ -272,7 +272,7 @@ def loadWave(filename) :
 		data = np.empty((r.frames, r.channels), dtype=np.float32)
 		fullblocks = r.frames // blockSize
 		lastBlockSize = r.frames % blockSize
-		for i in xrange(fullblocks) :
+		for i in range(fullblocks) :
 			readframes = r.read(data[i*blockSize:(i+1)*blockSize,:])
 			assert readframes == blockSize
 		if lastBlockSize :
@@ -281,14 +281,14 @@ def loadWave(filename) :
 		return r.samplerate, data
 
 def saveWave(filename, data, samplerate, verbose=False) :
-	if verbose: print "Saving wave file:",filename
+	if verbose: print("Saving wave file:",filename)
 	blockSize = 512
 	frames, channels = data.shape
 	fullblocks = frames // blockSize
 	lastBlockSize = frames % blockSize
 	with WaveWriter(filename, channels=channels, samplerate=samplerate) as w :
 		assert data.dtype == np.float32
-		for i in xrange(fullblocks) :
+		for i in range(fullblocks) :
 			w.write(data[blockSize*i:blockSize*(i+1)])
 		if lastBlockSize :
 			w.write(data[fullblocks*blockSize:])
@@ -304,7 +304,7 @@ if __name__ == '__main__' :
 		w.metadata.title = "Some Noise"
 		w.metadata.artist = "The Artists"
 		data = np.zeros((2,512), np.float32)
-		for x in xrange(100) :
+		for x in range(100) :
 			data[0,:] = (x*np.arange(512, dtype=np.float32)%512/512)
 			data[1,512-x:] =  1
 			data[1,:512-x] = -1
@@ -319,11 +319,11 @@ if __name__ == '__main__' :
 	with WaveReader(sys.argv[1]) as r :
 
 		# Print info
-		print "Title:", r.metadata.title
-		print "Artist:", r.metadata.artist
-		print "Channels:", r.channels
-		print "Format: 0x%x"%r.format
-		print "Sample Rate:", r.samplerate
+		print("Title:", r.metadata.title)
+		print("Artist:", r.metadata.artist)
+		print("Channels:", r.channels)
+		print("Format: 0x%x"%r.format)
+		print("Sample Rate:", r.samplerate)
 
 		# open pyaudio stream
 		stream = p.open(

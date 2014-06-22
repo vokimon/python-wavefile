@@ -16,12 +16,12 @@ import sys
 try:
     import ctypes as ct
 except ImportError:
-    print "this module requires ctypes"
+    print("this module requires ctypes")
     sys.exit(-1)
 try:
     import numpy as np
 except ImportError:
-    print "this module requires numpy"
+    print("this module requires numpy")
     sys.exit(-1)
 
 if sys.platform == "win32" :
@@ -48,7 +48,7 @@ except:
         _lib = ct.CDLL(os.path.join(dllPath, dllName))
     except:
         import sys
-        print "could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName)
+        print("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
         sys.exit(-1)
 
 _lib.sf_version_string.restype = ct.c_char_p
@@ -309,11 +309,11 @@ class SndFile(object):
 
     def __exit__(self, type, value, traceback):
         if type!=None:
-            print "an exception occured while in the with statement"
-            print value
+            print("an exception occured while in the with statement")
+            print(value)
         if self._SNDFILE != None:
             if self._lib.sf_close(self._SNDFILE)!=0:
-                print "Could not close the file on exit"
+                print("Could not close the file on exit")
 
     def __str__(self):
         s = """
@@ -351,7 +351,7 @@ class SndFile(object):
         if not nbFrames: nbFrames=self.nbFrames
         try:
             data, nbFramesRead = self._read(nbFrames, dtype)
-        except TypeError, te:
+        except TypeError as te:
             raise te
         return data, nbFramesRead
 
@@ -392,7 +392,7 @@ class SndFile(object):
         self.seek(startFrame)
         try:
             data, nbFramesRead = self._read(nbFrames, dtype)
-        except TypeError, te:
+        except TypeError as te:
             raise te
         return data, nbFramesRead
 
@@ -407,10 +407,10 @@ class SndFile(object):
 if __name__=="__main__":
     with SndFile("test/LS100673.WAV") as f:
         #print various information
-        print f
+        print(f)
         #read from 1 to 3 seconds
         data, nbFramesRead = f.readFromTo(1*f.samplerate, 3*f.samplerate, dtype=np.float64)
-        print "nb frames read:",nbFramesRead
+        print("nb frames read:",nbFramesRead)
 
         #get the left channel
         lChannel = data[:,0]
