@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
 import ctypes
-
+import sys
 
 from .libsndfile import _lib
 
@@ -153,6 +153,8 @@ class WaveWriter(object) :
                 channels = channels,
                 format = format
             )
+        if sys.version_info >= (3,0):
+            filename = filename.encode("ascii") 
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
@@ -202,6 +204,8 @@ class WaveReader(object) :
                 channels = channels,
                 format = format
             )
+        if sys.version_info >= (3,0):
+            filename = filename.encode("ascii")
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
