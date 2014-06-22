@@ -26,7 +26,7 @@ except ImportError:
 
 if sys.platform == "win32" :
     dllName = 'libsndfile-1'
-elif sys.platform == "linux2" :
+elif "linux" in sys.platform:
     dllName = 'libsndfile.so'
 else :
     dllName = 'libsndfile'
