@@ -27,6 +27,8 @@ from .libsndfile import _lib
 
 from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
 
+is_python3 = sys.version_info >= (3,0)
+
 class Format :
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
@@ -153,7 +155,7 @@ class WaveWriter(object) :
                 channels = channels,
                 format = format
             )
-        if sys.version_info >= (3,0):
+        if is_python3:
             filename = filename.encode("ascii") 
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
@@ -204,7 +206,7 @@ class WaveReader(object) :
                 channels = channels,
                 format = format
             )
-        if sys.version_info >= (3,0):
+        if is_python3:
             filename = filename.encode("ascii")
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
