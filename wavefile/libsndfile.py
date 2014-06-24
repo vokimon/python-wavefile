@@ -134,24 +134,24 @@ class FILE_FORMATS():
 # support this and even the file types which support one, may not support
 # all string types.
 class FILE_STRINGS():
-    SF_STR_TITLE        = 0x01
-    SF_STR_COPYRIGHT    = 0x02
-    SF_STR_SOFTWARE    = 0x03
+    SF_STR_TITLE     = 0x01
+    SF_STR_COPYRIGHT = 0x02
+    SF_STR_SOFTWARE  = 0x03
     SF_STR_ARTIST    = 0x04
-    SF_STR_COMMENT    = 0x05
-    SF_STR_DATE        = 0x06
-    SF_STR_ALBUM    = 0x07
-    SF_STR_LICENSE    = 0x08
+    SF_STR_COMMENT   = 0x05
+    SF_STR_DATE      = 0x06
+    SF_STR_ALBUM     = 0x07
+    SF_STR_LICENSE   = 0x08
 
 # Public error values. These are guaranteed to remain unchanged for the duration
 # of the library major version number.
 # There are also a large number of private error numbers which are internal to
 # the library which can change at any time.
-SF_ERR_NO_ERROR            = 0
-SF_ERR_UNRECOGNISED_FORMAT    = 1
-SF_ERR_SYSTEM            = 2
-SF_ERR_MALFORMED_FILE        = 3
-SF_ERR_UNSUPPORTED_ENCODING    = 4
+SF_ERR_NO_ERROR             = 0
+SF_ERR_UNRECOGNISED_FORMAT  = 1
+SF_ERR_SYSTEM               = 2
+SF_ERR_MALFORMED_FILE       = 3
+SF_ERR_UNSUPPORTED_ENCODING = 4
 
 
 #other definitions :
@@ -160,12 +160,14 @@ sf_count_t = ct.c_int64
 
 #structs:
 class SF_INFO(ct.Structure):
-    _fields_ = [("frames", sf_count_t), #Used to be called samples.  Changed to avoid confusion.
-                ("samplerate", ct.c_int),
-                ("channels", ct.c_int),
-                ("format", ct.c_int),
-                ("sections", ct.c_int),
-                ("seekable", ct.c_int)]
+    _fields_ = [
+        ("frames", sf_count_t), #Used to be called samples.  Changed to avoid confusion.
+        ("samplerate", ct.c_int),
+        ("channels", ct.c_int),
+        ("format", ct.c_int),
+        ("sections", ct.c_int),
+        ("seekable", ct.c_int)
+    ]
 
 def __init_lib_methods():
     SNDFILE = ct.c_void_p
