@@ -156,7 +156,7 @@ class WaveWriter(object) :
                 format = format
             )
         if is_python3:
-            filename = filename.encode("ascii") 
+            filename = filename.encode(sys.getdefaultencoding()) 
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
@@ -207,7 +207,7 @@ class WaveReader(object) :
                 format = format
             )
         if is_python3:
-            filename = filename.encode("ascii")
+            filename = filename.encode(sys.getdefaultencoding())
         self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
