@@ -27,6 +27,11 @@ from .libsndfile import _lib
 
 from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
 
+def _fsencode(filename) :
+    if type(filename) == type(u'') :
+        return filename.encode(sys.getfilesystemencoding())
+    return filename # bytes (py3) or str (py2), means already encoded
+
 class Format :
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
@@ -153,12 +158,10 @@ class WaveWriter(object) :
                 channels = channels,
                 format = format
             )
-        if type(filename) == type(u'') :
-            filename = filename.encode(sys.getfilesystemencoding())
-        self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_WRITE, self._info)
+        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
-                filename, _lib.sf_error_number(_lib.sf_error(self._sndfile))))
+                filename, _lib.sf_error_number(_lib.sf_error(self._sndfile)).decode('utf8')))
         assert self._sndfile, "Null sndfile handle but no error status"
         self._metadata = WaveMetadata(self._sndfile)
 
@@ -204,9 +207,7 @@ class WaveReader(object) :
                 channels = channels,
                 format = format
             )
-        if type(filename) == type(u'') :
-            filename = filename.encode(sys.getfilesystemencoding())
-        self._sndfile = _lib.sf_open(filename, OPEN_MODES.SFM_READ, self._info)
+        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
                 filename, _lib.sf_error_number(_lib.sf_error(self._sndfile))))
