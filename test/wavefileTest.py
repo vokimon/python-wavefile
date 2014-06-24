@@ -305,6 +305,19 @@ class LibSndfileTest(unittest.TestCase) :
 		self.assertEqual(4, i)
 
 
+	def test_write_unicodeFilename(self) :
+		data = self.fourSinusoids(samples=400)
+		self.writeWav(u"file€.wav", data)
+
+		self.assertTrue(u"file€.wav" in os.listdir(u'.'))
+
+	def test_write_decodedFilenames(self) :
+		data = self.fourSinusoids(samples=400)
+		encoded = u"file€.wav".encode(sys.getfilesystemencoding())
+		self.writeWav(encoded, data)
+
+		self.assertTrue(u"file€.wav" in os.listdir(u'.'))
+
 
 
 if __name__ == '__main__' :
