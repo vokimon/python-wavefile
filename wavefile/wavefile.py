@@ -27,10 +27,16 @@ from .libsndfile import _lib
 
 from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
 
+_tagencoding = 'utf8' # TODO: This is wrong, this info should be provided by the audio file
+_errorencoding = 'utf8' # ascii would be enough but utf8 is wider
+
 def _fsencode(filename) :
     if type(filename) == type(u'') :
         return filename.encode(sys.getfilesystemencoding())
     return filename # bytes (py3) or str (py2), means already encoded
+
+def _sferrormessage(code) :
+    return _lib.sf_error_number(code).decode(_errorencoding)
 
 class Format :
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
@@ -133,17 +139,19 @@ class WaveMetadata(object) :
         if name not in self.strings :
             raise AttributeError(name)
         stringid = self.strings.index(name)+1
-        return _lib.sf_get_string(self._sndfile, stringid)
+        value = _lib.sf_get_string(self._sndfile, stringid)
+        if value is None: return None
+        return value.decode(_tagencoding)
 
     def __setattr__(self, name, value) :
         if name not in self.strings :
             return object.__setattr__(self, name, value)
 
         stringid = self.strings.index(name)+1
-        error = _lib.sf_set_string(self._sndfile, stringid, value)
+        error = _lib.sf_set_string(self._sndfile, stringid, value.encode(_tagencoding))
         if error : print(ValueError(
             name,
-            error, _lib.sf_error_number(error)))
+            error, _sferrormessage(error)))
 
 class WaveWriter(object) :
     def __init__(self,
@@ -161,7 +169,7 @@ class WaveWriter(object) :
         self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
-                filename, _lib.sf_error_number(_lib.sf_error(self._sndfile)).decode('utf8')))
+                filename, _sferrormessage(_lib.sf_error(self._sndfile))))
         assert self._sndfile, "Null sndfile handle but no error status"
         self._metadata = WaveMetadata(self._sndfile)
 
@@ -210,7 +218,7 @@ class WaveReader(object) :
         self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
-                filename, _lib.sf_error_number(_lib.sf_error(self._sndfile))))
+                filename, _sferrormessage(_lib.sf_error(self._sndfile))))
         assert self._sndfile, "Null sndfile handle but no error status"
         self._metadata = WaveMetadata(self._sndfile)
 
