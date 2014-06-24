@@ -87,7 +87,7 @@ class LibSndfileTest(unittest.TestCase) :
 		try :
 			r = wavefile.WaveReader("notexisting.wav")
 			self.fail("Exception expected")
-		except IOError, e :
+		except IOError as e :
 			self.assertEqual( (
 				"Error opening 'notexisting.wav': System error.",
 			), e.args)
@@ -97,7 +97,7 @@ class LibSndfileTest(unittest.TestCase) :
 		try :
 			r = wavefile.WaveReader("badfile.wav")
 			self.fail("Exception expected")
-		except IOError, e :
+		except IOError as e :
 			self.assertEqual( (
 				"Error opening 'badfile.wav': File contains data in an unknown format.",
 			), e.args)
@@ -106,7 +106,7 @@ class LibSndfileTest(unittest.TestCase) :
 		try :
 			w = wavefile.WaveWriter("/badpath/file.wav")
 			self.fail("Exception expected")
-		except IOError, e :
+		except IOError as e :
 			self.assertEqual( (
 				"Error opening '/badpath/file.wav': System error.",
 			), e.args)
@@ -197,7 +197,7 @@ class LibSndfileTest(unittest.TestCase) :
 		try :
 			self.assertEqual(None, r.metadata.illegalAttribute)
 			self.fail("Exception expected")
-		except AttributeError, e :
+		except AttributeError as e :
 			self.assertEqual( (
 				"illegalAttribute",
 			), e.args)
@@ -264,7 +264,7 @@ class LibSndfileTest(unittest.TestCase) :
 				readdata = np.zeros((4, 1000), np.float32)
 				size = r.read(readdata)
 				self.fail("Exception expedted")
-			except AssertionError, e :
+			except AssertionError as e :
 				self.assertEqual(
 					("Buffer storage be column-major order. Consider using buffer(size)",),
 					e.args
@@ -278,7 +278,7 @@ class LibSndfileTest(unittest.TestCase) :
 				readdata = np.zeros((2, 1000), np.float32, order='F')
 				size = r.read(readdata)
 				self.fail("Exception expedted")
-			except Exception, e :
+			except Exception as e :
 				self.assertEqual(
 					("Buffer has room for 2 channels, wave file has 4 channels",),
 					e.args
