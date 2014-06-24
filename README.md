@@ -163,15 +163,15 @@ So this is a summary of what I found, just in case it is useful to anyone.
 - Standard 'wave' module:
 	- http://docs.python.org/library/wave.html
 	- I think this is the main reason why there are many
-	- wrappers around. The standard module to do wave file
-	- loading is crap.
-
+	  wrappers around. The standard module to do wave file
+	  loading is crap.
 	- Based on sndfile but it just writes .wav files.
 	- It lacks support for floating point samples, patch provided
 	  but ignored see http://bugs.python.org/issue1144504
 	- unreadable getX() methods instead of properties.
 	- no numpy integration
-	- no whole file shortcuts
+	- generators, context managers... what?
+	- no whole-file shortcuts provided
 
 - scikits.audiolab
 	- git clone https://github.com/cournape/audiolab
@@ -179,7 +179,7 @@ So this is a summary of what I found, just in case it is useful to anyone.
 	- Dual interface: matlab like and OO
 	- Property accessors to samplerate...
 	- Numpy integration
-	- Inplace processing?
+	- Inplace processing
 	- Not in Ubuntu
 	- Within a big library
 
