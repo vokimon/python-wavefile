@@ -1,28 +1,44 @@
 python-wavefile
 ===============
 
-'wavefile' python module to read and write audio files.
-It is a pythonic wrapper to the sndfile library featuring:
-* Attribute access to format, channels, length, sample rate...
-* Numpy interface using in place arrays (optimal for block processing)
-* Works as context manager
-* Different objects for reading and writing (no modes, consistent interface)
-* Shortened constants accessing for formats and the like
-* Matlab like whole file interface (not recommended but convenient)
+Pythonic libsndfile wrapper to read and write audio files.
+
+Features:
+
+* Attribute access for format, channels, length, sample rate...
+* Numpy interface using in-place arrays (optimal for block processing)
+* Real multichannel (not just mono/stereo)
+* Separate classes for reading and writing, so that available operations are consistent with the mode.
+* Writer and reader objects work as context managers for [RAII idiom](http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization)
+* Shortened constant names for formats (Using scopes instead of prefixes)
+* Matlab like whole-file interface (not recommended in production code but quite convenient for quick scripting)
+* No module compilation required (wraps the dll using ctypes)
+* Works both for Python3 >= 3.3 and Python2 >= 2.6
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
 
 TODO:
+
 * Handling properly different physical numpy layouts: use a view, assert or reshape
-* sndfile command interface
+* Exposing sndfile command API
 * Seeking
 * Use file name extension to deduce main format, if not specified
-* Use main format to deduce subformat if not specified
-* Providing strings for formats
+* Use main format to deduce subformat, if not specified
+* Separate Formats scope into Formats, Subformats and Endianess
+* Expose descriptive strings for formats
+* Handling properly unicode in text strings (now considers them UTF-8, which is not always true)
 
 Installation
 ------------
+
+### Using PyPi
+
+```bash
+pypi-install wavefile
+```
+
+### From sources
 
 A setup.py script is provided so the common procedure for
 installing python packages in you platfrom will work.
@@ -185,13 +201,30 @@ So this is a summary of what I found, just in case it is useful to anyone.
 
 - libsndfilectypes
 	- http://code.google.com/p/pyzic/wiki/LibSndFilectypes
-	- ctypes based wrapper
-	- No compilation required
+	- ctypes based wrapper: no compilation required
 	- numpy supported
 	- Windows only setup (fixable)
 	- Long access to constants
 	- Not inplace read (creates an array every time)
 
+
+python-wavefile reuses most of the libsndfilectypes ctypes wrapper,
+as not requiring module compilation was seen as a good point.
+A pythonic layer was added on the top of it.
+
+
+
+Version history
+---------------
+
+### 1.1
+
+- Python 3 support
+- Support for unicode filenames
+
+### 1.0
+
+- First version
 
 
 
