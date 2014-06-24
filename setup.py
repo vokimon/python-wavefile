@@ -17,7 +17,7 @@ https://github.com/vokimon/python-wavefile
 
 setup(
 	name = "wavefile",
-	version = "1.1~git",
+	version = "1.1",
 	description = "Pythonic wave file reader and writer",
 	author = "David Garcia Garzon",
 	author_email = "voki@canvoki.net",
@@ -33,6 +33,7 @@ setup(
 	classifiers = [
 		'Programming Language :: Python',
 		'Programming Language :: Python :: 2',
+		'Programming Language :: Python :: 3',
 		'Topic :: Multimedia',
 		'Topic :: Scientific/Engineering',
 		'Topic :: Software Development :: Libraries :: Python Modules',
