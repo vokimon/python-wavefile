@@ -11,18 +11,22 @@ is implemented with some helper methods.
 
 Requires numpy and ctypes. Tested under windows only.
 """
+from __future__ import print_function
+
+def _die(message) :
+    import sys
+    print("this module requires ctypes", file=sys.stderr)
+    sys.exit(-1)
 
 import sys
 try:
     import ctypes as ct
 except ImportError:
-    print("this module requires ctypes")
-    sys.exit(-1)
+    _die("this module requires ctypes")
 try:
     import numpy as np
 except ImportError:
-    print("this module requires numpy")
-    sys.exit(-1)
+    _die("this module requires numpy")
 
 if sys.platform == "win32" :
     dllName = 'libsndfile-1'
@@ -47,9 +51,7 @@ except:
         dllPath = os.path.dirname(os.path.abspath(__file__))
         _lib = ct.CDLL(os.path.join(dllPath, dllName))
     except:
-        import sys
-        print("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
-        sys.exit(-1)
+        _die("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
 
 _lib.sf_version_string.restype = ct.c_char_p
 _lib.sf_version_string.argtypes = None
@@ -264,6 +266,7 @@ class SEEK_MODES():
     SEEK_CUR = 1
     SEEK_END = 2
 
+# deprecated (Code kept as reference of some functionalities not yet implemented in python-wavefile)
 class SndFile(object):
     """ Main Class of the wrapper, provides easy access to audio file contents """
 
