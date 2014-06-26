@@ -60,8 +60,10 @@ Examples
 --------
 
 ### Writting example
+
 ```python
 from wavefile import WaveWriter, Format
+import numpy as np
 
 with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 	w.metadata.title = "Some Noise"
@@ -75,6 +77,7 @@ with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 ```
 
 ### Playback example (using pyaudio)
+
 ```python
 import pyaudio, sys
 from wavefile import WaveReader
@@ -157,7 +160,7 @@ and you have to slice to the actual ```nframes``` because
 the last block usually does not have the size you asked for.
 ```read_iter``` simplifies the code by transparently
 allocating the data block for you, reusing it for each block
-and slicing it as you get the data.
+and slicing it when the last incomplete block arrives.
 
 
 Existing alternatives (what i like and dislike)
