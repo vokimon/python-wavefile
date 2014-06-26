@@ -61,6 +61,8 @@ Examples
 
 ### Writting example
 ```python
+from wavefile import WaveWriter, Format
+
 with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 	w.metadata.title = "Some Noise"
 	w.metadata.artist = "The Artists"
@@ -75,6 +77,8 @@ with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
 ### Playback example (using pyaudio)
 ```python
 import pyaudio, sys
+from wavefile import WaveReader
+
 p = pyaudio.PyAudio()
 with WaveReader(sys.argv[1]) as r :
 
@@ -105,6 +109,9 @@ with WaveReader(sys.argv[1]) as r :
 ### Processing example
 
 ```python
+import sys
+from wavefile import WaveReader, WaveWriter
+
 with WaveReader(sys.argv[1]) as r :
 	with WaveWriter(
 			'output.wav',
@@ -124,6 +131,9 @@ you can still use the read function,
 which is closer to the C one.
 
 ```python
+import sys, numpy as np
+from wavefile import WaveReader, WaveWriter
+
 with WaveReader(sys.argv[1]) as r :
 	with WaveWriter(
 			'output.wav',
