@@ -218,9 +218,11 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
-### 1.2 (devel)
+### 1.2
 
 - Seek implemented
+- Removed some error handling that aborted program execution
+- Removed alien reference code in 'other' folder
 
 ### 1.1
 
