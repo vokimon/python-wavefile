@@ -3,7 +3,8 @@ python-wavefile
 
 Pythonic libsndfile wrapper to read and write audio files.
 
-Features:
+Features
+--------
 
 * Attribute access for format, channels, length, sample rate...
 * Numpy interface using in-place arrays (optimal for block processing)
@@ -18,16 +19,16 @@ Features:
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
 
-TODO:
+Wish list
+---------
 
-* Handling properly different physical numpy layouts: use a view, assert or reshape
-* Exposing sndfile command API
-* Seeking
 * Use file name extension to deduce main format, if not specified
 * Use main format to deduce subformat, if not specified
 * Separate Formats scope into Formats, Subformats and Endianess
 * Expose descriptive strings for formats
+* Exposing sndfile command API
 * Handling properly unicode in text strings (now considers them UTF-8, which is not always true)
+* Handling properly different physical numpy layouts: use a view, assert or reshape
 
 Installation
 ------------
@@ -216,6 +217,10 @@ A pythonic layer was added on the top of it.
 
 Version history
 ---------------
+
+### 1.2 (devel)
+
+- Seek implemented
 
 ### 1.1
 

@@ -260,6 +260,7 @@ class OPEN_MODES():
     SFM_WRITE = 0x20
     SFM_RDWR  = 0x30
 
+# deprecated
 class SEEK_MODES():
     #stdio.h :
     SEEK_SET = 0

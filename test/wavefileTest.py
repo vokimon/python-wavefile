@@ -66,6 +66,9 @@ class LibSndfileTest(unittest.TestCase) :
 	def sinusoid(self, samples=400, f=440, samplerate=44100) :
 		return np.sin( np.linspace(0, 2*np.pi*f*samples/samplerate, samples))[:,np.newaxis]
 
+	def counter(self, samples=400) :
+		return np.arange(samples)[:,np.newaxis].T*1.0
+
 	def channels(self, *args) :
 		return np.hstack(args).T
 
@@ -318,7 +321,115 @@ class LibSndfileTest(unittest.TestCase) :
 
 		self.assertTrue(u"file€.wav" in os.listdir(u'.'))
 
+	def test_counterHelper(self) :
+		blockSize = 10
+		data = self.counter(samples=400)
+		self.writeWav("file.wav", data)
+		firstSamples = []
+		with wavefile.WaveReader("file.wav") as r :
+			for i, readdata in enumerate(r.read_iter(blockSize)) :
+				firstSample = int(round(readdata[0][0]))
+				firstSamples.append(firstSample)
+		self.assertEqual(list(range(0,400,10)), firstSamples)
 
+	def seekTestHelper(self, frames, whence, expectedFrame, expectedSeq) :
+		"""After reading the frames block starting at 40,
+		do a seek of 'frames' frames relative to the 'whence'
+		and check that seek returns expectedFrame, and that the final
+		sequence is 'expectedSeq' """
+
+		blockSize = 10
+		data = self.counter(samples=100)
+		self.writeWav("file.wav", data)
+		firstSamples = []
+		with wavefile.WaveReader("file.wav") as r :
+			for i, readdata in enumerate(r.read_iter(blockSize)) :
+				firstSample = int(round(readdata[0][0]))
+				if firstSample == 40 and 40 not in firstSamples :
+					pos = r.seek(frames, whence)
+					self.assertEqual(expectedFrame, pos)
+				firstSamples.append(firstSample)
+		self.assertEqual(expectedSeq, firstSamples)
+
+	def test_seek_absoluteForward(self) :
+		self.seekTestHelper(
+			55, wavefile.Seek.SET, 55,
+			list(range(0,50,10))+list(range(55,100,10)))
+
+	def test_seek_absoluteBackward(self) :
+		self.seekTestHelper(
+			35, wavefile.Seek.SET, 35,
+			list(range(0,50,10))+list(range(35,100,10)))
+
+	def test_seek_absoluteNegative(self) :
+		self.seekTestHelper(
+			-35, wavefile.Seek.SET, -1,
+			list(range(0,100,10)))
+
+	def test_seek_absoluteToTheEnd_nextReadJustFinishes(self) :
+		self.seekTestHelper(
+			100, wavefile.Seek.SET, 100,
+			list(range(0,50,10)))
+
+	def test_seek_absoluteBeyondEnd(self) :
+		self.seekTestHelper(
+			101, wavefile.Seek.SET, -1,
+			list(range(0,100,10)))
+
+	def test_seek_absoluteAtStart(self) :
+		self.seekTestHelper(
+			0, wavefile.Seek.SET, 0,
+			list(range(0,50,10))+list(range(0,100,10)))
+
+	def test_seek_relativeForward(self) :
+		self.seekTestHelper(
+			+32, wavefile.Seek.CUR, 82,
+			list(range(0,50,10))+list(range(82,100,10)))
+
+	def test_seek_relativeBackward(self) :
+		self.seekTestHelper(
+			-32, wavefile.Seek.CUR, 18,
+			list(range(0,50,10))+list(range(18,100,10)))
+
+	def test_seek_relativeBackwardTooMuch(self) :
+		self.seekTestHelper(
+			-51, wavefile.Seek.CUR, -1,
+			list(range(0,100,10)))
+
+	def test_seek_relativeForwardTooMuch(self) :
+		self.seekTestHelper(
+			+51, wavefile.Seek.CUR, -1,
+			list(range(0,100,10)))
+
+	def test_seek_relativeAtEnd(self) :
+		self.seekTestHelper(
+			+50, wavefile.Seek.CUR, 100,
+			list(range(0,50,10)))
+
+	def test_seek_fromEndBack(self) :
+		self.seekTestHelper(
+			-20, wavefile.Seek.END, 80,
+			list(range(0,50,10))+list(range(80,100,10)))
+
+	def test_seek_fromEndToTheBegining(self) :
+		self.seekTestHelper(
+			-100, wavefile.Seek.END, 0,
+			list(range(0,50,10))+list(range(0,100,10)))
+
+	def test_seek_fromEndBackTooMuch(self) :
+		self.seekTestHelper(
+			-101, wavefile.Seek.END, -1,
+			list(range(0,100,10)))
+
+	def test_seek_fromEndStay(self) :
+		self.seekTestHelper(
+			0, wavefile.Seek.END, 100,
+			list(range(0,50,10)))
+
+	def test_seek_fromEndForwardFails(self) :
+		self.seekTestHelper(
+			1, wavefile.Seek.END, -1,
+			list(range(0,100,10)))
 
 if __name__ == '__main__' :
 	import sys

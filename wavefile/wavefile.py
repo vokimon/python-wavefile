@@ -110,6 +110,10 @@ class Format :
     TYPEMASK = 0x0FFF0000
     ENDMASK  = 0x30000000
 
+class Seek() :
+    SET = 0 # Relative to the begining of the file
+    CUR = 1 # Relative to the last read frame
+    END = 2 # Relative to the end of the file
 
 
 class WaveMetadata(object) :
@@ -270,14 +274,16 @@ class WaveReader(object) :
             "Buffer storage be column-major order. Consider using buffer(size)"
         if data.dtype==np.float64 :
             return _lib.sf_readf_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), frames)
-        elif data.dtype==np.float32 :
+        if data.dtype==np.float32 :
             return _lib.sf_readf_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), frames)
-        elif data.dtype==np.int16 :
+        if data.dtype==np.int16 :
             return _lib.sf_readf_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), frames)
-        elif data.dtype==np.int32 :
+        if data.dtype==np.int32 :
             return _lib.sf_readf_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), frames)
-        else:
-            raise TypeError("Please choose a correct dtype")
+        raise TypeError("Please choose a correct dtype")
+
+    def seek(self, frames, whence=Seek.SET) :
+       return _lib.sf_seek(self._sndfile, frames, whence)
 
 def loadWave(filename) :
     with WaveReader(filename) as r :
