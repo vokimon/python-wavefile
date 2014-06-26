@@ -231,7 +231,7 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
-### 1.3
+### 1.3 (git)
 
 ### 1.2
 
