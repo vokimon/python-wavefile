@@ -431,6 +431,21 @@ class LibSndfileTest(unittest.TestCase) :
 			1, wavefile.Seek.END, -1,
 			list(range(0,100,10)))
 
+	def test_seek_toResetFileReading(self) :
+		blockSize = 10
+		data = self.counter(samples=100)
+		self.writeWav("file.wav", data)
+		firstSamples = []
+		with wavefile.WaveReader("file.wav") as r :
+			for i, readdata in enumerate(r.read_iter(blockSize)) :
+				firstSample = int(round(readdata[0][0]))
+				firstSamples.append(firstSample)
+			pos = r.seek(0, Seek.SET)
+			for i, readdata in enumerate(r.read_iter(blockSize)) :
+				firstSample = int(round(readdata[0][0]))
+				firstSamples.append(firstSample)
+		self.assertEqual(list(range(0,100,10))*2, firstSamples)
+
 if __name__ == '__main__' :
 	import sys
 	sys.exit(unittest.main())
