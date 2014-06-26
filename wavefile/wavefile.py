@@ -27,8 +27,15 @@ from .libsndfile import _lib
 
 from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
 
-_tagencoding = 'utf8' # TODO: This is wrong, this info should be provided by the audio file
-_errorencoding = 'utf8' # ascii would be enough but utf8 is wider
+# Vorbis and Flac use utf8.
+# WAV/AIFF use ascii, but if chars beyond 127 are found,
+# we chose to interpret them as utf8. That migth be a wrong choice.
+# Same for writing, if users sets a non ASCII char in tag,
+# it will be encoded as utf8 which is a non-standard convention of us.
+_tagencoding = 'utf8'
+
+# ascii would be enough for libsndfile error messages but utf8 is wider
+_errorencoding = 'utf8'
 
 def _fsencode(filename) :
     if type(filename) == type(u'') :
@@ -77,27 +84,27 @@ class Format :
     FLOAT      = 0x0006    # 32 bit float data
     DOUBLE     = 0x0007    # 64 bit float data
 
-    ULAW       = 0x0010    # U-Law encoded.
-    ALAW       = 0x0011    # A-Law encoded.
-    IMA_ADPCM  = 0x0012    # IMA ADPCM.
-    MS_ADPCM   = 0x0013    # Microsoft ADPCM.
+    ULAW       = 0x0010    # U-Law encoded
+    ALAW       = 0x0011    # A-Law encoded
+    IMA_ADPCM  = 0x0012    # IMA ADPCM
+    MS_ADPCM   = 0x0013    # Microsoft ADPCM
 
-    GSM610     = 0x0020    # GSM 6.10 encoding.
+    GSM610     = 0x0020    # GSM 6.10 encoding
     VOX_ADPCM  = 0x0021    # OKI / Dialogix ADPCM
 
-    G721_32    = 0x0030    # 32kbs G721 ADPCM encoding.
-    G723_24    = 0x0031    # 24kbs G723 ADPCM encoding.
-    G723_40    = 0x0032    # 40kbs G723 ADPCM encoding.
+    G721_32    = 0x0030    # 32kbs G721 ADPCM encoding
+    G723_24    = 0x0031    # 24kbs G723 ADPCM encoding
+    G723_40    = 0x0032    # 40kbs G723 ADPCM encoding
 
-    DWVW_12    = 0x0040    # 12 bit Delta Width Variable Word encoding.
-    DWVW_16    = 0x0041    # 16 bit Delta Width Variable Word encoding.
-    DWVW_24    = 0x0042    # 24 bit Delta Width Variable Word encoding.
-    DWVW_N     = 0x0043    # N bit Delta Width Variable Word encoding.
+    DWVW_12    = 0x0040    # 12 bit Delta Width Variable Word encoding
+    DWVW_16    = 0x0041    # 16 bit Delta Width Variable Word encoding
+    DWVW_24    = 0x0042    # 24 bit Delta Width Variable Word encoding
+    DWVW_N     = 0x0043    # N bit Delta Width Variable Word encoding
 
     DPCM_8     = 0x0050    # 8 bit differential PCM (XI only)
     DPCM_16    = 0x0051    # 16 bit differential PCM (XI only)
 
-    VORBIS     = 0x0060    # Xiph Vorbis encoding.
+    VORBIS     = 0x0060    # Xiph Vorbis encoding
 
     # Endian-ness options.
 
