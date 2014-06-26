@@ -11,22 +11,10 @@ is implemented with some helper methods.
 
 Requires numpy and ctypes. Tested under windows only.
 """
-from __future__ import print_function
-
-def _die(message) :
-    import sys
-    print("this module requires ctypes", file=sys.stderr)
-    sys.exit(-1)
 
 import sys
-try:
-    import ctypes as ct
-except ImportError:
-    _die("this module requires ctypes")
-try:
-    import numpy as np
-except ImportError:
-    _die("this module requires numpy")
+import ctypes as ct
+import numpy as np
 
 if sys.platform == "win32" :
     dllName = 'libsndfile-1'
@@ -51,7 +39,7 @@ except:
         dllPath = os.path.dirname(os.path.abspath(__file__))
         _lib = ct.CDLL(os.path.join(dllPath, dllName))
     except:
-        _die("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
+        raise Exception("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
 
 _lib.sf_version_string.restype = ct.c_char_p
 _lib.sf_version_string.argtypes = None
