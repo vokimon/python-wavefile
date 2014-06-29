@@ -295,25 +295,24 @@ class WaveReader(object) :
 def loadWave(filename) :
     with WaveReader(filename) as r :
         blockSize = 512
-        data = np.empty((r.frames, r.channels), dtype=np.float32)
+        data = r.buffer(r.frames)
         fullblocks = r.frames // blockSize
         lastBlockSize = r.frames % blockSize
         for i in range(fullblocks) :
-            readframes = r.read(data[i*blockSize:(i+1)*blockSize,:])
+            readframes = r.read(data[:,i*blockSize:(i+1)*blockSize])
             assert readframes == blockSize
         if lastBlockSize :
-            readframes = r.read(data[fullblocks*blockSize:,:])
+            readframes = r.read(data[:,fullblocks*blockSize:])
             assert readframes == lastBlockSize
         return r.samplerate, data
 
 def saveWave(filename, data, samplerate, verbose=False) :
     if verbose: print("Saving wave file:",filename)
     blockSize = 512
-    frames, channels = data.shape
+    channels, frames = data.shape
     fullblocks = frames // blockSize
     lastBlockSize = frames % blockSize
     with WaveWriter(filename, channels=channels, samplerate=samplerate) as w :
-        assert data.dtype == np.float32
         for i in range(fullblocks) :
             w.write(data[blockSize*i:blockSize*(i+1)])
         if lastBlockSize :

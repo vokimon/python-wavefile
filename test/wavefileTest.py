@@ -446,6 +446,40 @@ class LibSndfileTest(unittest.TestCase) :
 				firstSamples.append(firstSample)
 		self.assertEqual(list(range(0,100,10))*2, firstSamples)
 
+	def test_load(self) :
+		data = self.fourSinusoids(samples=400)
+		self.writeWav("file.wav", data)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data, decimal=7)
+		self.assertEqual(readsamplerate, 44100)
+
+	def test_save(self) :
+		samplerate = 44100
+		data = self.fourSinusoids(samples=400)
+		wavefile.save("file.wav", data, samplerate=samplerate)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data, decimal=7)
+		self.assertEqual(readsamplerate, samplerate)
+
+	def test_save_slice(self) :
+		samplerate = 44100
+		data = self.fourSinusoids(samples=400)
+		data = np.ascontiguousarray(data)
+		wavefile.save("file.wav", data[::2], samplerate=samplerate)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data[::2], decimal=7)
+		self.assertEqual(readsamplerate, samplerate)
+
+	def test_save_asCOrder(self) :
+		samplerate = 44100
+		data = self.fourSinusoids(samples=400)
+		data = np.ascontiguousarray(data)
+		wavefile.save("file.wav", data, samplerate=samplerate)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data, decimal=7)
+		self.assertEqual(readsamplerate, samplerate)
+
+
 if __name__ == '__main__' :
 	import sys
 	sys.exit(unittest.main())
