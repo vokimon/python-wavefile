@@ -234,6 +234,9 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
+### 1.4 (devel)
+
+
 ### 1.3
 
 - Fix: Whole-file interface works again, regression tests added
