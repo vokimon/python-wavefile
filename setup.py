@@ -2,14 +2,23 @@
 from distutils.core import setup
 
 readme = """
-'wavefile' python module to read and write audio files.
-It is a pythonic wrapper to the sndfile library featuring:
-* Attribute access to format, channels, length, sample rate...
-* Numpy interface using in place arrays (optimal for block processing)
-* Works as context manager
-* Different objects for reading and writing (no modes, consistent interface)
-* Shortened constants accessing for formats and the like
-* Matlab like whole file interface (not recommended but convenient)
+Pythonic libsndfile wrapper to read and write audio files.
+
+Features
+--------
+
+- Writer and reader objects are context managers
+- Format, channels, length, sample rate... are accessed as properties as well as text strings
+- Real multichannel (not just mono/stereo)
+- All libsndfile formats supported, floating point encodings by default
+- Numpy based interface
+- Generators for block by block reading
+- Reading reuses the same data block to avoid many data allocations
+- Shortened constant names for formats (Using scopes instead of prefixes)
+- Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
+- Transparent UTF-8 handling for filenames and text strings
+- No module compilation required (wraps the dll using ctypes)
+- Works both for Python3 >= 3.3 and Python2 >= 2.6
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile

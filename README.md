@@ -6,15 +6,18 @@ Pythonic libsndfile wrapper to read and write audio files.
 Features
 --------
 
-* Attribute access for format, channels, length, sample rate...
-* Numpy interface using in-place arrays (optimal for block processing)
-* Real multichannel (not just mono/stereo)
-* Separate classes for reading and writing, so that available operations are consistent with the mode.
-* Writer and reader objects work as context managers for [RAII idiom](http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization)
-* Shortened constant names for formats (Using scopes instead of prefixes)
-* Matlab like whole-file interface (not recommended in production code but quite convenient for quick scripting)
-* No module compilation required (wraps the dll using ctypes)
-* Works both for Python3 >= 3.3 and Python2 >= 2.6
+- Writer and reader objects are context managers
+- Format, channels, length, sample rate... are accessed as properties as well as text strings
+- Real multichannel (not just mono/stereo)
+- All libsndfile formats supported, floating point encodings by default
+- Numpy based interface
+- Generators for block by block reading
+- Reading reuses the same data block to avoid many data allocations
+- Shortened constant names for formats (Using scopes instead of prefixes)
+- Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
+- Transparent UTF-8 handling for filenames and text strings
+- No module compilation required (wraps the dll using ctypes)
+- Works both for Python3 >= 3.3 and Python2 >= 2.6
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
@@ -22,13 +25,13 @@ https://github.com/vokimon/python-wavefile
 Wish list
 ---------
 
-* Use file name extension to deduce main format, if not specified
-* Use main format to deduce subformat, if not specified
-* Separate Formats scope into Formats, Subformats and Endianess
-* Expose descriptive strings for formats
+* Smart format chooser
+	* Use file name extension to deduce main format, if not specified
+	* Use main format to deduce subformat, if not specified
+* Format enumeration
+	* Separate Formats scope into Formats, Subformats and Endianess
+	* Expose descriptive strings for formats at the API
 * Exposing sndfile command API
-* Handling properly unicode in text strings (now considers them UTF-8, which is not always true)
-* Handling properly different physical numpy layouts: use a view, assert or reshape
 
 Installation
 ------------
