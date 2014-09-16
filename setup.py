@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from distutils.core import setup
+from setuptools import setup
 
 readme = """
 Pythonic libsndfile wrapper to read and write audio files.
@@ -39,6 +39,10 @@ setup(
 	scripts=[
 #		'audio.py',
 		],
+	install_requires=[
+		'numpy',
+	],
+	test_suite='test',
 	classifiers = [
 		'Programming Language :: Python',
 		'Programming Language :: Python :: 2',
