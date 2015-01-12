@@ -219,6 +219,15 @@ def __init_lib_methods():
     _lib.sf_read_int.restype = sf_count_t
     _lib.sf_read_int.argtypes = [SNDFILE, ct.POINTER(ct.c_int), sf_count_t]
 
+    _lib.sf_readf_float.restype = sf_count_t
+    _lib.sf_readf_float.argtypes = [SNDFILE, ct.POINTER(ct.c_float), sf_count_t]
+    _lib.sf_readf_double.restype = sf_count_t
+    _lib.sf_readf_double.argtypes = [SNDFILE, ct.POINTER(ct.c_double), sf_count_t]
+    _lib.sf_readf_short.restype = sf_count_t
+    _lib.sf_readf_short.argtypes = [SNDFILE, ct.POINTER(ct.c_short), sf_count_t]
+    _lib.sf_readf_int.restype = sf_count_t
+    _lib.sf_readf_int.argtypes = [SNDFILE, ct.POINTER(ct.c_int), sf_count_t]
+
     #sf_count_t    sf_write_raw     (SNDFILE *sndfile, const void *ptr, sf_count_t bytes) ;
     _lib.sf_write_raw.restype = sf_count_t
     _lib.sf_write_raw.argtypes = [SNDFILE, ct.c_void_p, sf_count_t]
@@ -240,6 +249,15 @@ def __init_lib_methods():
     _lib.sf_write_float.argtypes = [SNDFILE, ct.POINTER(ct.c_float), sf_count_t]
     _lib.sf_write_double.restype = sf_count_t
     _lib.sf_write_double.argtypes = [SNDFILE, ct.POINTER(ct.c_double), sf_count_t]
+
+    _lib.sf_writef_int.restype = sf_count_t
+    _lib.sf_writef_int.argtypes = [SNDFILE, ct.POINTER(ct.c_int), sf_count_t]
+    _lib.sf_writef_short.restype = sf_count_t
+    _lib.sf_writef_short.argtypes = [SNDFILE, ct.POINTER(ct.c_short), sf_count_t]
+    _lib.sf_writef_float.restype = sf_count_t
+    _lib.sf_writef_float.argtypes = [SNDFILE, ct.POINTER(ct.c_float), sf_count_t]
+    _lib.sf_writef_double.restype = sf_count_t
+    _lib.sf_writef_double.argtypes = [SNDFILE, ct.POINTER(ct.c_double), sf_count_t]
 
 __init_lib_methods()
 
