@@ -17,7 +17,7 @@ Features
 - Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
 - Transparent UTF-8 handling for filenames and text strings
 - No module compilation required (wraps the dll using ctypes)
-- Works both for Python3 >= 3.3 and Python2 >= 2.6
+- Compatible with Python >= 2.6 including Python3
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
@@ -236,10 +236,15 @@ Version history
 
 ### 1.4 (devel)
 
+- Works with Python 3.0 to 3.2, patch from j3ffhubb
+- Ctypes backend clean up, removing lot of legacy code
+- Tests can be run from setup
 
 ### 1.3
 
 - Fix: Whole-file interface works again, regression tests added
+- Added a helper script to run tests in Py2 and Py3
+- Using utf8 for tags
 
 ### 1.2
 

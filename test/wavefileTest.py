@@ -482,7 +482,9 @@ class LibSndfileTest(unittest.TestCase) :
 
 if __name__ == '__main__' :
 	import sys
-	sys.exit(unittest.main())
+	Runner = unittest.TextTestRunner
+	from colour_runner.runner import ColourTextTestRunner as Runner
+	sys.exit(unittest.main(), testRunner=Runner())
 
 
 
