@@ -41,6 +41,8 @@ setup(
 		],
 	install_requires=[
 		'numpy',
+		'ctypes',
+		'PyAudio', # tests and examples
 	],
 	test_suite='test',
 	classifiers = [
