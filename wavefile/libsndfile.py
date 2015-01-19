@@ -20,6 +20,8 @@ if sys.platform == "win32" :
     dllName = 'libsndfile-1'
 elif "linux" in sys.platform:
     dllName = 'libsndfile.so'
+elif "cygwin" in sys.platform:
+    dllName = 'libsndfile-1.dll'
 else :
     dllName = 'libsndfile'
 
