@@ -9,7 +9,7 @@ python:
 script: ./setup.py tests
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -y libsndfile1 libportaudio-dev
+- sudo apt-get install -y libsndfile1 portaudio19-dev
 install:
 - pip install --allow-external PyAudio --allow-unverified PyAudio PyAudio
 - pip install -r requirements.txt
