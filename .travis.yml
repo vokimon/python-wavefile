@@ -6,7 +6,7 @@ python:
 - "3.2"
 - "3.3"
 - "3.4"
-script: ./setup.py tests
+script: ./setup.py test
 before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -y libsndfile1 portaudio19-dev
