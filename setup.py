@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
-
+import sys
 readme = """
 Pythonic libsndfile wrapper to read and write audio files.
 
@@ -41,9 +41,10 @@ setup(
 		],
 	install_requires=[
 		'numpy',
-		'ctypes',
 		'PyAudio', # tests and examples
-	],
+	]+ [
+		'ctypes',
+	] if sys.version_info[0] == 2 else [],
 	test_suite='test',
 	classifiers = [
 		'Programming Language :: Python',
