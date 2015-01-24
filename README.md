@@ -1,6 +1,8 @@
 python-wavefile
 ===============
 
+[![Build Status](https://travis-ci.org/vokimon/python-wavefile.png?branch=master)](https://travis-ci.org/vokimon/wavefile)
+
 Pythonic libsndfile wrapper to read and write audio files.
 
 Features
