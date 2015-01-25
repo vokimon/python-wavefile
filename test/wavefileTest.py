@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from __future__ import unicode_literals
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 
@@ -310,16 +311,16 @@ class LibSndfileTest(unittest.TestCase) :
 
 	def test_write_unicodeFilename(self) :
 		data = self.fourSinusoids(samples=400)
-		self.writeWav(u"file€.wav", data)
+		self.writeWav("file€.wav", data)
 
-		self.assertTrue(u"file€.wav" in os.listdir(u'.'))
+		self.assertTrue("file€.wav" in os.listdir('.'))
 
 	def test_write_decodedFilenames(self) :
 		data = self.fourSinusoids(samples=400)
-		encoded = u"file€.wav".encode(sys.getfilesystemencoding())
+		encoded = "file€.wav".encode(sys.getfilesystemencoding())
 		self.writeWav(encoded, data)
 
-		self.assertTrue(u"file€.wav" in os.listdir(u'.'))
+		self.assertTrue("file€.wav" in os.listdir('.'))
 
 	def test_counterHelper(self) :
 		blockSize = 10
