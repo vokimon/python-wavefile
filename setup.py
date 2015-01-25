@@ -18,7 +18,7 @@ Features
 - Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
 - Transparent UTF-8 handling for filenames and text strings
 - No module compilation required (wraps the dll using ctypes)
-- Works both for Python3 >= 3.3 and Python2 >= 2.6
+- Works both for Python3 >= 3.2 and Python2 >= 2.6
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
@@ -26,7 +26,7 @@ https://github.com/vokimon/python-wavefile
 
 setup(
 	name = "wavefile",
-	version = "1.4~git",
+	version = "1.4",
 	description = "Pythonic wave file reader and writer",
 	author = "David Garcia Garzon",
 	author_email = "voki@canvoki.net",

@@ -38,6 +38,9 @@ Wish list
 Installation
 ------------
 
+[![Latest Version](https://pypip.in/version/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
+[![Supported Python Versions](https://pypip.in/py_versions/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
+
 ### Using PyPi
 
 ```bash
@@ -236,11 +239,15 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
-### 1.4 (devel)
+### 1.4
 
 - Works with Python 3.0 to 3.2, patch from j3ffhubb
+- Works on cygwin, patch from j3ffhubb
+- Added readf/writef functions, patch from Tim Langlois
 - Ctypes backend clean up, removing lot of legacy code
+- Using libsndfile soname (runtime packages) instead of link name (development)
 - Tests can be run from setup
+- Travis support
 
 ### 1.3
 
