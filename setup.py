@@ -26,7 +26,7 @@ https://github.com/vokimon/python-wavefile
 
 setup(
 	name = "wavefile",
-	version = "1.4",
+	version = "1.5~git",
 	description = "Pythonic wave file reader and writer",
 	author = "David Garcia Garzon",
 	author_email = "voki@canvoki.net",
