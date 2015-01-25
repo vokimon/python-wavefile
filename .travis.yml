@@ -5,7 +5,7 @@ python:
 - "3.2"
 - "3.3"
 - "3.4"
-script: ./setup.py test
+script: coverage run --source wavefile ./setup.py test
 before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -y libsndfile1 portaudio19-dev
@@ -13,5 +13,8 @@ install:
 - pip install --allow-external PyAudio --allow-unverified PyAudio PyAudio
 - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then pip install --allow-external ctypes --allow-unverified ctypes ctypes; fi
 - pip install numpy
+- pip install coveralls
+after_success:
+- coveralls
 
 
