@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 """
 Copyright 2012 David García Garzón
 
@@ -37,12 +39,18 @@ _tagencoding = 'utf8'
 # ascii would be enough for libsndfile error messages but utf8 is wider
 _errorencoding = 'utf8'
 
-def _fsencode(filename) :
-    if type(filename) == (unicode if sys.version_info< (3,0) else str) :
+def _fsencode(filename):
+    """Returns the filename encoded as the filesystem requires.
+    If the filename is bytes (or old plain strings in Py2),
+    the filename is considered already decoded and it is returned
+    as is.
+    """
+    if type(filename) == type(''):
         return filename.encode(sys.getfilesystemencoding())
     return filename # bytes (py3) or str (py2), means already encoded
 
-def _sferrormessage(code) :
+def _sferrormessage(code):
+    """Returns the sndfile error message for the code in proper unicode"""
     return _lib.sf_error_number(code).decode(_errorencoding)
 
 class Format :
