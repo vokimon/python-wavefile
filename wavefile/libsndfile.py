@@ -16,13 +16,15 @@ import sys
 import ctypes as ct
 import numpy as np
 
-if sys.platform == "win32" :
+if sys.platform == "win32":
     dllName = 'libsndfile-1'
 elif "linux" in sys.platform:
     dllName = 'libsndfile.so.1'
 elif "cygwin" in sys.platform:
     dllName = 'libsndfile-1.dll'
-else :
+elif "darwin" in sys.platform:
+    dllName = 'libsndfile.dylib'
+else:
     dllName = 'libsndfile'
 
 _lib=None
