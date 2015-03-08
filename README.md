@@ -246,6 +246,8 @@ Version history
 
 ### 1.5 (git)
 
+- MacOSX support
+
 ### 1.4
 
 - Works with Python 3.0 to 3.2, patch from j3ffhubb
