@@ -42,9 +42,7 @@ setup(
 	install_requires=[
 		'numpy',
 		'PyAudio', # tests and examples
-	]+ [
-		'ctypes',
-	] if sys.version_info[0] == 2 else [],
+	],
 	test_suite='test',
 	classifiers = [
 		'Programming Language :: Python',
