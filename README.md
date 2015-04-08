@@ -46,6 +46,18 @@ Installation
 [![Latest Version](https://pypip.in/version/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
 [![Supported Python Versions](https://pypip.in/py_versions/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
 
+### Binary dependencies
+
+Python dependencies are managed by the setup.py script.
+But still there are a couple of C/C++ dependencies.
+In Debian/Ubuntu, you can install them by casting:
+
+```bash
+sudo apt-get install -y libsndfile1 portaudio19-dev
+```
+PortAudio and its Python wrapper, PyAudio, are just required in order to run the examples.
+
+
 ### Using PyPi
 
 ```bash
@@ -58,11 +70,11 @@ A setup.py script is provided so the common procedure for
 installing python packages in you platfrom will work.
 For example in Debian/Ubuntu systems:
 ```bash
-sudo python setup install
+sudo python setup.py install
 ```
 And for per-user installation:
 ```bash
-python setup install --home=~/local
+python setup.py install --home=~/local
 ```
 provided that you have PTYHON_PATH set properly.
 
