@@ -41,9 +41,12 @@ setup(
 		],
 	install_requires=[
 		'numpy',
-		'PyAudio', # tests and examples
 	],
 	test_suite='test',
+	tests_require='PyAudio',
+	extras_require={
+		"examples":"PyAudio"
+	},
 	classifiers = [
 		'Programming Language :: Python',
 		'Programming Language :: Python :: 2',
