@@ -318,16 +318,16 @@ class LibSndfileTest(unittest.TestCase) :
 	def test_write_unicodeFilename_koreanCodepage(self) :
 		# Should work in windows if your code page is Korean (cp1252) and fail with any other
 		data = self.fourSinusoids(samples=400)
-		self.writeWav("查找問題.wav", data)
+		self.writeWav("언어.wav", data)
 
-		self.assertTrue("查找問題.wav" in os.listdir('.'))
+		self.assertTrue("언어.wav" in os.listdir('.'))
 
 	def test_write_unicodeFilename_multipleCodePage(self) :
 		# Should fail (by now) in windows which ever you code page is
 		data = self.fourSinusoids(samples=400)
-		self.writeWav("查找Языку.wav", data)
+		self.writeWav("语言Языку.wav", data)
 
-		self.assertTrue("查找Языку.wav" in os.listdir(u'.'))
+		self.assertTrue("语言Языку.wav" in os.listdir(u'.'))
 
 	def test_write_decodedFilenames(self) :
 		data = self.fourSinusoids(samples=400)
