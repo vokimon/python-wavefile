@@ -88,14 +88,12 @@ class LibSndfileTest(unittest.TestCase) :
 			)
 
 	def test_reader_withMissingFile(self) :
-		# TODO: Check why the received error has changed
 		try :
 			r = wavefile.WaveReader("notexisting.wav")
 			self.fail("Exception expected")
 		except IOError as e :
 			self.assertEqual( (
-#				"Error opening 'notexisting.wav': System error.",
-				"Error opening 'notexisting.wav': File contains data in an unknown format.",
+				"Error opening 'notexisting.wav': System error.",
 			), e.args)
 
 	def test_reader_withWrongfile(self) :
