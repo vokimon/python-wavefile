@@ -259,6 +259,8 @@ Version history
 ### 1.5 (git)
 
 - MacOSX support
+- Fix: Genere string accesses the proper id (closes #18)
+- PyAudio an optional dependency (just used by examples)
 
 ### 1.4
 
