@@ -114,6 +114,11 @@ class FILE_FORMATS():
 
     SF_FORMAT_VORBIS     = 0x0060    # Xiph Vorbis encoding.
 
+    SF_FORMAT_ALAC_16    = 0x0070    # Apple Lossless Audio Codec (16 bit)
+    SF_FORMAT_ALAC_20    = 0x0071    # Apple Lossless Audio Codec (20 bit)
+    SF_FORMAT_ALAC_24    = 0x0072    # Apple Lossless Audio Codec (24 bit)
+    SF_FORMAT_ALAC_32    = 0x0073    # Apple Lossless Audio Codec (32 bit)
+
     # Endian-ness options.
 
     SF_ENDIAN_FILE       = 0x00000000    # Default file endian-ness.
@@ -257,10 +262,19 @@ class COMMANDS:
     SFC_WAVEX_SET_AMBISONIC        = 0x1200
     SFC_WAVEX_GET_AMBISONIC        = 0x1201
 
+    # RF64, if <4Gb, on save, use regular RIFF/WAV
+    SFC_RF64_AUTO_DOWNGRADE        = 0x1210
+
     SFC_SET_VBR_ENCODING_QUALITY   = 0x1300
+    SFC_SET_COMPRESSION_LEVEL      = 0x1301
+
+    # Cart Chunk support
+    SFC_SET_CART_INFO              = 0x1400
+    SFC_GET_CART_INFO              = 0x1401
 
     # Following commands for testing only.
     SFC_TEST_IEEE_FLOAT_REPLACE    = 0x6001
+
 
     # SFC_SET_ADD_* values are deprecated and will disappear at some
     # time in the future. They are guaranteed to be here up to and
@@ -383,6 +397,13 @@ def __init_lib_methods():
     _lib.sf_writef_float.argtypes = [SNDFILE, ct.POINTER(ct.c_float), sf_count_t]
     _lib.sf_writef_double.restype = sf_count_t
     _lib.sf_writef_double.argtypes = [SNDFILE, ct.POINTER(ct.c_double), sf_count_t]
+
+    if _lib.sf_version_string() != 'libsndfile-1.0.25':
+
+        #int sf_current_byterate (SNDFILE *sndfile) ;
+        _lib.sf_current_byterate.restype = ct.c_int
+        _lib.sf_current_byterate.argtypes = [SNDFILE]
+
 
 __init_lib_methods()
 
