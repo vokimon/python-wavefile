@@ -145,7 +145,7 @@ class WaveMetadata(object) :
         for k in dir(FILE_STRINGS)
         if k.startswith('SF_STR_')
     ))
-    print strings
+
     __slots__ = list(strings.keys()) + [
         '_sndfile',
         ]
