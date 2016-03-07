@@ -190,7 +190,7 @@ class LibSndfileTest(unittest.TestCase) :
 		self.assertEqual(None, r.metadata.album)
 		self.assertEqual(None, r.metadata.license)
 		self.assertEqual(None, r.metadata.tracknumber)
-#		self.assertEqual(None, r.metadata.genre)
+		self.assertEqual(None, r.metadata.genre)
 		r.close()
 
 	def test_metadata_illegalAttribute(self) :
@@ -216,8 +216,6 @@ class LibSndfileTest(unittest.TestCase) :
 		wavefile.save("file.wav", self.input, 44100)
 
 	def test_metadata_set(self) :
-		# TODO: why do the commented out lines fail?
-
 		self.toRemove("file.ogg")
 		w = wavefile.WaveWriter("file.ogg",
 			format=wavefile.Format.OGG|wavefile.Format.VORBIS)
@@ -230,19 +228,58 @@ class LibSndfileTest(unittest.TestCase) :
 		w.metadata.album = 'myalbum'
 		w.metadata.license = 'mylicense'
 		w.metadata.tracknumber = '77'
-#		w.metadata.genre = 'mygenre'
+		w.metadata.genre = 'mygenre'
 		w.close()
 		r = wavefile.WaveReader("file.ogg")
 		self.assertEqual("mytitle", r.metadata.title)
 		self.assertEqual("mycopyright", r.metadata.copyright)
-		self.assertEqual("mysoftware (libsndfile-1.0.25)", r.metadata.software)
+		self.assertEqual("mysoftware ({})".format(
+			wavefile._lib.sf_version_string()
+			), r.metadata.software)
 		self.assertEqual("myartist", r.metadata.artist)
 		self.assertEqual("mycomment", r.metadata.comment)
 		self.assertEqual("mydate", r.metadata.date)
 		self.assertEqual("myalbum", r.metadata.album)
 		self.assertEqual("mylicense", r.metadata.license)
-#		self.assertEqual("77", r.metadata.tracknumber)
-#		self.assertEqual("mygenre", r.metadata.genre)
+		if wavefile._lib.sf_version_string() != 'libsndfile-1.0.25':
+			self.assertEqual("77", r.metadata.tracknumber)
+			self.assertEqual("mygenre", r.metadata.genre)
+		r.close()
+
+	def test_metadata_iter(self) :
+		self.toRemove("file.ogg")
+		w = wavefile.WaveWriter("file.ogg",
+			format=wavefile.Format.OGG|wavefile.Format.VORBIS)
+		w.metadata.title = 'mytitle'
+		w.metadata.copyright = 'mycopyright'
+		w.metadata.software = 'mysoftware'
+		w.metadata.artist = 'myartist'
+		w.metadata.comment = 'mycomment'
+		w.metadata.date = 'mydate'
+		w.metadata.album = 'myalbum'
+		w.metadata.license = 'mylicense'
+		w.metadata.tracknumber = '77'
+		w.metadata.genre = 'mygenre'
+		w.close()
+		r = wavefile.WaveReader("file.ogg")
+		strings = dict(r.metadata)
+		expected = dict(
+			title = 'mytitle',
+			copyright = 'mycopyright',
+			software = 'mysoftware ({})'.format(
+				wavefile._lib.sf_version_string()),
+			artist = 'myartist',
+			comment = 'mycomment',
+			date = 'mydate',
+			album = 'myalbum',
+			license = 'mylicense',
+			)
+		if wavefile._lib.sf_version_string() != 'libsndfile-1.0.25':
+			expected.update(
+				tracknumber='77',
+				genre='mygenre',
+				)
+		self.assertEqual(strings, expected)
 		r.close()
 
 	def writeWav(self, filename, data) :

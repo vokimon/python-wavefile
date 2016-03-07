@@ -27,7 +27,7 @@ import sys
 
 from .libsndfile import _lib
 
-from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO
+from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO, FILE_STRINGS
 
 # Vorbis and Flac use utf8.
 # WAV/AIFF use ascii, but if chars beyond 127 are found,
@@ -132,19 +132,16 @@ class Seek() :
 
 
 class WaveMetadata(object) :
-    strings = [
-        'title',
-        'copyright',
-        'software',
-        'artist',
-        'comment',
-        'date',
-        'album',
-        'license',
-        'tracknumber',
-        'genre',
-    ]
-    __slots__ = strings + [
+    strings = dict((
+        (
+            k[len('SF_STR_'):].lower(),
+            getattr(FILE_STRINGS,k)
+        )
+        for k in dir(FILE_STRINGS)
+        if k.startswith('SF_STR_')
+    ))
+    print strings
+    __slots__ = list(strings.keys()) + [
         '_sndfile',
         ]
 
@@ -152,12 +149,12 @@ class WaveMetadata(object) :
         self._sndfile = sndfile
 
     def __dir__(self) :
-        return self.strings
+        return [s for s in self.strings if s]
 
     def __getattr__(self, name) :
         if name not in self.strings :
             raise AttributeError(name)
-        stringid = self.strings.index(name)+1
+        stringid = self.strings[name]
         value = _lib.sf_get_string(self._sndfile, stringid)
         if value is None: return None
         return value.decode(_tagencoding)
@@ -166,11 +163,17 @@ class WaveMetadata(object) :
         if name not in self.strings :
             return object.__setattr__(self, name, value)
 
-        stringid = self.strings.index(name)+1
+        stringid = self.strings[name]
         error = _lib.sf_set_string(self._sndfile, stringid, value.encode(_tagencoding))
         if error : print(ValueError(
             name,
             error, _sferrormessage(error)))
+
+    def __iter__(self):
+        for k, i in self.strings.items():
+            value = _lib.sf_get_string(self._sndfile, i)
+            if value is None: continue
+            yield k, value.decode(_tagencoding)
 
 class WaveWriter(object) :
     def __init__(self,
