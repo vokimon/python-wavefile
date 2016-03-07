@@ -53,6 +53,13 @@ def _sferrormessage(code):
     """Returns the sndfile error message for the code in proper unicode"""
     return _lib.sf_error_number(code).decode(_errorencoding)
 
+def _sf_open_portable(filename, mode, info):
+    if 'win' in sys.platform:
+        return _lib.sf_wchar_open(_fsencode(filename), mode, info)
+    else:
+        return _lib.sf_open(_fsencode(filename), mode, info)
+
+
 class Format :
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
@@ -185,7 +192,7 @@ class WaveWriter(object) :
                 channels = channels,
                 format = format
             )
-        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_WRITE, self._info)
+        self._sndfile = _sf_open_portable(filename, OPEN_MODES.SFM_WRITE, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
@@ -234,7 +241,7 @@ class WaveReader(object) :
                 channels = channels,
                 format = format
             )
-        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
+        self._sndfile = _sf_open_portable(filename, OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
