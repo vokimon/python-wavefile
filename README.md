@@ -261,6 +261,7 @@ Version history
 - MacOSX support
 - Fix: Genere string accesses the proper id (closes #18)
 - PyAudio an optional dependency (just used by examples)
+- New stuff from libsndfile 1.0.26 included
 
 ### 1.4
 

@@ -114,6 +114,11 @@ class Format :
 
     VORBIS     = 0x0060    # Xiph Vorbis encoding
 
+    ALAC_16    = 0x0070    # Apple Lossless Audio Codec (16 bit)
+    ALAC_20    = 0x0071    # Apple Lossless Audio Codec (20 bit)
+    ALAC_24    = 0x0072    # Apple Lossless Audio Codec (24 bit)
+    ALAC_32    = 0x0073    # Apple Lossless Audio Codec (32 bit)
+
     # Endian-ness options.
 
     ENDIAN_FILE    = 0x00000000    # Default file endian-ness.
@@ -265,6 +270,10 @@ class WaveReader(object) :
     def samplerate(self) : return self._info.samplerate
     @property
     def frames(self) : return self._info.frames
+    # TODO: Untested
+    @property
+    def byterate(self):
+        return _lib.sf_current_byterate(self._sndfile)
 
     def read_iter(self, size=512, buffer=None) :
         data = buffer
