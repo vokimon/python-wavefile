@@ -398,7 +398,7 @@ def __init_lib_methods():
     _lib.sf_writef_double.restype = sf_count_t
     _lib.sf_writef_double.argtypes = [SNDFILE, ct.POINTER(ct.c_double), sf_count_t]
 
-    if _lib.sf_version_string() != 'libsndfile-1.0.25':
+    if _lib.sf_version_string().decode() != 'libsndfile-1.0.25':
 
         #int sf_current_byterate (SNDFILE *sndfile) ;
         _lib.sf_current_byterate.restype = ct.c_int

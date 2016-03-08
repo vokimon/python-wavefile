@@ -32,6 +32,7 @@ class LibSndfileTest(unittest.TestCase) :
 
 	def setUp(self) :
 		self.filestoremove = []
+		self.sfversion = wavefile._lib.sf_version_string().decode()
 
 	def tearDown(self) :
 		import os
@@ -233,16 +234,14 @@ class LibSndfileTest(unittest.TestCase) :
 		r = wavefile.WaveReader("file.ogg")
 		self.assertEqual("mytitle", r.metadata.title)
 		self.assertEqual("mycopyright", r.metadata.copyright)
-		self.assertEqual("mysoftware ({})".format(
-			wavefile._lib.sf_version_string()
-			), r.metadata.software)
+		self.assertEqual("mysoftware ({})".format(self.sfversion),
+			r.metadata.software)
 		self.assertEqual("myartist", r.metadata.artist)
 		self.assertEqual("mycomment", r.metadata.comment)
 		self.assertEqual("mydate", r.metadata.date)
 		self.assertEqual("myalbum", r.metadata.album)
 		self.assertEqual("mylicense", r.metadata.license)
-		sndfileversion = wavefile._lib.sf_version_string()
-		if sndfileversion != 'libsndfile-1.0.25':
+		if self.sfversion != 'libsndfile-1.0.25':
 			self.assertEqual("77", r.metadata.tracknumber)
 			self.assertEqual("mygenre", r.metadata.genre)
 		r.close()
@@ -263,19 +262,18 @@ class LibSndfileTest(unittest.TestCase) :
 		w.metadata.genre = 'mygenre'
 		w.close()
 		r = wavefile.WaveReader("file.ogg")
-		sndfileversion = wavefile._lib.sf_version_string()
 		strings = dict(r.metadata)
 		expected = dict(
 			title = 'mytitle',
 			copyright = 'mycopyright',
-			software = 'mysoftware ({})'.format(sndfileversion),
+			software = 'mysoftware ({})'.format(self.sfversion),
 			artist = 'myartist',
 			comment = 'mycomment',
 			date = 'mydate',
 			album = 'myalbum',
 			license = 'mylicense',
 			)
-		if sndfileversion != 'libsndfile-1.0.25':
+		if self.sfversion != 'libsndfile-1.0.25':
 			expected.update(
 				tracknumber='77',
 				genre='mygenre',
