@@ -234,7 +234,7 @@ class LibSndfileTest(unittest.TestCase) :
 		r = wavefile.WaveReader("file.ogg")
 		self.assertEqual("mytitle", r.metadata.title)
 		self.assertEqual("mycopyright", r.metadata.copyright)
-		self.assertEqual("mysoftware ({})".format(self.sfversion),
+		self.assertEqual("mysoftware ({0})".format(self.sfversion),
 			r.metadata.software)
 		self.assertEqual("myartist", r.metadata.artist)
 		self.assertEqual("mycomment", r.metadata.comment)
@@ -266,7 +266,7 @@ class LibSndfileTest(unittest.TestCase) :
 		expected = dict(
 			title = 'mytitle',
 			copyright = 'mycopyright',
-			software = 'mysoftware ({})'.format(self.sfversion),
+			software = 'mysoftware ({0})'.format(self.sfversion),
 			artist = 'myartist',
 			comment = 'mycomment',
 			date = 'mydate',
