@@ -256,7 +256,7 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
-### 1.5 (git)
+### 1.5
 
 - MacOSX support
 - Fix: Genere string accesses the proper id (closes #18)
