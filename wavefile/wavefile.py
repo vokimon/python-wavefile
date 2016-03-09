@@ -131,9 +131,9 @@ class Format :
     ENDMASK  = 0x30000000
 
 class Seek() :
-    SET = SEEK_MODES.SEEK_SET # Relative to the begining of the file
-    CUR = SEEK_MODES.SEEK_CUR # Relative to the last read frame
-    END = SEEK_MODES.SEEK_END # Relative to the end of the file
+    SET = SEEK_MODES.SF_SEEK_SET # Relative to the begining of the file
+    CUR = SEEK_MODES.SF_SEEK_CUR # Relative to the last read frame
+    END = SEEK_MODES.SF_SEEK_END # Relative to the end of the file
 
 
 class WaveMetadata(object) :
