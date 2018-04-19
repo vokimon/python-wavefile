@@ -43,8 +43,8 @@ Wish list
 Installation
 ------------
 
-[![Latest Version](https://pypip.in/version/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
-[![Supported Python Versions](https://pypip.in/py_versions/wavefile/badge.svg)](https://pypi.python.org/pypi/wavefile/)
+[![Latest Version](https://img.shields.io/pypi/v/wavefile.svg)](https://pypi.python.org/pypi/wavefile/)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/wavefile.svg)](https://pypi.python.org/pypi/wavefile/)
 
 ### Binary dependencies
 
