@@ -90,14 +90,26 @@ Examples
 from wavefile import WaveWriter, Format
 import numpy as np
 
-with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+BUFFERSIZE = 512
+NCHANNELS = 2
+TITLE = "Some Noise"
+ARTIST = "The Artists"
+
+with WaveWriter('synth.ogg',
+		channels=NCHANNELS,
+		format=Format.OGG|Format.VORBIS,
+		) as w :
 	w.metadata.title = "Some Noise"
 	w.metadata.artist = "The Artists"
-	data = np.zeros((2,512), np.float32)
-	for x in xrange(100) :
-		data[0,:] = (x*np.arange(512, dtype=np.float32)%512/512)
-		data[1,512-x:] =  1
-		data[1,:512-x] = -1
+	data = np.zeros((NCHANNELS,BUFFERSIZE), np.float32)
+	for x in range(256) :
+		# First channel: Saw wave sweep
+		data[0,:] = (x*np.arange(BUFFERSIZE, dtype=np.float32)%BUFFERSIZE/BUFFERSIZE)
+		# Second channel: Modulated square wave
+		data[1,BUFFERSIZE-x*2:] =  1
+		data[1,:BUFFERSIZE-x*2] = -1
+
+		# Write it down
 		w.write(data)
 ```
 
@@ -128,7 +140,7 @@ with WaveReader(sys.argv[1]) as r :
 	# iterator interface (reuses one array)
 	# beware of the frame size, not always 512, but 512 at least
 	for frame in r.read_iter(size=512) :
-		stream.write(frame, frame.shape[1])
+		stream.write(frame.flatten(), frame.shape[1])
 		sys.stdout.write("."); sys.stdout.flush()
 
 	stream.close()
@@ -154,7 +166,7 @@ with WaveReader(sys.argv[1]) as r :
 			w.write(.8*data)
 ```
 
-While read_iter is simpler and recommended,
+While `read_iter` is simpler and recommended,
 you can still use the read function,
 which is closer to the C one.
 

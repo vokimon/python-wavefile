@@ -20,8 +20,9 @@ with WaveWriter('synth.ogg',
 	for x in range(256) :
 		# First channel: Saw wave sweep
 		data[0,:] = (x*np.arange(BUFFERSIZE, dtype=np.float32)%BUFFERSIZE/BUFFERSIZE)
-		# Second channel: Square wave
+		# Second channel: Modulated square wave
 		data[1,BUFFERSIZE-x*2:] =  1
 		data[1,:BUFFERSIZE-x*2] = -1
 		# Write it down
 		w.write(data)
+
