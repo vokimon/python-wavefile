@@ -334,9 +334,9 @@ def saveWave(filename, data, samplerate, verbose=False) :
     lastBlockSize = frames % blockSize
     with WaveWriter(filename, channels=channels, samplerate=samplerate) as w :
         for i in range(fullblocks) :
-            w.write(data[blockSize*i:blockSize*(i+1)])
+            w.write(data[:,blockSize*i:blockSize*(i+1)])
         if lastBlockSize :
-            w.write(data[fullblocks*blockSize:])
+            w.write(data[:,fullblocks*blockSize:])
 
 load=loadWave
 save=saveWave
