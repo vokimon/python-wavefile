@@ -1,10 +1,10 @@
 language: python
 python:
-- "2.6"
 - "2.7"
 #- "3.2" # coverage broke compatibility, python-wavefile is still compatible
 - "3.3"
 - "3.4"
+- "3.7"
 script: coverage run --source wavefile ./setup.py test
 before_install:
 - sudo apt-get update -qq
