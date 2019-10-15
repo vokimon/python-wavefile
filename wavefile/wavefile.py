@@ -286,7 +286,6 @@ class WaveReader(object) :
         while nframes :
             yield data[:,:nframes]
             nframes = self.read(data)
-        raise StopIteration
 
     def buffer(self, size, dtype=np.float32) :
         """Provides a properly constructed buffer to read data"""
