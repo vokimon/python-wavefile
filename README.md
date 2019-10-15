@@ -1,5 +1,5 @@
-python-wavefile
-===============
+# ![python-wavefile](docs/python-wavefile-banner.svg)
+
 
 [![Build Status](https://travis-ci.org/vokimon/python-wavefile.png?branch=master)](https://travis-ci.org/vokimon/python-wavefile)
 [![Coverage Status](https://coveralls.io/repos/vokimon/python-wavefile/badge.png?branch=master)](https://coveralls.io/r/vokimon/python-wavefile?branch=master)
@@ -7,8 +7,6 @@ python-wavefile
 [![Issue Stats](http://www.issuestats.com/github/vokimon/python-wavefile/badge/issue)](http://www.issuestats.com/github/vokimon/python-wavefile)
 
 Pythonic libsndfile wrapper to read and write audio files.
-
-![python-wavefile logo](docs/python-wavefile-logo.svg)
 
 Features
 --------
