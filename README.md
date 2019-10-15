@@ -6,7 +6,7 @@ python-wavefile
 [![Issue Stats](http://www.issuestats.com/github/vokimon/python-wavefile/badge/pr)](http://www.issuestats.com/github/vokimon/python-wavefile)
 [![Issue Stats](http://www.issuestats.com/github/vokimon/python-wavefile/badge/issue)](http://www.issuestats.com/github/vokimon/python-wavefile)
 
-
+![python-wavefile logo](docs/python-wavefile-logo.svg){style="float:right;min-width:40%"}
 
 Pythonic libsndfile wrapper to read and write audio files.
 
