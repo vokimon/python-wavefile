@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="469.91806"
-   height="124.64567"
+   width="552"
+   height="128"
    id="svg2985"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
@@ -19,7 +19,7 @@
    inkscape:export-filename="/home/vokimon/CajitasDeArena/vokiweb/hyde-coder/content/coder/media/images/python-wavefile-logo.png"
    inkscape:export-xdpi="720"
    inkscape:export-ydpi="720"
-   viewBox="0 0 469.91806 124.64567">
+   viewBox="0 0 552 128">
   <defs
      id="defs2987">
     <linearGradient
@@ -138,9 +138,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.8186945"
-     inkscape:cx="237.98751"
-     inkscape:cy="17.834552"
+     inkscape:zoom="0.90934727"
+     inkscape:cx="375.45663"
+     inkscape:cy="20.75964"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
@@ -173,18 +173,18 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     transform="translate(1,58.545977)">
+     transform="translate(0.5,62.400309)">
     <rect
-       style="opacity:1;vector-effect:none;fill:#fff1b8;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       style="opacity:0.95;vector-effect:none;fill:#fff1b8;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect923"
-       width="467.91806"
-       height="61.582634"
+       width="550.39478"
+       height="61.582638"
        x="0"
        y="3.5170557"
        ry="0" />
     <g
        id="g878"
-       transform="translate(340.42024,-63.496707)">
+       transform="translate(418.30504,-63.496707)">
       <g
          style="stroke-width:0.90671563;stroke-miterlimit:4;stroke-dasharray:none"
          transform="matrix(2.2761218,0,0,2.1864127,-6.245206,-15.92217)"
@@ -396,37 +396,6 @@
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="ccc" />
     </g>
-    <g
-       id="g933"
-       transform="matrix(1.0408176,0,0,1.0408176,-0.25988264,-3.7455027)">
-      <flowRoot
-         transform="matrix(1.0261789,0,0,1.0261789,-20.680549,13.919036)"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';letter-spacing:0px;word-spacing:0px;fill:#d3bc5f;fill-opacity:1;stroke:none"
-         id="flowRoot899"
-         xml:space="preserve"><flowRegion
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';fill:#d3bc5f"
-           id="flowRegion901"><rect
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono';fill:#d3bc5f"
-             y="0.51373893"
-             x="23.327946"
-             height="60.263863"
-             width="413.29346"
-             id="rect903" /></flowRegion><flowPara
-           id="flowPara905">python-wavefile</flowPara></flowRoot>      <flowRoot
-         xml:space="preserve"
-         id="flowRoot913"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;line-height:1.25;font-family:'Standard Symbols L';-inkscape-font-specification:'Standard Symbols L';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-         transform="matrix(1.0261789,0,0,1.0261789,-20.680549,11.866678)"><flowRegion
-           id="flowRegion909"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:'Standard Symbols L';-inkscape-font-specification:'Standard Symbols L'"><rect
-             id="rect907"
-             width="413.29346"
-             height="60.263863"
-             x="23.327946"
-             y="0.51373893"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:42.66666794px;font-family:'Standard Symbols L';-inkscape-font-specification:'Standard Symbols L'" /></flowRegion><flowPara
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono'"
-           id="flowPara911">python-wavefile</flowPara></flowRoot>    </g>
     <flowRoot
        xml:space="preserve"
        id="flowRoot915"
@@ -438,5 +407,29 @@
            height="150.10767"
            x="-39.03899"
            y="-49.96899" /></flowRegion><flowPara
-         id="flowPara921"></flowPara></flowRoot>  </g>
+         id="flowPara921"></flowPara></flowRoot>    <g
+       id="g982"
+       transform="translate(2,2)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#a0892c;fill-opacity:1;stroke:none"
+         x="8.6916285"
+         y="52.813026"
+         id="text976"><tspan
+           sodipodi:role="line"
+           id="tspan974"
+           x="8.6916285"
+           y="52.813026">python-wavefile</tspan></text>
+      <text
+         id="text972"
+         y="50.813026"
+         x="6.6916285"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:48px;line-height:1.25;font-family:'Ubuntu Mono';-inkscape-font-specification:'Ubuntu Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="50.813026"
+           x="6.6916285"
+           id="tspan970"
+           sodipodi:role="line">python-wavefile</tspan></text>
+    </g>
+  </g>
 </svg>
