@@ -219,14 +219,13 @@ class WaveWriter(object) :
         assert channels == self._info.channels
         if data.dtype==np.float64 :
             return _lib.sf_writef_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), nframes)
-        elif data.dtype==np.float32 :
+        if data.dtype==np.float32 :
             return _lib.sf_writef_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), nframes)
-        elif data.dtype==np.int16 :
+        if data.dtype==np.int16 :
             return _lib.sf_writef_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), nframes)
-        elif data.dtype==np.int32 :
+        if data.dtype==np.int32 :
             return _lib.sf_writef_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), nframes)
-        else:
-            raise TypeError("Please choose a correct dtype")
+        raise TypeError("Please choose a correct dtype")
 
 
 class WaveReader(object) :
