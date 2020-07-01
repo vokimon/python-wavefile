@@ -82,7 +82,7 @@ Copying the wavefile directory to your project is also ok.
 Examples
 --------
 
-### Writting example
+### Writing example
 
 ```python
 from wavefile import WaveWriter, Format
