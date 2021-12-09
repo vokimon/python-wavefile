@@ -2,9 +2,7 @@
 
 [![Build Status](https://travis-ci.org/vokimon/python-wavefile.png?branch=master)](https://travis-ci.org/vokimon/python-wavefile)
 [![Coverage Status](https://coveralls.io/repos/vokimon/python-wavefile/badge.png?branch=master)](https://coveralls.io/r/vokimon/python-wavefile?branch=master)
-[![PyPi Downloads](https://img.shields.io/pypi/dm/python-wavefile.svg)](https://pypi.python.org/pypi/python-wavefile)
-[![Issue Stats](http://www.issuestats.com/github/vokimon/python-wavefile/badge/pr)](http://www.issuestats.com/github/vokimon/python-wavefile)
-[![Issue Stats](http://www.issuestats.com/github/vokimon/python-wavefile/badge/issue)](http://www.issuestats.com/github/vokimon/python-wavefile)
+[![PyPi Downloads](https://img.shields.io/pypi/dm/wavefile.svg)](https://pypi.python.org/pypi/wavefile)
 
 Pythonic libsndfile wrapper to read and write audio files.
 
