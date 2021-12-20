@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - '2.7'
-          - '3.4'
-          - '3.9'
+          - '2.7' # Py2
+          - '3.7' # oldest supported Py3 version
+          - '3' # last current supported 
     name: Python ${{ matrix.python-version }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
