@@ -14,7 +14,7 @@ jobs:
       matrix:
         python-version:
           - '2.7' # Py2
-          - '3.7' # oldest supported Py3 version
+          - '3.8' # oldest supported Py3 version
           - '3' # last current supported 
     name: Python ${{ matrix.python-version }}
     steps:
