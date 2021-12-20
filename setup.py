@@ -23,6 +23,7 @@ Features
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
 """
+py2 = sys.version_info<(3,)
 
 setup(
 	name = "wavefile",
@@ -40,7 +41,7 @@ setup(
 #		'audio.py',
 		],
 	install_requires=[
-		'numpy',
+		'numpy<1.17' if py2 else 'numpy', # Py2
 	],
 	test_suite='test',
 	tests_require='PyAudio',
