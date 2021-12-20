@@ -104,7 +104,7 @@ class LibSndfileTest(unittest.TestCase) :
 			self.fail("Exception expected")
 		except IOError as e :
 			self.assertEqual( (
-				"Error opening 'badfile.wav': File contains data in an unknown format.",
+				"Error opening 'badfile.wav': Format not recognised.",
 			), e.args)
 
 	def test_writter_withWrongPath(self) :
