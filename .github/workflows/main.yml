@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push: # on push commits at any branch
+  pull_request: # on external PR
+  workflow_dispatch: # on demand
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TRAVIS: 'true' # Skip tests requiring data
+    strategy:
+      matrix:
+        python-version:
+          - '2.7'
+          - '3.4'
+          - '3.9'
+    name: Python ${{ matrix.python-version }}
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libsndfile1 portaudio19-dev
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          ./setup.py develop
+      - uses: BSFishy/pip-action@v1
+        with:
+          packages: |
+            numpy
+            PyAudio
+            pytest
+            pytest-cov
+            coveralls
+      - name: Unit tests
+        run: |
+          pytest --cov=wavefile
+      - name: Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel: true
+          flag-name: python-${{ matrix.python-version }}
+
+  coveralls_finish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: AndreMiras/coveralls-python-action@develop
+      with:
+        parallel-finished: true
