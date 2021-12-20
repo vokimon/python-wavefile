@@ -33,7 +33,6 @@ jobs:
       - uses: BSFishy/pip-action@v1
         with:
           packages: |
-            numpy
             PyAudio
             pytest
             pytest-cov
