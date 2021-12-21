@@ -103,9 +103,10 @@ class LibSndfileTest(unittest.TestCase) :
 			r = wavefile.WaveReader("badfile.wav")
 			self.fail("Exception expected")
 		except IOError as e :
-			self.assertEqual( (
-				"Error opening 'badfile.wav': Format not recognised.",
-			), e.args)
+			self.assertIn(e.args[0], [
+                "Error opening 'badfile.wav': File contains data in an unknown format.", # libsndfile 1.0.28
+				"Error opening 'badfile.wav': Format not recognised.", # libsndfile > 1.0.30
+            ])
 
 	def test_writter_withWrongPath(self) :
 		try :
