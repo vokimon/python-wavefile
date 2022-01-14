@@ -10,15 +10,15 @@ Pythonic libsndfile wrapper to read and write audio files.
 Features
 --------
 
-- Writer and reader objects are context managers
-- Format, channels, length, sample rate... are accessed as properties as well as text strings
-- Real multichannel (not just mono/stereo)
+- Wave file resources allocated as context managers (`with`)
+- Format, channels, length, sample rate... are accessed as properties
+- Real multichannel (not just mono/stereo, surround, ambisonics and virtually any number of channels)
 - All libsndfile formats supported, floating point encodings by default
 - Numpy based interface
-- Generators for block by block reading
+- Generators for block by block access (streaming without loading the full audio into memory)
 - Reading reuses the same data block to avoid many data allocations
-- Shortened constant names for formats (Using scopes instead of prefixes)
 - Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
+- Shortened constant names for formats (Using namespaces instead of prefixes)
 - Transparent UTF-8 handling for filenames and text strings
 - No module compilation required (wraps the dll using ctypes)
 - Compatible with Python >= 2.6 including Python3
@@ -46,7 +46,7 @@ Installation
 ### Binary dependencies
 
 Python dependencies are managed by the setup.py script.
-But still there are a couple of C/C++ dependencies.
+But still there are a couple of binary dependencies.
 In Debian/Ubuntu, you can install them by casting:
 
 ```bash
@@ -54,11 +54,10 @@ sudo apt-get install -y libsndfile1 portaudio19-dev
 ```
 PortAudio and its Python wrapper, PyAudio, are just required in order to run the examples.
 
-
 ### Using PyPi
 
 ```bash
-pypi-install wavefile
+pip install wavefile
 ```
 
 ### From sources
@@ -66,17 +65,10 @@ pypi-install wavefile
 A setup.py script is provided so the common procedure for
 installing python packages in you platfrom will work.
 For example in Debian/Ubuntu systems:
-```bash
-sudo python setup.py install
-```
-And for per-user installation:
-```bash
-python setup.py install --home=~/local
-```
-provided that you have PTYHON_PATH set properly.
 
-Copying the wavefile directory to your project is also ok.
-
+```bash
+python setup.py install
+```
 
 Examples
 --------
