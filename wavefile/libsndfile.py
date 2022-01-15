@@ -309,6 +309,13 @@ class SF_INFO(ct.Structure):
         ("seekable", ct.c_int)
     ]
 
+class SF_FORMAT_INFO(ct.Structure):
+    _fields_ = [
+        ('format', ct.c_int),
+        ('name', ct.c_char_p),
+        ('extension', ct.c_char_p),
+    ]
+
 def __init_lib_methods():
     SNDFILE = ct.c_void_p
 
