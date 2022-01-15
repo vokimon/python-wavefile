@@ -40,7 +40,7 @@ jobs:
             coveralls
       - name: Unit tests
         run: |
-          pytest test/wavefileTest.py
+          pytest
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@develop
         with:
