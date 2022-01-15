@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 
-from wavefile import *
+from . import wavefile
 import unittest
 import numpy as np
 from numpy.testing import assert_equal as np_assert_equal, assert_almost_equal as np_assert_almost_equal
