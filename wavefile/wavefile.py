@@ -83,46 +83,46 @@ class Format:
 
     # Subtypes from here on.
 
-    PCM_S8     = 0x0001    # Signed 8 bit data
-    PCM_16     = 0x0002    # Signed 16 bit data
-    PCM_24     = 0x0003    # Signed 24 bit data
-    PCM_32     = 0x0004    # Signed 32 bit data
+    PCM_S8       = 0x0001  # Signed 8 bit data
+    PCM_16       = 0x0002  # Signed 16 bit data
+    PCM_24       = 0x0003  # Signed 24 bit data
+    PCM_32       = 0x0004  # Signed 32 bit data
 
-    PCM_U8     = 0x0005    # Unsigned 8 bit data (WAV and RAW only)
+    PCM_U8       = 0x0005  # Unsigned 8 bit data (WAV and RAW only)
 
-    FLOAT      = 0x0006    # 32 bit float data
-    DOUBLE     = 0x0007    # 64 bit float data
+    FLOAT        = 0x0006  # 32 bit float data
+    DOUBLE       = 0x0007  # 64 bit float data
 
-    ULAW       = 0x0010    # U-Law encoded
-    ALAW       = 0x0011    # A-Law encoded
-    IMA_ADPCM  = 0x0012    # IMA ADPCM
-    MS_ADPCM   = 0x0013    # Microsoft ADPCM
+    ULAW         = 0x0010  # U-Law encoded
+    ALAW         = 0x0011  # A-Law encoded
+    IMA_ADPCM    = 0x0012  # IMA ADPCM
+    MS_ADPCM     = 0x0013  # Microsoft ADPCM
 
-    GSM610     = 0x0020    # GSM 6.10 encoding
-    VOX_ADPCM  = 0x0021    # OKI / Dialogix ADPCM
+    GSM610       = 0x0020  # GSM 6.10 encoding
+    VOX_ADPCM    = 0x0021  # OKI / Dialogix ADPCM
     NMS_ADPCM_16 = 0x0022  # 16kbs NMS G721-variant encoding.
     NMS_ADPCM_24 = 0x0023  # 24kbs NMS G721-variant encoding.
     NMS_ADPCM_32 = 0x0024  # 32kbs NMS G721-variant encoding.
 
-    G721_32    = 0x0030    # 32kbs G721 ADPCM encoding
-    G723_24    = 0x0031    # 24kbs G723 ADPCM encoding
-    G723_40    = 0x0032    # 40kbs G723 ADPCM encoding
+    G721_32      = 0x0030  # 32kbs G721 ADPCM encoding
+    G723_24      = 0x0031  # 24kbs G723 ADPCM encoding
+    G723_40      = 0x0032  # 40kbs G723 ADPCM encoding
 
-    DWVW_12    = 0x0040    # 12 bit Delta Width Variable Word encoding
-    DWVW_16    = 0x0041    # 16 bit Delta Width Variable Word encoding
-    DWVW_24    = 0x0042    # 24 bit Delta Width Variable Word encoding
-    DWVW_N     = 0x0043    # N bit Delta Width Variable Word encoding
+    DWVW_12      = 0x0040  # 12 bit Delta Width Variable Word encoding
+    DWVW_16      = 0x0041  # 16 bit Delta Width Variable Word encoding
+    DWVW_24      = 0x0042  # 24 bit Delta Width Variable Word encoding
+    DWVW_N       = 0x0043  # N bit Delta Width Variable Word encoding
 
-    DPCM_8     = 0x0050    # 8 bit differential PCM (XI only)
-    DPCM_16    = 0x0051    # 16 bit differential PCM (XI only)
+    DPCM_8       = 0x0050  # 8 bit differential PCM (XI only)
+    DPCM_16      = 0x0051  # 16 bit differential PCM (XI only)
 
-    VORBIS     = 0x0060    # Xiph Vorbis encoding
-    OPUS       = 0x0064    # Xiph/Skype Opus encoding.
+    VORBIS       = 0x0060  # Xiph Vorbis encoding
+    OPUS         = 0x0064  # Xiph/Skype Opus encoding.
 
-    ALAC_16    = 0x0070    # Apple Lossless Audio Codec (16 bit)
-    ALAC_20    = 0x0071    # Apple Lossless Audio Codec (20 bit)
-    ALAC_24    = 0x0072    # Apple Lossless Audio Codec (24 bit)
-    ALAC_32    = 0x0073    # Apple Lossless Audio Codec (32 bit)
+    ALAC_16      = 0x0070  # Apple Lossless Audio Codec (16 bit)
+    ALAC_20      = 0x0071  # Apple Lossless Audio Codec (20 bit)
+    ALAC_24      = 0x0072  # Apple Lossless Audio Codec (24 bit)
+    ALAC_32      = 0x0073  # Apple Lossless Audio Codec (32 bit)
 
     MPEG_LAYER_I   = 0x0080 # MPEG-1 Audio Layer I.
     MPEG_LAYER_II  = 0x0081 # MPEG-1 Audio Layer II.
