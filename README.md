@@ -26,18 +26,9 @@ Features
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
 
-Wish list
----------
-
-* Smart format chooser
-	* Use file name extension to deduce main format, if not specified
-	* Use main format to deduce subformat, if not specified
-* Format enumeration
-	* Separate Formats scope into Formats, Subformats and Endianess
-	* Expose format description strings at the API
-* Exposing sndfile command API
 
 - [Version history](CHANGES.md)
+- [Wish list](TODO.md)
 - [Installation](#installation)
 - [Examples](#examples)
   - [Writing example](#writing-example)
