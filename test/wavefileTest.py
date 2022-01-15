@@ -88,6 +88,9 @@ class LibSndfileTest(unittest.TestCase):
 			self.sinusoid(samples, 110),
 			)
 
+	def test_channels(self):
+		self.assertEqual(self.fourSinusoids(600).shape, (4,600))
+
 	def test_reader_withMissingFile(self):
 		try:
 			r = wavefile.WaveReader("notexisting.wav")

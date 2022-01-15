@@ -34,6 +34,7 @@ https://github.com/vokimon/python-wavefile
   - [Writing example](#writing-example)
   - [Playback example (using PyAudio)](#playback-example-using-pyaudio)
   - [Processing example](#processing-example)
+  - [Whole file (slow) processing](#whole-file-slow-processing)
 
 
 
@@ -72,6 +73,39 @@ python setup.py install
 
 Examples
 --------
+
+### Whole file (slow) processing
+
+This is the quick and dirty way (mathlab like) of reading and saving audio.
+
+While is quite convenient to get things done,
+DO NO USE IT, if you are concerned with performance.
+
+```python
+import wavefile
+import numpy as np
+
+def sinusoid(samples, f, samplerate=44100):
+    return np.sin( np.linspace(0, 2*np.pi*f*samples/samplerate, samples))[:,np.newaxis]
+
+def channels(*args):
+    return np.hstack(args).T
+
+
+audio = channels(
+    sinusoid(100000,  440),
+    sinusoid(100000,  880),
+    sinusoid(100000, 1760),
+)
+
+wavefile.save("sinusoid.wav", audio, 44100)
+
+loadedsamplerate, loaded = wavefile.load("sinusoid.wav")
+
+loaded.shape() # 3, 100000
+
+```
+
 
 ### Writing example
 
@@ -185,6 +219,8 @@ the last block usually does not have the size you asked for.
 ```read_iter``` simplifies the code by transparently
 allocating the data block for you, reusing it for each block
 and slicing it when the last incomplete block arrives.
+
+
 
 
 Existing alternatives (what i like and dislike)
