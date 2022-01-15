@@ -31,9 +31,9 @@ _lib=None
 try:
     from ctypes.util import find_library
     #does the user already have libsamplerate installed?
-    if sys.platform == 'win32' :
+    if sys.platform == 'win32':
         dllPath = find_library(dllName)
-    else :
+    else:
         dllPath = dllName
     _lib = ct.CDLL(dllPath)
 except:
@@ -294,7 +294,7 @@ class COMMANDS:
     SFC_SET_ADD_DITHER_ON_READ     = 0x1071
 
 
-#other definitions :
+#other definitions:
 sf_count_t = ct.c_int64
 
 
@@ -433,7 +433,7 @@ def __init_lib_methods():
 __init_lib_methods()
 
 
-#class definitions :
+#class definitions:
 class OPEN_MODES():
     SFM_READ  = 0x10
     SFM_WRITE = 0x20

@@ -53,7 +53,7 @@ def _sferrormessage(code):
     """Returns the sndfile error message for the code in proper unicode"""
     return _lib.sf_error_number(code).decode(_errorencoding)
 
-class Format :
+class Format:
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
     AU     = 0x030000    # Sun/NeXT AU format (big endian).
@@ -139,13 +139,13 @@ class Format :
     TYPEMASK = 0x0FFF0000
     ENDMASK  = 0x30000000
 
-class Seek() :
+class Seek():
     SET = SEEK_MODES.SF_SEEK_SET # Relative to the begining of the file
     CUR = SEEK_MODES.SF_SEEK_CUR # Relative to the last read frame
     END = SEEK_MODES.SF_SEEK_END # Relative to the end of the file
 
 
-class WaveMetadata(object) :
+class WaveMetadata(object):
     strings = dict((
         (
             k[len('SF_STR_'):].lower(),
@@ -159,27 +159,27 @@ class WaveMetadata(object) :
         '_sndfile',
         ]
 
-    def __init__(self, sndfile) :
+    def __init__(self, sndfile):
         self._sndfile = sndfile
 
-    def __dir__(self) :
+    def __dir__(self):
         return [s for s in self.strings if s]
 
-    def __getattr__(self, name) :
-        if name not in self.strings :
+    def __getattr__(self, name):
+        if name not in self.strings:
             raise AttributeError(name)
         stringid = self.strings[name]
         value = _lib.sf_get_string(self._sndfile, stringid)
         if value is None: return None
         return value.decode(_tagencoding)
 
-    def __setattr__(self, name, value) :
-        if name not in self.strings :
+    def __setattr__(self, name, value):
+        if name not in self.strings:
             return object.__setattr__(self, name, value)
 
         stringid = self.strings[name]
         error = _lib.sf_set_string(self._sndfile, stringid, value.encode(_tagencoding))
-        if error : print(ValueError(
+        if error: print(ValueError(
             name,
             error, _sferrormessage(error)))
 
@@ -189,13 +189,13 @@ class WaveMetadata(object) :
             if value is None: continue
             yield k, value.decode(_tagencoding)
 
-class WaveWriter(object) :
+class WaveWriter(object):
     def __init__(self,
                 filename,
                 samplerate = 44100,
                 channels = 1,
                 format = Format.WAV | Format.FLOAT,
-                ) :
+                ):
 
         self._info = SF_INFO(
                 samplerate = samplerate,
@@ -203,40 +203,40 @@ class WaveWriter(object) :
                 format = format
             )
         self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_WRITE, self._info)
-        if _lib.sf_error(self._sndfile) :
+        if _lib.sf_error(self._sndfile):
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
         assert self._sndfile, "Null sndfile handle but no error status"
         self._metadata = WaveMetadata(self._sndfile)
 
-    def __enter__(self) :
+    def __enter__(self):
         return self
-    def __exit__(self, type, value, traceback) :
+    def __exit__(self, type, value, traceback):
         self.close()
         if value: raise
 
-    def close(self) :
+    def close(self):
         _lib.sf_close( self._sndfile)
 
     @property
-    def metadata(self) :
+    def metadata(self):
         return self._metadata
 
-    def write(self, data) :
+    def write(self, data):
         channels, nframes = data.shape
         data = data.ravel('F')
         assert channels == self._info.channels
-        if data.dtype==np.float64 :
+        if data.dtype==np.float64:
             return _lib.sf_writef_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), nframes)
-        if data.dtype==np.float32 :
+        if data.dtype==np.float32:
             return _lib.sf_writef_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), nframes)
-        if data.dtype==np.int16 :
+        if data.dtype==np.int16:
             return _lib.sf_writef_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), nframes)
-        if data.dtype==np.int32 :
+        if data.dtype==np.int32:
             return _lib.sf_writef_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), nframes)
         raise TypeError("Please choose a correct dtype")
 
-    def seek(self, frames, whence=Seek.SET) :
+    def seek(self, frames, whence=Seek.SET):
         """Moves the current multisample frame to be read/written.
         This movement can be absolute position (whence=Seek.SET)
         relative to the current position (whence=Seek.CUR)
@@ -244,13 +244,13 @@ class WaveWriter(object) :
         """
         return _lib.sf_seek(self._sndfile, frames, whence)
 
-class WaveReader(object) :
+class WaveReader(object):
     def __init__(self,
                 filename,
                 samplerate = 0,
                 channels = 0,
                 format = 0,
-                ) :
+                ):
 
         self._info = SF_INFO(
                 samplerate = samplerate,
@@ -258,72 +258,76 @@ class WaveReader(object) :
                 format = format
             )
         self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
-        if _lib.sf_error(self._sndfile) :
+        if _lib.sf_error(self._sndfile):
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
         assert self._sndfile, "Null sndfile handle but no error status"
         self._metadata = WaveMetadata(self._sndfile)
 
-    def __enter__(self) :
+    def __enter__(self):
         return self
-    def __exit__(self, type, value, traceback) :
+    def __exit__(self, type, value, traceback):
         self.close()
         if value: raise
 
-    def close(self) :
+    def close(self):
         _lib.sf_close( self._sndfile)
 
     @property
-    def metadata(self) :
+    def metadata(self):
         return self._metadata
 
     @property
-    def channels(self) : return self._info.channels
+    def channels(self): return self._info.channels
+
     @property
-    def format(self) : return self._info.format
+    def format(self): return self._info.format
+
     @property
-    def samplerate(self) : return self._info.samplerate
+    def samplerate(self): return self._info.samplerate
+
     @property
-    def frames(self) : return self._info.frames
+    def frames(self): return self._info.frames
+
     # TODO: Untested
     @property
     def byterate(self):
         return _lib.sf_current_byterate(self._sndfile)
 
-    def read_iter(self, size=512, buffer=None) :
+    def read_iter(self, size=512, buffer=None):
         data = buffer
-        if data is None :
+        if data is None:
             data = self.buffer(size)
-        else :
+        else:
             assert buffer.shape[0] == self.channels
             size = buffer.shape[1]
         nframes = self.read(data)
-        while nframes :
+        while nframes:
             yield data[:,:nframes]
             nframes = self.read(data)
 
-    def buffer(self, size, dtype=np.float32) :
+    def buffer(self, size, dtype=np.float32):
         """Provides a properly constructed buffer to read data"""
         return np.zeros((self.channels, size), dtype, order='F')
 
-    def read(self, data) :
+    def read(self, data):
         channels, frames = data.shape
         assert channels == self.channels, \
             "Buffer has room for %i channels, wave file has %i channels"%(
                 channels, self.channels)
         assert data.strides[0]*channels == data.strides[1], \
             "Buffer storage be column-major order. Consider using buffer(size)"
-        if data.dtype==np.float64 :
+        if data.dtype==np.float64:
             return _lib.sf_readf_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), frames)
-        if data.dtype==np.float32 :
+        if data.dtype==np.float32:
             return _lib.sf_readf_float(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)), frames)
-        if data.dtype==np.int16 :
+        if data.dtype==np.int16:
             return _lib.sf_readf_short(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_short)), frames)
-        if data.dtype==np.int32 :
+        if data.dtype==np.int32:
             return _lib.sf_readf_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), frames)
         raise TypeError("Please choose a correct dtype")
 
-    def seek(self, frames, whence=Seek.SET) :
+    def seek(self, frames, whence=Seek.SET):
         """Moves the current multisample frame to be read/written.
         This movement can be absolute position (whence=Seek.SET)
         relative to the current position (whence=Seek.CUR)
@@ -331,56 +335,56 @@ class WaveReader(object) :
         """
         return _lib.sf_seek(self._sndfile, frames, whence)
 
-def loadWave(filename) :
-    with WaveReader(filename) as r :
+def loadWave(filename):
+    with WaveReader(filename) as r:
         blockSize = 512
         data = r.buffer(r.frames)
         fullblocks = r.frames // blockSize
         lastBlockSize = r.frames % blockSize
-        for i in range(fullblocks) :
+        for i in range(fullblocks):
             readframes = r.read(data[:,i*blockSize:(i+1)*blockSize])
             assert readframes == blockSize
-        if lastBlockSize :
+        if lastBlockSize:
             readframes = r.read(data[:,fullblocks*blockSize:])
             assert readframes == lastBlockSize
         return r.samplerate, data
 
-def saveWave(filename, data, samplerate, verbose=False) :
+def saveWave(filename, data, samplerate, verbose=False):
     if verbose: print("Saving wave file:",filename)
     blockSize = 512
     channels, frames = data.shape
     fullblocks = frames // blockSize
     lastBlockSize = frames % blockSize
-    with WaveWriter(filename, channels=channels, samplerate=samplerate) as w :
-        for i in range(fullblocks) :
+    with WaveWriter(filename, channels=channels, samplerate=samplerate) as w:
+        for i in range(fullblocks):
             w.write(data[:,blockSize*i:blockSize*(i+1)])
-        if lastBlockSize :
+        if lastBlockSize:
             w.write(data[:,fullblocks*blockSize:])
 
 load=loadWave
 save=saveWave
 
 
-if __name__ == '__main__' :
+if __name__ == '__main__':
 
     # Writting example
-    with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
+    with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w:
         w.metadata.title = "Some Noise"
         w.metadata.artist = "The Artists"
         data = np.zeros((2,512), np.float32)
-        for x in range(100) :
+        for x in range(100):
             data[0,:] = (x*np.arange(512, dtype=np.float32)%512/512)
             data[1,512-x:] =  1
             data[1,:512-x] = -1
             w.write(data)
 
     import sys
-    if len(sys.argv)<2 : sys.exit(0)
+    if len(sys.argv)<2: sys.exit(0)
 
     # Playback example (using pyaudio)
     import pyaudio, sys
     p = pyaudio.PyAudio()
-    with WaveReader(sys.argv[1]) as r :
+    with WaveReader(sys.argv[1]) as r:
 
         # Print info
         print("Title:", r.metadata.title)
@@ -399,30 +403,27 @@ if __name__ == '__main__' :
 
         # iterator interface (reuses one array)
         # beware of the frame size, not always 512, but 512 at least
-        for frame in r.read_iter(size=512) :
+        for frame in r.read_iter(size=512):
             stream.write(frame, frame.shape[1])
             sys.stdout.write("."); sys.stdout.flush()
 
         stream.close()
 
     # Processing example (using read, instead of read_iter but just to show how it is used)
-    with WaveReader(sys.argv[1]) as r :
+    with WaveReader(sys.argv[1]) as r:
         with WaveWriter(
                 'output.wav',
                 channels=r.channels,
                 samplerate=r.samplerate,
-                ) as w :
+                ) as w:
             w.metadata.title = r.metadata.title + " II"
             w.metadata.artist = r.metadata.artist
 
             data = np.zeros((r.channels,512), np.float32, order='F')
             nframes = r.read(data)
-            while nframes :
+            while nframes:
                 sys.stdout.write("."); sys.stdout.flush()
                 w.write(.8*data[:,:nframes])
                 nframes = r.read(data)
 
-
-
-
-
+# vim: et ts=4 sw=4
