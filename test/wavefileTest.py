@@ -553,11 +553,7 @@ class LibSndfileTest(unittest.TestCase):
 	def test_save_swappedAxis_fixesThem_deprecated(self):
 		data = self.fourSinusoids(samples=400)
 		frameFirst = np.ascontiguousarray(data.T)
-		with self.assertWarnsRegex(DeprecationWarning,
-			"First dimension should be the channel."
-		):
-			wavefile.save("file.wav", frameFirst, samplerate=44100)
-
+		wavefile.save("file.wav", frameFirst, samplerate=44100)
 		self.assertLoadWav('file.wav', data)
 
 	@unittest.skipIf(sys.version_info < (3,2), "Warning assertions introduced in 3.2")
