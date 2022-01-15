@@ -441,6 +441,10 @@ def __init_lib_methods():
     #int sf_get_chunk_size (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
     #int sf_get_chunk_data (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
 
+    # TODO: write_sync
+
+    #void    sf_write_sync    (SNDFILE *sndfile) ;
+
 __init_lib_methods()
 
 
