@@ -505,6 +505,13 @@ class LibSndfileTest(unittest.TestCase):
 		np_assert_almost_equal(readdata, data, decimal=7)
 		self.assertEqual(readsamplerate, 44100)
 
+	def test_load_longer(self):
+		data = self.fourSinusoids(samples=600) # > 512
+		self.writeWav("file.wav", data)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data, decimal=7)
+		self.assertEqual(readsamplerate, 44100)
+
 	def test_save(self):
 		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
@@ -520,6 +527,15 @@ class LibSndfileTest(unittest.TestCase):
 		wavefile.save("file.wav", data[::2], samplerate=samplerate)
 		readsamplerate, readdata = wavefile.load("file.wav")
 		np_assert_almost_equal(readdata, data[::2], decimal=7)
+		self.assertEqual(readsamplerate, samplerate)
+
+	def test_save_longer(self):
+		samplerate = 44100
+		data = self.fourSinusoids(samples=600) # >512
+		data = np.ascontiguousarray(data)
+		wavefile.save("file.wav", data, samplerate=samplerate)
+		readsamplerate, readdata = wavefile.load("file.wav")
+		np_assert_almost_equal(readdata, data, decimal=7)
 		self.assertEqual(readsamplerate, samplerate)
 
 	def test_save_asCOrder(self):
