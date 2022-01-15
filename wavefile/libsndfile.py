@@ -79,6 +79,7 @@ class FILE_FORMATS():
     SF_FORMAT_OGG        = 0x200000    # Xiph OGG container
     SF_FORMAT_MPC2K      = 0x210000    # Akai MPC 2000 sampler
     SF_FORMAT_RF64       = 0x220000    # RF64 WAV file
+    SF_FORMAT_MPEG       = 0x230000    # MPEG-1/2 audio stream
 
     # Subtypes from here on.
 
@@ -99,6 +100,9 @@ class FILE_FORMATS():
 
     SF_FORMAT_GSM610     = 0x0020    # GSM 6.10 encoding.
     SF_FORMAT_VOX_ADPCM  = 0x0021    # OKI / Dialogix ADPCM
+    SF_FORMAT_NMS_ADPCM_16 = 0x0022  # 16kbs NMS G721-variant encoding.
+    SF_FORMAT_NMS_ADPCM_24 = 0x0023  # 24kbs NMS G721-variant encoding.
+    SF_FORMAT_NMS_ADPCM_32 = 0x0024  # 32kbs NMS G721-variant encoding.
 
     SF_FORMAT_G721_32    = 0x0030    # 32kbs G721 ADPCM encoding.
     SF_FORMAT_G723_24    = 0x0031    # 24kbs G723 ADPCM encoding.
@@ -113,11 +117,16 @@ class FILE_FORMATS():
     SF_FORMAT_DPCM_16    = 0x0051    # 16 bit differential PCM (XI only)
 
     SF_FORMAT_VORBIS     = 0x0060    # Xiph Vorbis encoding.
+    SF_FORMAT_OPUS       = 0x0064    # Xiph/Skype Opus encoding.
 
     SF_FORMAT_ALAC_16    = 0x0070    # Apple Lossless Audio Codec (16 bit)
     SF_FORMAT_ALAC_20    = 0x0071    # Apple Lossless Audio Codec (20 bit)
     SF_FORMAT_ALAC_24    = 0x0072    # Apple Lossless Audio Codec (24 bit)
     SF_FORMAT_ALAC_32    = 0x0073    # Apple Lossless Audio Codec (32 bit)
+
+    SF_FORMAT_MPEG_LAYER_I   = 0x0080 # MPEG-1 Audio Layer I.
+    SF_FORMAT_MPEG_LAYER_II  = 0x0081 # MPEG-1 Audio Layer II.
+    SF_FORMAT_MPEG_LAYER_III = 0x0082 # MPEG-2 Audio Layer III.
 
     # Endian-ness options.
 

@@ -255,6 +255,13 @@ A pythonic layer was added on the top of it.
 Version history
 ---------------
 
+### Unreleased
+
+- Incorporated all the new formats from sndfile 1.0.31
+	- Containers: mp3, opus
+	- Encodings: NMS ADPCM, MPEG
+- Added `Writer.seek` method
+
 ### 1.5
 
 - MacOSX support
