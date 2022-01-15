@@ -5,16 +5,16 @@
 import sys
 from wavefile import WaveReader, WaveWriter
 
-with WaveReader(sys.argv[1]) as r :
+with WaveReader(sys.argv[1]) as r:
 	with WaveWriter(
 			'output.wav',
 			channels=r.channels,
 			samplerate=r.samplerate,
-			) as w :
+			) as w:
 		w.metadata.title = r.metadata.title + " II"
 		w.metadata.artist = r.metadata.artist
 
-		for data in r.read_iter(size=512) :
+		for data in r.read_iter(size=512):
 			sys.stdout.write("."); sys.stdout.flush()
 			w.write(.8*data)
 

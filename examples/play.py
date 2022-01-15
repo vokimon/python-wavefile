@@ -8,7 +8,7 @@ from wavefile import WaveReader
 BUFFERSIZE = 512
 
 pa = pyaudio.PyAudio()
-with WaveReader(sys.argv[1]) as r :
+with WaveReader(sys.argv[1]) as r:
 
 	# Print info
 	print("Title: {}".format(r.metadata.title))
@@ -28,7 +28,7 @@ with WaveReader(sys.argv[1]) as r :
 
 	# iterator interface (reuses one array)
 	# beware of the frame size, not always BUFFERSIZE, but BUFFERSIZE at least
-	for frame in r.read_iter(size=BUFFERSIZE) :
+	for frame in r.read_iter(size=BUFFERSIZE):
 		stream.write(frame.flatten(), frame.shape[1])
 
 		sys.stdout.write("."); sys.stdout.flush()

@@ -15,7 +15,7 @@ ARTIST = "The Artists"
 NBUFFERS = int(SECONDS*SAMPLERATE/BUFFERSIZE)
 
 pa = pyaudio.PyAudio()
-with WaveWriter('recording.ogg', channels=NCHANNELS, samplerate=SAMPLERATE, format=Format.OGG|Format.VORBIS) as w :
+with WaveWriter('recording.ogg', channels=NCHANNELS, samplerate=SAMPLERATE, format=Format.OGG|Format.VORBIS) as w:
 
 	w.metadata.title = TITLE
 	w.metadata.artist = ARTIST
@@ -28,7 +28,7 @@ with WaveWriter('recording.ogg', channels=NCHANNELS, samplerate=SAMPLERATE, form
 		input = True,
 	)
 
-	for x in range(NBUFFERS) :
+	for x in range(NBUFFERS):
 		data = stream.read(BUFFERSIZE)
 		data = np.fromstring(data, np.float32)
 		data = data.reshape(BUFFERSIZE,NCHANNELS)
