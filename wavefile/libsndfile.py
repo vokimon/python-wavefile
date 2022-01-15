@@ -413,22 +413,22 @@ def __init_lib_methods():
         _lib.sf_current_byterate.restype = ct.c_int
         _lib.sf_current_byterate.argtypes = [SNDFILE]
 
-	# TODO: Chunks, new undocumented feature in 1.0.26
+    # TODO: Chunks, new undocumented feature in 1.0.26
 
-	#struct SF_CHUNK_INFO
-	#{	char		id [64] ;	/* The chunk identifier. */
-	#	unsigned	id_size ;	/* The size of the chunk identifier. */
-	#	unsigned	datalen ;	/* The size of that data. */
-	#	void		*data ;		/* Pointer to the data. */
-	#} ;
+    #struct SF_CHUNK_INFO
+    #{    char        id [64] ;    /* The chunk identifier. */
+    #    unsigned    id_size ;    /* The size of the chunk identifier. */
+    #    unsigned    datalen ;    /* The size of that data. */
+    #    void        *data ;        /* Pointer to the data. */
+    #} ;
 
-	#typedef struct SF_CHUNK_INFO SF_CHUNK_INFO ;
-	#int sf_set_chunk (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info) ;
-	#typedef	struct SF_CHUNK_ITERATOR SF_CHUNK_ITERATOR ;
-	#SF_CHUNK_ITERATOR * sf_get_chunk_iterator (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info) ;
-	#SF_CHUNK_ITERATOR * sf_next_chunk_iterator (SF_CHUNK_ITERATOR * iterator) ;
-	#int sf_get_chunk_size (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
-	#int sf_get_chunk_data (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
+    #typedef struct SF_CHUNK_INFO SF_CHUNK_INFO ;
+    #int sf_set_chunk (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info) ;
+    #typedef    struct SF_CHUNK_ITERATOR SF_CHUNK_ITERATOR ;
+    #SF_CHUNK_ITERATOR * sf_get_chunk_iterator (SNDFILE * sndfile, const SF_CHUNK_INFO * chunk_info) ;
+    #SF_CHUNK_ITERATOR * sf_next_chunk_iterator (SF_CHUNK_ITERATOR * iterator) ;
+    #int sf_get_chunk_size (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
+    #int sf_get_chunk_data (const SF_CHUNK_ITERATOR * it, SF_CHUNK_INFO * chunk_info) ;
 
 __init_lib_methods()
 

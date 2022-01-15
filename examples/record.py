@@ -17,26 +17,26 @@ NBUFFERS = int(SECONDS*SAMPLERATE/BUFFERSIZE)
 pa = pyaudio.PyAudio()
 with WaveWriter('recording.ogg', channels=NCHANNELS, samplerate=SAMPLERATE, format=Format.OGG|Format.VORBIS) as w:
 
-	w.metadata.title = TITLE
-	w.metadata.artist = ARTIST
+    w.metadata.title = TITLE
+    w.metadata.artist = ARTIST
 
-	stream = pa.open(
-		format = pyaudio.paFloat32,
-		channels = NCHANNELS,
-		rate = SAMPLERATE,
-		frames_per_buffer = BUFFERSIZE,
-		input = True,
-	)
+    stream = pa.open(
+        format = pyaudio.paFloat32,
+        channels = NCHANNELS,
+        rate = SAMPLERATE,
+        frames_per_buffer = BUFFERSIZE,
+        input = True,
+    )
 
-	for x in range(NBUFFERS):
-		data = stream.read(BUFFERSIZE)
-		data = np.fromstring(data, np.float32)
-		data = data.reshape(BUFFERSIZE,NCHANNELS)
-		w.write(data.transpose())
+    for x in range(NBUFFERS):
+        data = stream.read(BUFFERSIZE)
+        data = np.fromstring(data, np.float32)
+        data = data.reshape(BUFFERSIZE,NCHANNELS)
+        w.write(data.transpose())
 
-		sys.stdout.write("."); sys.stdout.flush()
+        sys.stdout.write("."); sys.stdout.flush()
 
-	stream.close()
+    stream.close()
 
 pa.terminate()
 
