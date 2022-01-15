@@ -236,6 +236,13 @@ class WaveWriter(object) :
             return _lib.sf_writef_int(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), nframes)
         raise TypeError("Please choose a correct dtype")
 
+    def seek(self, frames, whence=Seek.SET) :
+        """Moves the current multisample frame to be read/written.
+        This movement can be absolute position (whence=Seek.SET)
+        relative to the current position (whence=Seek.CUR)
+        or relative to the end (whence=Seek.END).
+        """
+        return _lib.sf_seek(self._sndfile, frames, whence)
 
 class WaveReader(object) :
     def __init__(self,
@@ -317,7 +324,12 @@ class WaveReader(object) :
         raise TypeError("Please choose a correct dtype")
 
     def seek(self, frames, whence=Seek.SET) :
-       return _lib.sf_seek(self._sndfile, frames, whence)
+        """Moves the current multisample frame to be read/written.
+        This movement can be absolute position (whence=Seek.SET)
+        relative to the current position (whence=Seek.CUR)
+        or relative to the end (whence=Seek.END).
+        """
+        return _lib.sf_seek(self._sndfile, frames, whence)
 
 def loadWave(filename) :
     with WaveReader(filename) as r :
