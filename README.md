@@ -81,8 +81,6 @@ import numpy as np
 
 BUFFERSIZE = 512
 NCHANNELS = 2
-TITLE = "Some Noise"
-ARTIST = "The Artists"
 
 with WaveWriter('synth.ogg',
 		channels=NCHANNELS,
