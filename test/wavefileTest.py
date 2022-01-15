@@ -550,7 +550,7 @@ class LibSndfileTest(unittest.TestCase):
 		wavefile.save("file.wav", data, samplerate=44100)
 		self.assertLoadWav('file.wav', data)
 
-	def test_save_warnsWhenSwappedAxisButStillWorks(self):
+	def test_save_swappedAxis_fixesThem_deprecated(self):
 		data = self.fourSinusoids(samples=400)
 		frameFirst = np.ascontiguousarray(data.T)
 		with self.assertWarnsRegex(DeprecationWarning,
@@ -560,7 +560,16 @@ class LibSndfileTest(unittest.TestCase):
 
 		self.assertLoadWav('file.wav', data)
 
-	def test_save_monoInSingleDimensionForConvenience(self):
+	@unittest.skipIf(sys.version_info < (3,2), "Warning assertions introduced in 3.2")
+	def test_save_swappedAxis_deprecationWarning(self):
+		data = self.fourSinusoids(samples=400)
+		frameFirst = np.ascontiguousarray(data.T)
+		with self.assertWarnsRegex(DeprecationWarning,
+			"First dimension should be the channel."
+		):
+			wavefile.save("file.wav", frameFirst, samplerate=44100)
+
+	def test_save_monoInSingleDimension_forConvenience(self):
 		data = self.sinusoid(samples=400, f=440)[:,0]
 		self.assertEqual(data.shape, (400,))
 		wavefile.save("file.wav", data, samplerate=44100)
