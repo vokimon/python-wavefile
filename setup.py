@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-from setuptools import setup
+from setuptools import setup, find_packages
 import sys
+from wavefile import __version__
 readme = """
 Pythonic libsndfile wrapper to read and write audio files.
 
@@ -26,40 +27,35 @@ https://github.com/vokimon/python-wavefile
 py2 = sys.version_info<(3,)
 
 setup(
-	name = "wavefile",
-	version = "1.5",
-	description = "Pythonic wave file reader and writer",
-	author = "David Garcia Garzon",
-	author_email = "voki@canvoki.net",
-	url = 'https://github.com/vokimon/python-wavefile',
-	long_description = readme,
-	license = 'GNU General Public License v3 or later (GPLv3+)',
-	packages=[
-		'wavefile',
-		],
-	scripts=[
-#		'audio.py',
-		],
-	install_requires=[
-		'numpy<1.17' if py2 else 'numpy', # Py2
-	],
-	test_suite='test',
-	tests_require='PyAudio',
-	extras_require={
-		"examples":"PyAudio"
-	},
-	classifiers = [
-		'Programming Language :: Python',
-		'Programming Language :: Python :: 2',
-		'Programming Language :: Python :: 3',
-		'Topic :: Multimedia',
-		'Topic :: Scientific/Engineering',
-		'Topic :: Software Development :: Libraries :: Python Modules',
-		'Intended Audience :: Developers',
-		'Intended Audience :: Science/Research',
-		'Development Status :: 5 - Production/Stable',
-		'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-		'Operating System :: OS Independent',
-	],
-	)
+    name = "wavefile",
+    version = __version__,
+    description = "Pythonic wave file reader and writer",
+    author = "David Garcia Garzon",
+    author_email = "voki@canvoki.net",
+    url = 'https://github.com/vokimon/python-wavefile',
+    long_description = readme,
+    license = 'GNU General Public License v3 or later (GPLv3+)',
+    packages=find_packages(exclude=['*_test']),
+    install_requires=[
+        'numpy<1.17' if py2 else 'numpy', # Py2
+    ],
+    test_suite='test',
+    tests_require='PyAudio',
+    extras_require={
+        "examples":"PyAudio"
+    },
+    classifiers = [
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Topic :: Multimedia',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+        'Operating System :: OS Independent',
+    ],
+)
 
