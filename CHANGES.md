@@ -2,10 +2,14 @@
 
 ## Unreleased
 
-- Incorporated all the new formats from sndfile 1.0.31
-	- Containers: mp3, opus
-	- Encodings: NMS ADPCM, MPEG
+- Incorporated all the new formats supported by sndfile up to 1.0.31
+  - Containers: mp3, opus
+  - Encodings: NMS ADPCM, MPEG
 - Added `Writer.seek` method
+- PR#23 Incorrect implementation of saveWave method. Fixes #20. Thanks Sravan Patibandla (pbskumar)!
+  - This will render some client code failing. But I applied it since
+    it is coherent to have the same layout on saving and loading.
+    Client code should now transpose the numpy matrix when saving with wavefile.save()
 
 ## 1.5
 
