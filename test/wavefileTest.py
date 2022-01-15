@@ -529,25 +529,19 @@ class LibSndfileTest(unittest.TestCase):
 		self.assertEqual(expectedSamplerate, samplerate)
 
 	def test_save(self):
-		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
-		wavefile.save("file.wav", data, samplerate=samplerate)
-		readsamplerate, readdata = wavefile.load("file.wav")
-		np_assert_almost_equal(readdata, data, decimal=7)
-		self.assertEqual(readsamplerate, samplerate)
+		wavefile.save("file.wav", data, samplerate=44100)
+		self.assertLoadWav("file.wav", data)
 
 	def test_save_slice(self):
-		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
-		data = np.ascontiguousarray(data)
-		wavefile.save("file.wav", data[:,::2], samplerate=samplerate)
-		readsamplerate, readdata = wavefile.load("file.wav")
+		#data = np.ascontiguousarray(data)
+		wavefile.save("file.wav", data[:,::2], samplerate=44100)
 		self.assertLoadWav('file.wav', data[:,::2])
 
 	def test_save_longerThanAFrame(self):
 		data = self.fourSinusoids(samples=600) # >512
 		wavefile.save("file.wav", data, samplerate=44100)
-		readsamplerate, readdata = wavefile.load("file.wav")
 		self.assertLoadWav('file.wav', data)
 
 	def test_save_asCOrder(self):

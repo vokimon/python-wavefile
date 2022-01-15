@@ -365,7 +365,9 @@ def save(filename, data, samplerate, verbose=False):
         data = data.reshape((1,data.shape[0]))
 
     channels, frames = data.shape
-    if channels>frames and channels>10:
+
+    # TODO: Deprecate this compat code
+    if channels>frames and frames>0: # heuristic to detect inverted dims
         warnings.warn(
             "First dimension should be the channel. "
             "Transposing but next version, python-wavefile 1.7, will not.",
