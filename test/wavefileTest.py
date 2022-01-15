@@ -86,7 +86,8 @@ class LibSndfileTest(unittest.TestCase):
 			self.sinusoid(samples, 440),
 			self.sinusoid(samples, 220),
 			self.sinusoid(samples, 110),
-			)
+		)
+
 
 	def test_channels(self):
 		self.assertEqual(self.fourSinusoids(600).shape, (4,600))
@@ -515,6 +516,18 @@ class LibSndfileTest(unittest.TestCase):
 		np_assert_almost_equal(readdata, data, decimal=7)
 		self.assertEqual(readsamplerate, 44100)
 
+	def assertLoadWav(self, filename,
+			expectedData=None,
+			expectedSamplerate=44100,
+			expectedShape=None
+	):
+		samplerate, data = wavefile.load("file.wav")
+		if expectedShape is not None:
+			self.assertEqual(data.shape, expectedShape)
+		if expectedData is not None:
+			np_assert_almost_equal(expectedData, data, decimal=7)
+		self.assertEqual(expectedSamplerate, samplerate)
+
 	def test_save(self):
 		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
@@ -527,28 +540,38 @@ class LibSndfileTest(unittest.TestCase):
 		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
 		data = np.ascontiguousarray(data)
-		wavefile.save("file.wav", data[::2], samplerate=samplerate)
+		wavefile.save("file.wav", data[:,::2], samplerate=samplerate)
 		readsamplerate, readdata = wavefile.load("file.wav")
-		np_assert_almost_equal(readdata, data[::2], decimal=7)
-		self.assertEqual(readsamplerate, samplerate)
+		self.assertLoadWav('file.wav', data[:,::2])
 
-	def test_save_longer(self):
-		samplerate = 44100
+	def test_save_longerThanAFrame(self):
 		data = self.fourSinusoids(samples=600) # >512
-		data = np.ascontiguousarray(data)
-		wavefile.save("file.wav", data, samplerate=samplerate)
+		wavefile.save("file.wav", data, samplerate=44100)
 		readsamplerate, readdata = wavefile.load("file.wav")
-		np_assert_almost_equal(readdata, data, decimal=7)
-		self.assertEqual(readsamplerate, samplerate)
+		self.assertLoadWav('file.wav', data)
 
 	def test_save_asCOrder(self):
-		samplerate = 44100
 		data = self.fourSinusoids(samples=400)
 		data = np.ascontiguousarray(data)
-		wavefile.save("file.wav", data, samplerate=samplerate)
-		readsamplerate, readdata = wavefile.load("file.wav")
-		np_assert_almost_equal(readdata, data, decimal=7)
-		self.assertEqual(readsamplerate, samplerate)
+		wavefile.save("file.wav", data, samplerate=44100)
+		self.assertLoadWav('file.wav', data)
+
+	def test_save_warnsWhenSwappedAxisButStillWorks(self):
+		data = self.fourSinusoids(samples=400)
+		frameFirst = np.ascontiguousarray(data.T)
+		with self.assertWarnsRegex(DeprecationWarning,
+			"First dimension should be the channel."
+		):
+			wavefile.save("file.wav", frameFirst, samplerate=44100)
+
+		self.assertLoadWav('file.wav', data)
+
+	def test_save_monoInSingleDimensionForConvenience(self):
+		data = self.sinusoid(samples=400, f=440)[:,0]
+		self.assertEqual(data.shape, (400,))
+		wavefile.save("file.wav", data, samplerate=44100)
+		# Read still provides the channel dimension
+		self.assertLoadWav('file.wav', data.reshape((1,400)))
 
 
 if __name__ == '__main__':

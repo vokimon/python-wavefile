@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import numpy as np
 import ctypes
 import sys
+import warnings
 
 from .libsndfile import _lib
 
@@ -337,7 +338,7 @@ class WaveReader(object):
         """
         return _lib.sf_seek(self._sndfile, frames, whence)
 
-def loadWave(filename):
+def load(filename):
     with WaveReader(filename) as r:
         blockSize = 512
         data = r.buffer(r.frames)
@@ -351,10 +352,29 @@ def loadWave(filename):
             assert readframes == lastBlockSize
         return r.samplerate, data
 
-def saveWave(filename, data, samplerate, verbose=False):
+def save(filename, data, samplerate, verbose=False):
+    """
+    Given save the audio data, having shape (channels, frames),
+    and stores as a sound file.
+    For convenience you can also provide a mono in (channels,) shape.
+    """
     if verbose: print("Saving wave file:",filename)
-    blockSize = 512
+
+    # Mono convenience
+    if len(data.shape) == 1:
+        data = data.reshape((1,data.shape[0]))
+
     channels, frames = data.shape
+    if channels>frames and channels>10:
+        warnings.warn(
+            "First dimension should be the channel. "
+            "Transposing but next version, python-wavefile 1.7, will not.",
+            DeprecationWarning
+        )
+        data = data.T
+        channels, frames = data.shape
+
+    blockSize = 512
     fullblocks = frames // blockSize
     lastBlockSize = frames % blockSize
     with WaveWriter(filename, channels=channels, samplerate=samplerate) as w:
@@ -363,8 +383,9 @@ def saveWave(filename, data, samplerate, verbose=False):
         if lastBlockSize:
             w.write(data[:,fullblocks*blockSize:])
 
-load=loadWave
-save=saveWave
+# For the mathlab nostalgic
+loadWave=load
+saveWave=save
 
 
 if __name__ == '__main__':

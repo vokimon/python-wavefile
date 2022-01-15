@@ -6,6 +6,8 @@
   - Containers: mp3, opus
   - Encodings: NMS ADPCM, MPEG
 - Added `Writer.seek` method
+- Added whole-file load/save example
+- wavefile.save accepts 1D mono data for convenience
 - PR#23 Incorrect implementation of saveWave method. Fixes #20. Thanks Sravan Patibandla (pbskumar)!
   - This will render some client code failing. But I applied it since
     it is coherent to have the same layout on saving and loading.
