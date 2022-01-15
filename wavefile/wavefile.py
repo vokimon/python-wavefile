@@ -241,6 +241,7 @@ class WaveWriter(object):
         This movement can be absolute position (whence=Seek.SET)
         relative to the current position (whence=Seek.CUR)
         or relative to the end (whence=Seek.END).
+        Returns absolute seek position or -1 if out of scope.
         """
         return _lib.sf_seek(self._sndfile, frames, whence)
 
@@ -332,6 +333,7 @@ class WaveReader(object):
         This movement can be absolute position (whence=Seek.SET)
         relative to the current position (whence=Seek.CUR)
         or relative to the end (whence=Seek.END).
+        Returns absolute seek position or -1 if out of scope.
         """
         return _lib.sf_seek(self._sndfile, frames, whence)
 
