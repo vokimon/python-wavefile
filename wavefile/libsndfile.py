@@ -335,6 +335,10 @@ def __init_lib_methods():
     _lib.sf_error_number.restype = ct.c_char_p
     _lib.sf_error_number.argtypes = [ct.c_int]
 
+    #int        sf_command    (SNDFILE *sndfile, int command, void *data, int datasize) ;
+    _lib.sf_command.restype = ct.c_int
+    _lib.sf_command.argtypes = [SNDFILE, ct.c_int, ct.c_void_p, ct.c_int]
+
     #int        sf_format_check    (const SF_INFO *info) ;
     _lib.sf_format_check.restype = ct.c_int
     _lib.sf_format_check.argtypes = [ct.POINTER(SF_INFO)]
