@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 import sys
-from wavefile import __version__
+
 readme = """
 Pythonic libsndfile wrapper to read and write audio files.
 
@@ -28,7 +28,7 @@ py2 = sys.version_info<(3,)
 
 setup(
     name = "wavefile",
-    version = __version__,
+    version = '1.5.0',
     description = "Pythonic wave file reader and writer",
     author = "David Garcia Garzon",
     author_email = "voki@canvoki.net",
