@@ -33,6 +33,10 @@ class LibSndfileTest(unittest.TestCase):
     def setUp(self):
         self.filestoremove = []
         self.sfversion = wavefile._lib.sf_version_string().decode()
+        self.version = tuple(
+            int(x)
+            for x in self.sfversion.split('-')[-1].split('.')
+        )
 
     def tearDown(self):
         import os
@@ -574,7 +578,6 @@ class LibSndfileTest(unittest.TestCase):
 
 
     def assertFormatListEqual(self, data, expected):
-        print(data)
         rendered = ''.join(
             """{format:08x}: "{name}"{formatedExtension}\n""".format(
                     formatedExtension = " ({extension})".format(**item) if item['extension'] else "",
@@ -599,11 +602,27 @@ class LibSndfileTest(unittest.TestCase):
             """00030002: "AU (Sun/Next 16 bit PCM)" (au)\n"""
             """00030010: "AU (Sun/Next 8-bit u-law)" (au)\n"""
             """00040021: "OKI Dialogic VOX ADPCM" (vox)\n"""
+            + (
             """00170002: "FLAC 16 bit" (flac)\n"""
+                if self.version>=(1,0,18) else ""
+            )
+            +
             """00180002: "CAF (Apple 16 bit PCM)" (caf)\n"""
             """00180070: "CAF (Apple 16 bit ALAC)" (caf)\n"""
+            + (
             """00200060: "Ogg Vorbis (Xiph Foundation)" (ogg)\n"""
+                if self.version>=(1,0,31) else ""
+            )
+            + (
+            """00200060: "Ogg Vorbis (Xiph Foundation)" (oga)\n"""
+                if (1,0,31)>self.version>=(1,0,18) else "")
+            + (
             """00200064: "Ogg Opus (Xiph Foundation)" (opus)\n"""
+                if self.version>=(1,0,29) else "")
+            + (
+            """00230064: "MPEG-1/2 (Xiph Foundation)" (mp3)\n"""
+                if self.version>=(1,1,0) else "")
+
         )
 
 
