@@ -38,6 +38,7 @@ setup(
     packages=find_packages(exclude=['*_test']),
     install_requires=[
         'numpy<1.17' if py2 else 'numpy', # Py2
+        'enum34' if py2 else '',
     ],
     test_suite='test',
     tests_require='PyAudio',
