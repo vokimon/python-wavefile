@@ -496,7 +496,7 @@ class LibSndfileTest(unittest.TestCase):
             for i, readdata in enumerate(r.read_iter(blockSize)):
                 firstSample = int(round(readdata[0][0]))
                 firstSamples.append(firstSample)
-            pos = r.seek(0, Seek.SET)
+            pos = r.seek(0, wavefile.Seek.SET)
             for i, readdata in enumerate(r.read_iter(blockSize)):
                 firstSample = int(round(readdata[0][0]))
                 firstSamples.append(firstSample)
