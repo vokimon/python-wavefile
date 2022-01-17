@@ -573,6 +573,274 @@ class LibSndfileTest(unittest.TestCase):
         self.assertLoadWav('file.wav', data.reshape((1,400)))
 
 
+    def assertFormatListEqual(self, data, expected):
+        print(data)
+        rendered = ''.join(
+            """{format:08x}: "{name}"{formatedExtension}\n""".format(
+                    formatedExtension = " ({extension})".format(**item) if item['extension'] else "",
+                    **item
+                )
+            for item in sorted(data, key=lambda x: x['format'])
+        )
+        self.maxDiff = None
+        self.assertMultiLineEqual(rendered, expected)
+
+    def test_commonFormats(self):
+        formats = wavefile.commonFormats()
+        self.assertFormatListEqual(formats,
+            """00010002: "WAV (Microsoft 16 bit PCM)" (wav)\n"""
+            """00010005: "WAV (Microsoft 8 bit PCM)" (wav)\n"""
+            """00010006: "WAV (Microsoft 32 bit float)" (wav)\n"""
+            """00010012: "WAV (Microsoft 4 bit IMA ADPCM)" (wav)\n"""
+            """00010013: "WAV (Microsoft 4 bit MS ADPCM)" (wav)\n"""
+            """00020001: "AIFF (Apple/SGI 8 bit PCM)" (aiff)\n"""
+            """00020002: "AIFF (Apple/SGI 16 bit PCM)" (aiff)\n"""
+            """00020006: "AIFF (Apple/SGI 32 bit float)" (aifc)\n"""
+            """00030002: "AU (Sun/Next 16 bit PCM)" (au)\n"""
+            """00030010: "AU (Sun/Next 8-bit u-law)" (au)\n"""
+            """00040021: "OKI Dialogic VOX ADPCM" (vox)\n"""
+            """00170002: "FLAC 16 bit" (flac)\n"""
+            """00180002: "CAF (Apple 16 bit PCM)" (caf)\n"""
+            """00180070: "CAF (Apple 16 bit ALAC)" (caf)\n"""
+            """00200060: "Ogg Vorbis (Xiph Foundation)" (ogg)\n"""
+            """00200064: "Ogg Opus (Xiph Foundation)" (opus)\n"""
+        )
+
+
+    def test_majorFormats(self):
+        formats = wavefile.majorFormats()
+        self.assertFormatListEqual(formats, ""
+            """00010000: "WAV (Microsoft)" (wav)\n"""
+            """00020000: "AIFF (Apple/SGI)" (aiff)\n"""
+            """00030000: "AU (Sun/NeXT)" (au)\n"""
+            """00040000: "RAW (header-less)" (raw)\n"""
+            """00050000: "PAF (Ensoniq PARIS)" (paf)\n"""
+            """00060000: "IFF (Amiga IFF/SVX8/SV16)" (iff)\n"""
+            """00070000: "WAV (NIST Sphere)" (wav)\n"""
+            """00080000: "VOC (Creative Labs)" (voc)\n"""
+            """000a0000: "SF (Berkeley/IRCAM/CARL)" (sf)\n"""
+            """000b0000: "W64 (SoundFoundry WAVE 64)" (w64)\n"""
+            """000c0000: "MAT4 (GNU Octave 2.0 / Matlab 4.2)" (mat)\n"""
+            """000d0000: "MAT5 (GNU Octave 2.1 / Matlab 5.0)" (mat)\n"""
+            """000e0000: "PVF (Portable Voice Format)" (pvf)\n"""
+            """000f0000: "XI (FastTracker 2)" (xi)\n"""
+            """00100000: "HTK (HMM Tool Kit)" (htk)\n"""
+            """00110000: "SDS (Midi Sample Dump Standard)" (sds)\n"""
+            """00120000: "AVR (Audio Visual Research)" (avr)\n"""
+            """00130000: "WAVEX (Microsoft)" (wav)\n"""
+            """00160000: "SD2 (Sound Designer II)" (sd2)\n"""
+            """00170000: "FLAC (Free Lossless Audio Codec)" (flac)\n"""
+            """00180000: "CAF (Apple Core Audio File)" (caf)\n"""
+            """00190000: "WVE (Psion Series 3)" (wve)\n"""
+            """00200000: "OGG (OGG Container format)" (oga)\n"""
+            """00210000: "MPC (Akai MPC 2k)" (mpc)\n"""
+            """00220000: "RF64 (RIFF 64)" (rf64)\n"""
+        )
+
+    def test_subtypeFormats(self):
+        formats = wavefile.subtypeFormats()
+        self.assertFormatListEqual(formats, ""
+            """00000001: "Signed 8 bit PCM"\n"""
+            """00000002: "Signed 16 bit PCM"\n"""
+            """00000003: "Signed 24 bit PCM"\n"""
+            """00000004: "Signed 32 bit PCM"\n"""
+            """00000005: "Unsigned 8 bit PCM"\n"""
+            """00000006: "32 bit float"\n"""
+            """00000007: "64 bit float"\n"""
+            """00000010: "U-Law"\n"""
+            """00000011: "A-Law"\n"""
+            """00000012: "IMA ADPCM"\n"""
+            """00000013: "Microsoft ADPCM"\n"""
+            """00000020: "GSM 6.10"\n"""
+            """00000021: "VOX ADPCM" (vox)\n"""
+            """00000022: "16kbs NMS ADPCM"\n"""
+            """00000023: "24kbs NMS ADPCM"\n"""
+            """00000024: "32kbs NMS ADPCM"\n"""
+            """00000030: "32kbs G721 ADPCM"\n"""
+            """00000031: "24kbs G723 ADPCM"\n"""
+            """00000032: "40kbs G723 ADPCM"\n"""
+            """00000040: "12 bit DWVW"\n"""
+            """00000041: "16 bit DWVW"\n"""
+            """00000042: "24 bit DWVW"\n"""
+            """00000050: "8 bit DPCM"\n"""
+            """00000051: "16 bit DPCM"\n"""
+            """00000060: "Vorbis"\n"""
+            """00000064: "Opus"\n"""
+            """00000070: "16 bit ALAC"\n"""
+            """00000071: "20 bit ALAC"\n"""
+            """00000072: "24 bit ALAC"\n"""
+            """00000073: "32 bit ALAC"\n"""
+        )
+
+    def test_formatDescription_full(self):
+        self.assertEqual(
+            wavefile.formatDescription(
+                wavefile.Format.WAV | wavefile.Format.PCM_16
+            ), dict(
+                format=0x00010000,
+                name="WAV (Microsoft)",
+                subtype="Signed 16 bit PCM",
+                extension="wav",
+            )
+        )
+
+    def test_formatDescription_major(self):
+        self.assertEqual(
+            wavefile.formatDescription(
+                wavefile.Format.WAV
+            ), dict(
+                format=0x00010000,
+                name="WAV (Microsoft)",
+                # no subtype
+                extension="wav",
+            )
+        )
+
+    def test_formatDescription_subtype(self):
+        self.assertEqual(
+            wavefile.formatDescription(
+                wavefile.Format.PCM_16
+            ), dict(
+                # no format
+                # no name
+                subtype="Signed 16 bit PCM",
+                # no extension
+            )
+        )
+
+    def test_checkFormat_whenCompatible(self):
+        self.assertTrue(wavefile.checkFormat(
+            wavefile.Format.WAV | wavefile.Format.PCM_16))
+
+    def test_checkFormat_whenIncompatible(self):
+        self.assertFalse(wavefile.checkFormat(
+            wavefile.Format.WAV | wavefile.Format.PCM_S8))
+
+    def test_allFormats(self):
+        formats = wavefile.allFormats()
+        self.assertFormatListEqual(formats, ""
+            """00010002: "WAV (Microsoft) Signed 16 bit PCM" (wav)\n"""
+            """00010003: "WAV (Microsoft) Signed 24 bit PCM" (wav)\n"""
+            """00010004: "WAV (Microsoft) Signed 32 bit PCM" (wav)\n"""
+            """00010005: "WAV (Microsoft) Unsigned 8 bit PCM" (wav)\n"""
+            """00010006: "WAV (Microsoft) 32 bit float" (wav)\n"""
+            """00010007: "WAV (Microsoft) 64 bit float" (wav)\n"""
+            """00010010: "WAV (Microsoft) U-Law" (wav)\n"""
+            """00010011: "WAV (Microsoft) A-Law" (wav)\n"""
+            """00010012: "WAV (Microsoft) IMA ADPCM" (wav)\n"""
+            """00010013: "WAV (Microsoft) Microsoft ADPCM" (wav)\n"""
+            """00020001: "AIFF (Apple/SGI) Signed 8 bit PCM" (aiff)\n"""
+            """00020002: "AIFF (Apple/SGI) Signed 16 bit PCM" (aiff)\n"""
+            """00020003: "AIFF (Apple/SGI) Signed 24 bit PCM" (aiff)\n"""
+            """00020004: "AIFF (Apple/SGI) Signed 32 bit PCM" (aiff)\n"""
+            """00020005: "AIFF (Apple/SGI) Unsigned 8 bit PCM" (aiff)\n"""
+            """00020006: "AIFF (Apple/SGI) 32 bit float" (aiff)\n"""
+            """00020007: "AIFF (Apple/SGI) 64 bit float" (aiff)\n"""
+            """00020010: "AIFF (Apple/SGI) U-Law" (aiff)\n"""
+            """00020011: "AIFF (Apple/SGI) A-Law" (aiff)\n"""
+            """00020012: "AIFF (Apple/SGI) IMA ADPCM" (aiff)\n"""
+            """00030001: "AU (Sun/NeXT) Signed 8 bit PCM" (au)\n"""
+            """00030002: "AU (Sun/NeXT) Signed 16 bit PCM" (au)\n"""
+            """00030003: "AU (Sun/NeXT) Signed 24 bit PCM" (au)\n"""
+            """00030004: "AU (Sun/NeXT) Signed 32 bit PCM" (au)\n"""
+            """00030006: "AU (Sun/NeXT) 32 bit float" (au)\n"""
+            """00030007: "AU (Sun/NeXT) 64 bit float" (au)\n"""
+            """00030010: "AU (Sun/NeXT) U-Law" (au)\n"""
+            """00030011: "AU (Sun/NeXT) A-Law" (au)\n"""
+            """00040001: "RAW (header-less) Signed 8 bit PCM" (raw)\n"""
+            """00040002: "RAW (header-less) Signed 16 bit PCM" (raw)\n"""
+            """00040003: "RAW (header-less) Signed 24 bit PCM" (raw)\n"""
+            """00040004: "RAW (header-less) Signed 32 bit PCM" (raw)\n"""
+            """00040005: "RAW (header-less) Unsigned 8 bit PCM" (raw)\n"""
+            """00040006: "RAW (header-less) 32 bit float" (raw)\n"""
+            """00040007: "RAW (header-less) 64 bit float" (raw)\n"""
+            """00040010: "RAW (header-less) U-Law" (raw)\n"""
+            """00040011: "RAW (header-less) A-Law" (raw)\n"""
+            """00050001: "PAF (Ensoniq PARIS) Signed 8 bit PCM" (paf)\n"""
+            """00050002: "PAF (Ensoniq PARIS) Signed 16 bit PCM" (paf)\n"""
+            """00050003: "PAF (Ensoniq PARIS) Signed 24 bit PCM" (paf)\n"""
+            """00070001: "WAV (NIST Sphere) Signed 8 bit PCM" (wav)\n"""
+            """00070002: "WAV (NIST Sphere) Signed 16 bit PCM" (wav)\n"""
+            """00070003: "WAV (NIST Sphere) Signed 24 bit PCM" (wav)\n"""
+            """00070004: "WAV (NIST Sphere) Signed 32 bit PCM" (wav)\n"""
+            """00070010: "WAV (NIST Sphere) U-Law" (wav)\n"""
+            """00070011: "WAV (NIST Sphere) A-Law" (wav)\n"""
+            """00080002: "VOC (Creative Labs) Signed 16 bit PCM" (voc)\n"""
+            """00080005: "VOC (Creative Labs) Unsigned 8 bit PCM" (voc)\n"""
+            """00080010: "VOC (Creative Labs) U-Law" (voc)\n"""
+            """00080011: "VOC (Creative Labs) A-Law" (voc)\n"""
+            """000a0002: "SF (Berkeley/IRCAM/CARL) Signed 16 bit PCM" (sf)\n"""
+            """000a0004: "SF (Berkeley/IRCAM/CARL) Signed 32 bit PCM" (sf)\n"""
+            """000a0006: "SF (Berkeley/IRCAM/CARL) 32 bit float" (sf)\n"""
+            """000a0010: "SF (Berkeley/IRCAM/CARL) U-Law" (sf)\n"""
+            """000a0011: "SF (Berkeley/IRCAM/CARL) A-Law" (sf)\n"""
+            """000b0002: "W64 (SoundFoundry WAVE 64) Signed 16 bit PCM" (w64)\n"""
+            """000b0003: "W64 (SoundFoundry WAVE 64) Signed 24 bit PCM" (w64)\n"""
+            """000b0004: "W64 (SoundFoundry WAVE 64) Signed 32 bit PCM" (w64)\n"""
+            """000b0005: "W64 (SoundFoundry WAVE 64) Unsigned 8 bit PCM" (w64)\n"""
+            """000b0006: "W64 (SoundFoundry WAVE 64) 32 bit float" (w64)\n"""
+            """000b0007: "W64 (SoundFoundry WAVE 64) 64 bit float" (w64)\n"""
+            """000b0010: "W64 (SoundFoundry WAVE 64) U-Law" (w64)\n"""
+            """000b0011: "W64 (SoundFoundry WAVE 64) A-Law" (w64)\n"""
+            """000b0012: "W64 (SoundFoundry WAVE 64) IMA ADPCM" (w64)\n"""
+            """000b0013: "W64 (SoundFoundry WAVE 64) Microsoft ADPCM" (w64)\n"""
+            """000c0002: "MAT4 (GNU Octave 2.0 / Matlab 4.2) Signed 16 bit PCM" (mat)\n"""
+            """000c0004: "MAT4 (GNU Octave 2.0 / Matlab 4.2) Signed 32 bit PCM" (mat)\n"""
+            """000c0006: "MAT4 (GNU Octave 2.0 / Matlab 4.2) 32 bit float" (mat)\n"""
+            """000c0007: "MAT4 (GNU Octave 2.0 / Matlab 4.2) 64 bit float" (mat)\n"""
+            """000d0002: "MAT5 (GNU Octave 2.1 / Matlab 5.0) Signed 16 bit PCM" (mat)\n"""
+            """000d0004: "MAT5 (GNU Octave 2.1 / Matlab 5.0) Signed 32 bit PCM" (mat)\n"""
+            """000d0005: "MAT5 (GNU Octave 2.1 / Matlab 5.0) Unsigned 8 bit PCM" (mat)\n"""
+            """000d0006: "MAT5 (GNU Octave 2.1 / Matlab 5.0) 32 bit float" (mat)\n"""
+            """000d0007: "MAT5 (GNU Octave 2.1 / Matlab 5.0) 64 bit float" (mat)\n"""
+            """000e0001: "PVF (Portable Voice Format) Signed 8 bit PCM" (pvf)\n"""
+            """000e0002: "PVF (Portable Voice Format) Signed 16 bit PCM" (pvf)\n"""
+            """000e0004: "PVF (Portable Voice Format) Signed 32 bit PCM" (pvf)\n"""
+            """00120001: "AVR (Audio Visual Research) Signed 8 bit PCM" (avr)\n"""
+            """00120002: "AVR (Audio Visual Research) Signed 16 bit PCM" (avr)\n"""
+            """00120005: "AVR (Audio Visual Research) Unsigned 8 bit PCM" (avr)\n"""
+            """00130002: "WAVEX (Microsoft) Signed 16 bit PCM" (wav)\n"""
+            """00130003: "WAVEX (Microsoft) Signed 24 bit PCM" (wav)\n"""
+            """00130004: "WAVEX (Microsoft) Signed 32 bit PCM" (wav)\n"""
+            """00130005: "WAVEX (Microsoft) Unsigned 8 bit PCM" (wav)\n"""
+            """00130006: "WAVEX (Microsoft) 32 bit float" (wav)\n"""
+            """00130007: "WAVEX (Microsoft) 64 bit float" (wav)\n"""
+            """00130010: "WAVEX (Microsoft) U-Law" (wav)\n"""
+            """00130011: "WAVEX (Microsoft) A-Law" (wav)\n"""
+            """00160001: "SD2 (Sound Designer II) Signed 8 bit PCM" (sd2)\n"""
+            """00160002: "SD2 (Sound Designer II) Signed 16 bit PCM" (sd2)\n"""
+            """00160003: "SD2 (Sound Designer II) Signed 24 bit PCM" (sd2)\n"""
+            """00160004: "SD2 (Sound Designer II) Signed 32 bit PCM" (sd2)\n"""
+            """00170001: "FLAC (Free Lossless Audio Codec) Signed 8 bit PCM" (flac)\n"""
+            """00170002: "FLAC (Free Lossless Audio Codec) Signed 16 bit PCM" (flac)\n"""
+            """00170003: "FLAC (Free Lossless Audio Codec) Signed 24 bit PCM" (flac)\n"""
+            """00180001: "CAF (Apple Core Audio File) Signed 8 bit PCM" (caf)\n"""
+            """00180002: "CAF (Apple Core Audio File) Signed 16 bit PCM" (caf)\n"""
+            """00180003: "CAF (Apple Core Audio File) Signed 24 bit PCM" (caf)\n"""
+            """00180004: "CAF (Apple Core Audio File) Signed 32 bit PCM" (caf)\n"""
+            """00180006: "CAF (Apple Core Audio File) 32 bit float" (caf)\n"""
+            """00180007: "CAF (Apple Core Audio File) 64 bit float" (caf)\n"""
+            """00180010: "CAF (Apple Core Audio File) U-Law" (caf)\n"""
+            """00180011: "CAF (Apple Core Audio File) A-Law" (caf)\n"""
+            """00180070: "CAF (Apple Core Audio File) 16 bit ALAC" (caf)\n"""
+            """00180071: "CAF (Apple Core Audio File) 20 bit ALAC" (caf)\n"""
+            """00180072: "CAF (Apple Core Audio File) 24 bit ALAC" (caf)\n"""
+            """00180073: "CAF (Apple Core Audio File) 32 bit ALAC" (caf)\n"""
+            """00200060: "OGG (OGG Container format) Vorbis" (oga)\n"""
+            """00200064: "OGG (OGG Container format) Opus" (oga)\n"""
+            """00210002: "MPC (Akai MPC 2k) Signed 16 bit PCM" (mpc)\n"""
+            """00220002: "RF64 (RIFF 64) Signed 16 bit PCM" (rf64)\n"""
+            """00220003: "RF64 (RIFF 64) Signed 24 bit PCM" (rf64)\n"""
+            """00220004: "RF64 (RIFF 64) Signed 32 bit PCM" (rf64)\n"""
+            """00220005: "RF64 (RIFF 64) Unsigned 8 bit PCM" (rf64)\n"""
+            """00220006: "RF64 (RIFF 64) 32 bit float" (rf64)\n"""
+            """00220007: "RF64 (RIFF 64) 64 bit float" (rf64)\n"""
+            """00220010: "RF64 (RIFF 64) U-Law" (rf64)\n"""
+            """00220011: "RF64 (RIFF 64) A-Law" (rf64)\n"""
+
+        )
+
+
 if __name__ == '__main__':
     import sys
     Runner = unittest.TextTestRunner

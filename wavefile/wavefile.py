@@ -26,9 +26,16 @@ import ctypes
 import sys
 import warnings
 
-from .libsndfile import _lib
-
-from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO, FILE_STRINGS
+from .libsndfile import (
+    _lib,
+    OPEN_MODES,
+    SEEK_MODES,
+    FILE_STRINGS,
+    FILE_FORMATS,
+    COMMANDS,
+    SF_INFO,
+    SF_FORMAT_INFO,
+)
 
 # Vorbis and Flac use utf8.
 # WAV/AIFF use ascii, but if chars beyond 127 are found,
@@ -388,6 +395,88 @@ def save(filename, data, samplerate, verbose=False):
 # For the mathlab nostalgic
 loadWave=load
 saveWave=save
+
+def _command(commandCode, data, sf=None):
+    sf = sf or ctypes.c_void_p(0)
+    return _lib.sf_command(sf, commandCode, ctypes.byref(data), ctypes.sizeof(data))
+
+def _getFormatList(counterCommand, getterCommand):
+    n = ctypes.c_int()
+    _command(counterCommand, n)
+    result =[]
+    for i in range(n.value):
+        info = SF_FORMAT_INFO(format=i)
+        _command(getterCommand, info)
+        item = dict(
+            format=info.format,
+            name=info.name.decode(),
+            extension=info.extension and info.extension.decode(),
+        )
+        result.append(item)
+    return result
+
+def commonFormats():
+    return _getFormatList(
+        COMMANDS.SFC_GET_SIMPLE_FORMAT_COUNT,
+        COMMANDS.SFC_GET_SIMPLE_FORMAT)
+
+def majorFormats():
+    return _getFormatList(
+        COMMANDS.SFC_GET_FORMAT_MAJOR_COUNT,
+        COMMANDS.SFC_GET_FORMAT_MAJOR)
+
+def subtypeFormats():
+    return _getFormatList(
+        COMMANDS.SFC_GET_FORMAT_SUBTYPE_COUNT,
+        COMMANDS.SFC_GET_FORMAT_SUBTYPE)
+
+def allFormats():
+    majors = majorFormats()
+    minors = subtypeFormats()
+    return [
+        dict(
+            format = major['format'] | minor['format'],
+            name = major['name'] + " " + minor['name'],
+            extension = major['extension'],
+        )
+        for major in majors
+        for minor in minors
+        if checkFormat(major['format'] | minor['format'])
+    ]
+
+
+def checkFormat(format):
+    return _lib.sf_format_check(SF_INFO(
+        frames=1000, # whatever
+        samplerate=44100, # whatever
+        channels=2, # whatever
+        format=format,
+    ))
+
+def formatDescription(code):
+    result = {}
+    sf = ctypes.c_void_p(0)
+    minor = None
+    minorCode = code & FILE_FORMATS.SF_FORMAT_SUBMASK
+    if minorCode:
+        info = SF_FORMAT_INFO(format=minorCode)
+        error = _command(COMMANDS.SFC_GET_FORMAT_INFO, info)
+        if error:
+            raise ValuerError()
+
+        result.update(
+            subtype = info.name.decode()
+        )
+
+    if code & FILE_FORMATS.SF_FORMAT_TYPEMASK:
+        info = SF_FORMAT_INFO(format=code)
+        _command(COMMANDS.SFC_GET_FORMAT_INFO, info)
+        result.update(
+            format=info.format,
+            name=info.name.decode(),
+            extension=info.extension and info.extension.decode(),
+        )
+    return result or None
 
 
 # vim: et ts=4 sw=4

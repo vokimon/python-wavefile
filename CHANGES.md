@@ -2,9 +2,10 @@
 
 ## Unreleased
 
-- Incorporated all the new formats supported by sndfile up to 1.0.31
+- Incorporated enums for all the new formats supported by sndfile up to 1.0.31
   - Containers: mp3, opus
-  - Encodings: NMS ADPCM, MPEG
+  - Encodings: NMS ADPCM, MPEGx Layerx
+- Experimental: Api to enumerate, check and describe formats
 - Added `Writer.seek` method
 - Added whole-file load/save example
 - wavefile.save accepts 1D mono data for convenience

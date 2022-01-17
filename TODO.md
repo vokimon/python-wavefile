@@ -11,6 +11,7 @@
 - Exposing sndfile command API
 - `mv test/wavefileTest.py wavefile/wavefile_test.py`
 - pathlib support
+- Cue markers
 
 
 ## Test Coverage
