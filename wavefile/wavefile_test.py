@@ -34,7 +34,7 @@ def v(versiontext):
     import pkg_resources
     return pkg_resources.parse_version(versiontext)
 
-class LibSndfileTest(unittest.TestCase):
+class WavefileTest(unittest.TestCase):
 
     def setUp(self):
         self.filestoremove = []
@@ -257,7 +257,7 @@ class LibSndfileTest(unittest.TestCase):
         self.assertEqual("mydate", r.metadata.date)
         self.assertEqual("myalbum", r.metadata.album)
         self.assertEqual("mylicense", r.metadata.license)
-        if self.sfversion != 'libsndfile-1.0.25':
+        if self.version > v('1.0.25'):
             self.assertEqual("77", r.metadata.tracknumber)
             self.assertEqual("mygenre", r.metadata.genre)
         r.close()
@@ -289,7 +289,7 @@ class LibSndfileTest(unittest.TestCase):
             album = 'myalbum',
             license = 'mylicense',
             )
-        if self.sfversion != 'libsndfile-1.0.25':
+        if self.version > v('1.0.25'):
             expected.update(
                 tracknumber='77',
                 genre='mygenre',
@@ -583,6 +583,13 @@ class LibSndfileTest(unittest.TestCase):
         # Read still provides the channel dimension
         self.assertLoadWav('file.wav', data.reshape((1,400)))
 
+
+class Format_Test(unittest.TestCase):
+
+    def setUp(self):
+        import pkg_resources
+        self.sfversion = wavefile._lib.sf_version_string().decode()
+        self.version = v(self.sfversion[len('libsndfile-'):])
 
     def assertFormatListEqual(self, data, expected):
         rendered = ''.join(
