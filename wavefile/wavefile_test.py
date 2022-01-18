@@ -902,7 +902,80 @@ class LibSndfileTest(unittest.TestCase):
                 if self.version>v('1.0.31') else "")
         )
 
+    def test_format_description_major(self):
+        f = wavefile.Format.WAV
+        self.assertEqual(f.description, "WAV (Microsoft)")
 
+    def test_format_name_full(self):
+        f = wavefile.Format.WAV | wavefile.Format.PCM_16
+        self.assertEqual(f.description, "WAV (Microsoft) Signed 16 bit PCM")
+
+    def test_format_name_subtype(self):
+        f = wavefile.Format.PCM_16
+        self.assertEqual(f.description, "Signed 16 bit PCM")
+
+    def test_format_extension_major(self):
+        f = wavefile.Format.WAV
+        self.assertEqual(f.extension, 'wav')
+
+    def test_format_extension_full(self):
+        f = wavefile.Format.WAV | wavefile.Format.PCM_16
+        self.assertEqual(f.extension, 'wav')
+
+    def test_format_extension_subtype(self):
+        f = wavefile.Format.PCM_16
+        self.assertEqual(f.extension, None)
+
+    def test_format_isSupported_existing(self):
+        f = wavefile.Format.WAV | wavefile.Format.PCM_16
+        self.assertTrue(f.isSupported())
+
+    def test_format_isSupported_incompatible(self):
+        f = wavefile.Format.WAV | wavefile.Format.PCM_S8
+        self.assertFalse(f.isSupported())
+
+    def test_info_full(self):
+        f = wavefile.Format.WAV | wavefile.Format.PCM_16
+        self.assertEqual( f.info(), dict(
+            format=0x00010000,
+            name="WAV (Microsoft)",
+            subtype="Signed 16 bit PCM",
+            extension="wav",
+        ))
+
+    def test_info_major(self):
+        f = wavefile.Format.WAV
+        self.assertEqual( f.info(), dict(
+            format=0x00010000,
+            name="WAV (Microsoft)",
+            # no subtype
+            extension="wav",
+        ))
+
+    def test_info_subtype(self):
+        f = wavefile.Format.PCM_16
+        self.assertEqual( f.info(), dict(
+            # no format
+            # no name
+            subtype="Signed 16 bit PCM",
+            # no extension
+        ))
+
+    def test_info_subtype_badone(self):
+        f = wavefile.Format(0x29) # Not existing as 2022-01-18
+        with self.assertRaises(ValueError) as ctx:
+            f.info()
+        self.assertEqual(format(ctx.exception),
+            "41"
+        )
+
+    def test_info_major_badone(self):
+        f = wavefile.Format(0x290000) # Not existing as 2022-01-18
+        with self.assertRaises(ValueError) as ctx:
+            f.info()
+        self.assertEqual(format(ctx.exception),
+            "2686976"
+        )
 
 
 

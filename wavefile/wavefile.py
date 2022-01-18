@@ -25,7 +25,7 @@ import numpy as np
 import ctypes
 import sys
 import warnings
-from enum import Enum
+from enum import Enum, IntFlag
 
 from .libsndfile import (
     _lib,
@@ -62,7 +62,40 @@ def _sferrormessage(code):
     """Returns the sndfile error message for the code in proper unicode"""
     return _lib.sf_error_number(code).decode(_errorencoding)
 
-class Format(int, Enum):
+class Format(IntFlag):
+
+    @property
+    def description(self):
+        """A description for the format"""
+
+        details = self.info()
+        return ' '.join(
+            details.get(attr, None)
+            for attr in ['name', 'subtype']
+            if details.get(attr, None)
+        )
+
+    @property
+    def extension(self):
+        """The common extension for the major format or None"""
+
+        details = self.info()
+        return details.get('extension',None)
+
+    def isSupported(self):
+        """True if the convination of major and subtype is compatible."""
+
+        return _lib.sf_format_check(SF_INFO(
+            frames=1000, # whatever
+            samplerate=44100, # whatever
+            channels=2, # whatever
+            format=self.value,
+        ))
+
+    def info(self):
+        return formatDescription(self.value)
+
+
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
     AU     = 0x030000    # Sun/NeXT AU format (big endian).
@@ -166,7 +199,7 @@ class WaveMetadata(object):
 
     __slots__ = list(strings.keys()) + [
         '_sndfile',
-        ]
+    ]
 
     def __init__(self, sndfile):
         self._sndfile = sndfile
@@ -255,18 +288,19 @@ class WaveWriter(object):
         return _lib.sf_seek(self._sndfile, frames, whence)
 
 class WaveReader(object):
-    def __init__(self,
-                filename,
-                samplerate = 0,
-                channels = 0,
-                format = 0,
-                ):
+    def __init__(
+        self,
+        filename,
+        samplerate = 0,
+        channels = 0,
+        format = 0,
+    ):
 
         self._info = SF_INFO(
-                samplerate = samplerate,
-                channels = channels,
-                format = format
-            )
+            samplerate = samplerate,
+            channels = channels,
+            format = format
+        )
         self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
         if _lib.sf_error(self._sndfile):
             raise IOError("Error opening '%s': %s"%(
@@ -463,7 +497,7 @@ def formatDescription(code):
         info = SF_FORMAT_INFO(format=minorCode)
         error = _command(COMMANDS.SFC_GET_FORMAT_INFO, info)
         if error:
-            raise ValuerError()
+            raise ValueError(code)
 
         result.update(
             subtype = info.name.decode()
@@ -471,7 +505,9 @@ def formatDescription(code):
 
     if code & FILE_FORMATS.SF_FORMAT_TYPEMASK:
         info = SF_FORMAT_INFO(format=code)
-        _command(COMMANDS.SFC_GET_FORMAT_INFO, info)
+        error = _command(COMMANDS.SFC_GET_FORMAT_INFO, info)
+        if error:
+            raise ValueError(code)
         result.update(
             format=info.format,
             name=info.name.decode(),
