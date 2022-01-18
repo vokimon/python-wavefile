@@ -26,7 +26,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 from . import wavefile
 import unittest
 import numpy as np
-from numpy.testing import assert_equal as np_assert_equal, assert_almost_equal as np_assert_almost_equal
+from numpy.testing import (
+    assert_almost_equal as np_assert_almost_equal,
+)
 
 def v(versiontext):
     import pkg_resources
