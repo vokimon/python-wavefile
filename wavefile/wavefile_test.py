@@ -28,15 +28,17 @@ import unittest
 import numpy as np
 from numpy.testing import assert_equal as np_assert_equal, assert_almost_equal as np_assert_almost_equal
 
+def v(versiontext):
+    import pkg_resources
+    return pkg_resources.parse_version(versiontext)
+
 class LibSndfileTest(unittest.TestCase):
 
     def setUp(self):
         self.filestoremove = []
+        import pkg_resources
         self.sfversion = wavefile._lib.sf_version_string().decode()
-        self.version = tuple(
-            int(x)
-            for x in self.sfversion.split('-')[-1].split('.')
-        )
+        self.version = v(self.sfversion[len('libsndfile-'):])
 
     def tearDown(self):
         import os
@@ -604,25 +606,24 @@ class LibSndfileTest(unittest.TestCase):
             """00040021: "OKI Dialogic VOX ADPCM" (vox)\n"""
             + (
             """00170002: "FLAC 16 bit" (flac)\n"""
-                if self.version>=(1,0,18) else ""
+                if self.version>=v('1.0.18') else ""
             )
             +
             """00180002: "CAF (Apple 16 bit PCM)" (caf)\n"""
             """00180070: "CAF (Apple 16 bit ALAC)" (caf)\n"""
             + (
             """00200060: "Ogg Vorbis (Xiph Foundation)" (ogg)\n"""
-                if self.version>=(1,0,31) else ""
+                if self.version>=v('1.0.31') else ""
             )
             + (
             """00200060: "Ogg Vorbis (Xiph Foundation)" (oga)\n"""
-                if (1,0,31)>self.version>=(1,0,18) else "")
+                if v('1.0.31')>self.version>=v('1.0.18') else "")
             + (
             """00200064: "Ogg Opus (Xiph Foundation)" (opus)\n"""
-                if self.version>=(1,0,29) else "")
+                if self.version>=v('1.0.29') else "")
             + (
-            """00230064: "MPEG-1/2 (Xiph Foundation)" (mp3)\n"""
-                if self.version>=(1,1,0) else "")
-
+            """00230082: "MPEG Layer 3" (mp3)\n"""
+                if self.version>v('1.0.31') else "")
         )
 
 
@@ -654,6 +655,10 @@ class LibSndfileTest(unittest.TestCase):
             """00200000: "OGG (OGG Container format)" (oga)\n"""
             """00210000: "MPC (Akai MPC 2k)" (mpc)\n"""
             """00220000: "RF64 (RIFF 64)" (rf64)\n"""
+            + (
+            """00230000: "MPEG-1/2 Audio" (m1a)\n"""
+                if self.version > v('1.0.31') else "")
+
         )
 
     def test_subtypeFormats(self):
@@ -672,23 +677,40 @@ class LibSndfileTest(unittest.TestCase):
             """00000013: "Microsoft ADPCM"\n"""
             """00000020: "GSM 6.10"\n"""
             """00000021: "VOX ADPCM" (vox)\n"""
+            + (
             """00000022: "16kbs NMS ADPCM"\n"""
             """00000023: "24kbs NMS ADPCM"\n"""
             """00000024: "32kbs NMS ADPCM"\n"""
+                if self.version>=v('1.0.29') else "")
+            +
             """00000030: "32kbs G721 ADPCM"\n"""
             """00000031: "24kbs G723 ADPCM"\n"""
+            + (
             """00000032: "40kbs G723 ADPCM"\n"""
+                if self.version>=v('1.0.29') else "")
+            +
             """00000040: "12 bit DWVW"\n"""
             """00000041: "16 bit DWVW"\n"""
             """00000042: "24 bit DWVW"\n"""
             """00000050: "8 bit DPCM"\n"""
             """00000051: "16 bit DPCM"\n"""
+            + (
             """00000060: "Vorbis"\n"""
+                if self.version>=v('1.0.18') else "")
+            + (
             """00000064: "Opus"\n"""
+                if self.version>=v('1.0.29') else "")
+            +
             """00000070: "16 bit ALAC"\n"""
             """00000071: "20 bit ALAC"\n"""
             """00000072: "24 bit ALAC"\n"""
             """00000073: "32 bit ALAC"\n"""
+            + (
+            """00000080: "MPEG Layer I" (mp1)\n"""
+            """00000081: "MPEG Layer II" (mp2)\n"""
+            """00000082: "MPEG Layer III" (mp3)\n"""
+                if self.version>v('1.0.31') else "")
+
         )
 
     def test_formatDescription_full(self):
@@ -748,6 +770,10 @@ class LibSndfileTest(unittest.TestCase):
             """00010011: "WAV (Microsoft) A-Law" (wav)\n"""
             """00010012: "WAV (Microsoft) IMA ADPCM" (wav)\n"""
             """00010013: "WAV (Microsoft) Microsoft ADPCM" (wav)\n"""
+            + (
+            """00010082: "WAV (Microsoft) MPEG Layer III" (wav)\n"""
+                if self.version>v('1.0.31') else "")
+            +
             """00020001: "AIFF (Apple/SGI) Signed 8 bit PCM" (aiff)\n"""
             """00020002: "AIFF (Apple/SGI) Signed 16 bit PCM" (aiff)\n"""
             """00020003: "AIFF (Apple/SGI) Signed 24 bit PCM" (aiff)\n"""
@@ -830,9 +856,12 @@ class LibSndfileTest(unittest.TestCase):
             """00160002: "SD2 (Sound Designer II) Signed 16 bit PCM" (sd2)\n"""
             """00160003: "SD2 (Sound Designer II) Signed 24 bit PCM" (sd2)\n"""
             """00160004: "SD2 (Sound Designer II) Signed 32 bit PCM" (sd2)\n"""
+            + (
             """00170001: "FLAC (Free Lossless Audio Codec) Signed 8 bit PCM" (flac)\n"""
             """00170002: "FLAC (Free Lossless Audio Codec) Signed 16 bit PCM" (flac)\n"""
             """00170003: "FLAC (Free Lossless Audio Codec) Signed 24 bit PCM" (flac)\n"""
+                if self.version>=v('1.0.18') else "")
+            +
             """00180001: "CAF (Apple Core Audio File) Signed 8 bit PCM" (caf)\n"""
             """00180002: "CAF (Apple Core Audio File) Signed 16 bit PCM" (caf)\n"""
             """00180003: "CAF (Apple Core Audio File) Signed 24 bit PCM" (caf)\n"""
@@ -845,8 +874,13 @@ class LibSndfileTest(unittest.TestCase):
             """00180071: "CAF (Apple Core Audio File) 20 bit ALAC" (caf)\n"""
             """00180072: "CAF (Apple Core Audio File) 24 bit ALAC" (caf)\n"""
             """00180073: "CAF (Apple Core Audio File) 32 bit ALAC" (caf)\n"""
+            + (
             """00200060: "OGG (OGG Container format) Vorbis" (oga)\n"""
+                if self.version>=v('1.0.18') else "")
+            + (
             """00200064: "OGG (OGG Container format) Opus" (oga)\n"""
+                if self.version>=v('1.0.29') else "")
+            +
             """00210002: "MPC (Akai MPC 2k) Signed 16 bit PCM" (mpc)\n"""
             """00220002: "RF64 (RIFF 64) Signed 16 bit PCM" (rf64)\n"""
             """00220003: "RF64 (RIFF 64) Signed 24 bit PCM" (rf64)\n"""
@@ -856,7 +890,11 @@ class LibSndfileTest(unittest.TestCase):
             """00220007: "RF64 (RIFF 64) 64 bit float" (rf64)\n"""
             """00220010: "RF64 (RIFF 64) U-Law" (rf64)\n"""
             """00220011: "RF64 (RIFF 64) A-Law" (rf64)\n"""
-
+            + (
+            """00230080: "MPEG-1/2 Audio MPEG Layer I" (m1a)\n"""
+            """00230081: "MPEG-1/2 Audio MPEG Layer II" (m1a)\n"""
+            """00230082: "MPEG-1/2 Audio MPEG Layer III" (m1a)\n"""
+                if self.version>v('1.0.31') else "")
         )
 
 
