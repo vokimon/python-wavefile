@@ -25,6 +25,7 @@ import numpy as np
 import ctypes
 import sys
 import warnings
+from enum import Enum
 
 from .libsndfile import (
     _lib,
@@ -61,7 +62,7 @@ def _sferrormessage(code):
     """Returns the sndfile error message for the code in proper unicode"""
     return _lib.sf_error_number(code).decode(_errorencoding)
 
-class Format:
+class Format(int, Enum):
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).
     AU     = 0x030000    # Sun/NeXT AU format (big endian).
@@ -147,7 +148,7 @@ class Format:
     TYPEMASK = 0x0FFF0000
     ENDMASK  = 0x30000000
 
-class Seek():
+class Seek(int, Enum):
     SET = SEEK_MODES.SF_SEEK_SET # Relative to the begining of the file
     CUR = SEEK_MODES.SF_SEEK_CUR # Relative to the last read frame
     END = SEEK_MODES.SF_SEEK_END # Relative to the end of the file
