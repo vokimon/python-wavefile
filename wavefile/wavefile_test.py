@@ -74,13 +74,13 @@ class LibSndfileTest(unittest.TestCase):
         os.system("sweep '%s'"%file)
 
     def sinusoid(self, samples=400, f=440, samplerate=44100):
-        return np.sin( np.linspace(0, 2*np.pi*f*samples/samplerate, samples))[:,np.newaxis]
+        return np.sin( np.linspace(0, 2*np.pi*f*samples/samplerate, samples))[np.newaxis,:]
 
     def counter(self, samples=400):
-        return np.arange(samples)[:,np.newaxis].T*1.0
+        return np.arange(samples)[np.newaxis,:]*1.0
 
     def channels(self, *args):
-        return np.hstack(args).T
+        return np.vstack(args)
 
     def stereoSinusoids(self, samples=400):
         return self.channels(
@@ -96,6 +96,9 @@ class LibSndfileTest(unittest.TestCase):
             self.sinusoid(samples, 110),
         )
 
+
+    def test_sinusoid(self):
+        self.assertEqual(self.sinusoid(600).shape, (1,600))
 
     def test_channels(self):
         self.assertEqual(self.fourSinusoids(600).shape, (4,600))
@@ -574,7 +577,7 @@ class LibSndfileTest(unittest.TestCase):
             wavefile.save("file.wav", frameFirst, samplerate=44100)
 
     def test_save_monoInSingleDimension_forConvenience(self):
-        data = self.sinusoid(samples=400, f=440)[:,0]
+        data = self.sinusoid(samples=400, f=440)[0]
         self.assertEqual(data.shape, (400,))
         wavefile.save("file.wav", data, samplerate=44100)
         # Read still provides the channel dimension
