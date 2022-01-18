@@ -438,7 +438,6 @@ def _command(commandCode, data, sf=None):
 def _getFormatList(counterCommand, getterCommand):
     n = ctypes.c_int()
     _command(counterCommand, n)
-    result =[]
     for i in range(n.value):
         info = SF_FORMAT_INFO(format=i)
         _command(getterCommand, info)
@@ -447,8 +446,7 @@ def _getFormatList(counterCommand, getterCommand):
             name=info.name.decode(),
             extension=info.extension and info.extension.decode(),
         )
-        result.append(item)
-    return result
+        yield item
 
 def commonFormats():
     return _getFormatList(
@@ -467,8 +465,8 @@ def subtypeFormats():
 
 def allFormats():
     majors = majorFormats()
-    minors = subtypeFormats()
-    return [
+    minors = list(subtypeFormats())
+    return (
         dict(
             format = major['format'] | minor['format'],
             name = major['name'] + " " + minor['name'],
@@ -477,7 +475,7 @@ def allFormats():
         for major in majors
         for minor in minors
         if checkFormat(major['format'] | minor['format'])
-    ]
+    )
 
 
 def checkFormat(format):
