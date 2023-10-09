@@ -64,10 +64,17 @@ def _sferrormessage(code):
     return _lib.sf_error_number(code).decode(_errorencoding)
 
 class Format(IntFlag):
+    """Represents an audio file format.
+    A full format specification can be constructed by bitwise 'or' of three components:
+    a major format, meaning the container file format,
+    a subtype, usually the internal audio encoding,
+    and an endianess.
+    Components can be obtained by bitwise 'and' operator with TYPEMASK, SUBMASK and ENDMASK.
+    """
 
     @property
     def description(self):
-        """A description for the format"""
+        """A textual description for the format"""
 
         details = self.info()
         return ' '.join(
@@ -84,7 +91,7 @@ class Format(IntFlag):
         return details.get('extension',None)
 
     def isSupported(self):
-        """True if the convination of major and subtype is compatible."""
+        """True if the combination of major, subtype and mask is supported by the library."""
 
         return _lib.sf_format_check(SF_INFO(
             frames=1000, # whatever
