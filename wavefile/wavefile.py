@@ -25,8 +25,8 @@ import numpy as np
 import ctypes
 import sys
 import warnings
-from enum import Enum
-from .flag36 import IntFlag
+from enum import Enum, IntEnum, IntFlag
+
 
 from .libsndfile import (
     _lib,

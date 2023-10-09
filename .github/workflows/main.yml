@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - '2.7' # Py2
           - '3.8' # oldest supported Py3
           - '3' # newest supported Py3
     name: Python ${{ matrix.python-version }}
