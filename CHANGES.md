@@ -1,6 +1,6 @@
 # Version history
 
-## Unreleased
+## 1.6.0 2023-10-10
 
 - Dropped Python<3.8
 - Incorporated enums for all the new formats supported by sndfile up to 1.0.31
@@ -8,7 +8,7 @@
   - Encodings: NMS ADPCM, MPEGx Layerx
 - Experimental: Api to enumerate, check and describe formats
 - Added `Writer.seek` method
-- Added whole-file load/save example
+- Added example for whole-file load/save
 - wavefile.save accepts 1D mono data for convenience
 - PR#23 Incorrect implementation of saveWave method. Fixes #20. Thanks Sravan Patibandla (pbskumar)!
   - This will render some client code failing. But I applied it since
