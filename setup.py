@@ -24,8 +24,6 @@ Features
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
 """
-py2 = sys.version_info<(3,)
-
 setup(
     name = "wavefile",
     version = '1.5.0',
@@ -37,17 +35,15 @@ setup(
     license = 'GNU General Public License v3 or later (GPLv3+)',
     packages=find_packages(exclude=['*_test']),
     install_requires=[
-        'numpy<1.17' if py2 else 'numpy', # Py2
-        'enum34' if py2 else '',
+        'numpy',
     ],
     test_suite='test',
     tests_require='PyAudio',
     extras_require={
-        "examples":"PyAudio"
+        "examples": "PyAudio"
     },
     classifiers = [
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Multimedia',
         'Topic :: Scientific/Engineering',
