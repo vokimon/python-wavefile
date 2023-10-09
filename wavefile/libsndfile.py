@@ -234,7 +234,6 @@ class COMMANDS:
     SFC_GET_MAX_ALL_CHANNELS       = 0x1045
 
     SFC_SET_ADD_PEAK_CHUNK         = 0x1050
-    SFC_SET_ADD_HEADER_PAD_CHUNK   = 0x1051
 
     SFC_UPDATE_HEADER_NOW          = 0x1060
     SFC_SET_UPDATE_HEADER_AUTO     = 0x1061
@@ -243,6 +242,7 @@ class COMMANDS:
 
     SFC_SET_RAW_START_OFFSET       = 0x1090
 
+    # Commands reserved for dithering, which is not implemented.
     SFC_SET_DITHER_ON_WRITE        = 0x10A0
     SFC_SET_DITHER_ON_READ         = 0x10A1
 
@@ -253,6 +253,10 @@ class COMMANDS:
 
     SFC_SET_CLIPPING               = 0x10C0
     SFC_GET_CLIPPING               = 0x10C1
+
+    SFC_GET_CUE_COUNT              = 0x10CD
+    SFC_GET_CUE                    = 0x10CE
+    SFC_SET_CUE                    = 0x10CF
 
     SFC_GET_INSTRUMENT             = 0x10D0
     SFC_SET_INSTRUMENT             = 0x10D1
@@ -277,9 +281,20 @@ class COMMANDS:
     SFC_SET_VBR_ENCODING_QUALITY   = 0x1300
     SFC_SET_COMPRESSION_LEVEL      = 0x1301
 
+    # Ogg format commands
+    SFC_SET_OGG_PAGE_LATENCY_MS    = 0x1302
+    SFC_SET_OGG_PAGE_LATENCY       = 0x1303
+    SFC_GET_OGG_STREAM_SERIALNO    = 0x1306
+    SFC_GET_BITRATE_MODE           = 0x1304
+    SFC_SET_BITRATE_MODE           = 0x1305
+
     # Cart Chunk support
     SFC_SET_CART_INFO              = 0x1400
     SFC_GET_CART_INFO              = 0x1401
+
+    # Opus files original samplerate metadata
+    SFC_SET_ORIGINAL_SAMPLERATE    = 0x1500
+    SFC_GET_ORIGINAL_SAMPLERATE    = 0x1501
 
     # Following commands for testing only.
     SFC_TEST_IEEE_FLOAT_REPLACE    = 0x6001
@@ -290,6 +305,7 @@ class COMMANDS:
     # including version 1.0.8 to avoid breakage of existng software.
     # They currently do nothing and will continue to do nothing.
 
+    SFC_SET_ADD_HEADER_PAD_CHUNK   = 0x1051
     SFC_SET_ADD_DITHER_ON_WRITE    = 0x1070
     SFC_SET_ADD_DITHER_ON_READ     = 0x1071
 
