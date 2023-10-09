@@ -103,6 +103,22 @@ class Format(IntFlag):
     def info(self):
         return formatDescription(self.value)
 
+    @classmethod
+    def common(cls):
+        return commonFormats()
+
+    @classmethod
+    def all(cls):
+        return allFormats()
+
+    @classmethod
+    def major(cls):
+        return majorFormats()
+
+    @classmethod
+    def subtypes(cls):
+        return subtypeFormats()
+
 
     WAV    = 0x010000    # Microsoft WAV format (little endian default).
     AIFF   = 0x020000    # Apple/SGI AIFF format (big endian).

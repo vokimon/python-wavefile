@@ -590,6 +590,7 @@ class Format_Test(unittest.TestCase):
         import pkg_resources
         self.sfversion = wavefile._lib.sf_version_string().decode()
         self.version = v(self.sfversion[len('libsndfile-'):])
+        self.maxDiff = None
 
     def assertFormatListEqual(self, data, expected):
         rendered = ''.join(
@@ -984,5 +985,29 @@ class Format_Test(unittest.TestCase):
             "2686976"
         )
 
+
+    def test_format_all__equal_allFormats(self):
+        self.assertEqual(
+            list(wavefile.Format.all()),
+            list(wavefile.allFormats()),
+        )
+
+    def test_format_common__equal_commonFormats(self):
+        self.assertEqual(
+            list(wavefile.Format.common()),
+            list(wavefile.commonFormats()),
+        )
+
+    def test_format_major__equal_majorFormats(self):
+        self.assertEqual(
+            list(wavefile.Format.major()),
+            list(wavefile.majorFormats()),
+        )
+
+    def test_format_subtypes__equal_subtypesFormats(self):
+        self.assertEqual(
+            list(wavefile.Format.subtypes()),
+            list(wavefile.subtypeFormats()),
+        )
 
 
