@@ -16,17 +16,22 @@ import sys
 import ctypes as ct
 import numpy as np
 
-if sys.platform == "win32":
-    dllName = 'libsndfile-1'
-elif "linux" in sys.platform:
-    dllName = 'libsndfile.so.1'
-elif "cygwin" in sys.platform:
-    dllName = 'libsndfile-1.dll'
-elif "darwin" in sys.platform:
-    dllName = 'libsndfile.dylib'
-else:
-    dllName = 'libsndfile'
+def _libfilename():
+    for system, libname in [
+        ('win32', 'libsndfile-1'),
+        ('linux', 'libsndfile.so.1'),
+        ('cygwin', 'libsndfile-1.dll'),
+        ('darwin', 'libsndfile.dylib'),
+        ('', 'libsndfile'),
+    ]:
+        if system in sys.platform:
+            return libname
+    raise Exception(
+        'No libsndfile dll name mapping for platform {}.'
+        .format(sys.platform)
+    )
 
+dllName = _libfilename()
 _lib=None
 try:
     from ctypes.util import find_library
