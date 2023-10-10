@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install cython # required by some versions of numpy
-          ./setup.py develop
+          pip install -e .
       - uses: BSFishy/pip-action@v1
         with:
           packages: |
