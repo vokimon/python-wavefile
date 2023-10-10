@@ -45,6 +45,9 @@ Documentation = "https://readthedocs.org"
 Repository = "https://github.com/vokimon/python-wavefile"
 Changelog = "https://github.com/vokimon/python-wavefile/blob/master/CHANGELOG.md"
 
+[tool.setuptools.packages]
+find = {}
+
 [tool.coverage.run]
 relative_files = true
 branch = true
