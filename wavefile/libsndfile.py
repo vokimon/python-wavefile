@@ -19,9 +19,10 @@ import numpy as np
 def _libfilename():
     for system, libname in [
         ('win32', 'libsndfile-1'),
-        ('linux', 'libsndfile.so.1'),
         ('cygwin', 'libsndfile-1.dll'),
         ('darwin', 'libsndfile.dylib'),
+        ('linux', 'libsndfile.so.1'),
+        ('freebsd', 'libsndfile.so.1'),
         ('', 'libsndfile'),
     ]:
         if system in sys.platform:
