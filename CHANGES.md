@@ -1,5 +1,9 @@
 # Version history
 
+## 1.6.2 2023-10-10
+
+- Temptative support for freebsd
+
 ## 1.6.1 2023-10-10
 
 - Build fixes
