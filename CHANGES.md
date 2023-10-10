@@ -1,5 +1,9 @@
 # Version history
 
+## Unreleased
+
+- Migrated to pyproject.toml
+
 ## 1.6.2 2023-10-10
 
 - Temptative support for freebsd

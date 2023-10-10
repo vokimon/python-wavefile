@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+
+[project]
+name = "wavefile"
+version = "1.6.2"
+description = "Pythonic wave file reader and writer"
+authors = [
+    { name="David García Garzón", email="voki@canvoki.net" },
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file="LICENSE"}
+keywords = ["audio", "wavefile", "libsndfile"]
+
+classifiers = [
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Topic :: Multimedia',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'Development Status :: 5 - Production/Stable',
+    'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
+    'Operating System :: OS Independent',
+]
+dependencies = [
+    'numpy',
+]
+
+[project.optional-dependencies]
+test = [
+    'pytest',
+    'pytest-cov',
+]
+examples = [
+    'PyAudio',
+]
+
+[project.urls]
+Homepage = "https://github.com/vokimon/python-wavefile"
+Documentation = "https://readthedocs.org"
+Repository = "https://github.com/vokimon/python-wavefile"
+Changelog = "https://github.com/vokimon/python-wavefile/blob/master/CHANGELOG.md"
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+omit = ["**/*test.py"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=wavefile"
+
+

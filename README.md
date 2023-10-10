@@ -21,7 +21,7 @@ Features
 - Shortened constant names for formats (Using namespaces instead of prefixes)
 - Transparent UTF-8 handling for filenames and text strings
 - No module compilation required (wraps the dll using ctypes)
-- Compatible with Python >= 2.6 including Python3
+- Compatible with Python >= 3.8
 
 You can find the latest version at:
 https://github.com/vokimon/python-wavefile
