@@ -1,5 +1,9 @@
 # Version history
 
+## 1.6.1 2023-10-10
+
+- Build fixes
+
 ## 1.6.0 2023-10-10
 
 - Dropped Python<3.8
