@@ -113,22 +113,23 @@ import numpy as np
 BUFFERSIZE = 512
 NCHANNELS = 2
 
-with WaveWriter('synth.ogg',
-		channels=NCHANNELS,
-		format=Format.OGG|Format.VORBIS,
-		) as w:
-	w.metadata.title = "Some Noise"
-	w.metadata.artist = "The Artists"
-	data = np.zeros((NCHANNELS,BUFFERSIZE), np.float32)
-	for x in range(256):
-		# First channel: Saw wave sweep
-		data[0,:] = (x*np.arange(BUFFERSIZE, dtype=np.float32)%BUFFERSIZE/BUFFERSIZE)
-		# Second channel: Modulated square wave
-		data[1,BUFFERSIZE-x*2:] =  1
-		data[1,:BUFFERSIZE-x*2] = -1
+with WaveWriter(
+    'synth.ogg',
+    channels=NCHANNELS,
+    format=Format.OGG|Format.VORBIS,
+) as w:
+    w.metadata.title = "Some Noise"
+    w.metadata.artist = "The Artists"
+    data = np.zeros((NCHANNELS,BUFFERSIZE), np.float32)
+    for x in range(256):
+        # First channel: Saw wave sweep
+        data[0,:] = (x*np.arange(BUFFERSIZE, dtype=np.float32)%BUFFERSIZE/BUFFERSIZE)
+        # Second channel: Modulated square wave
+        data[1,BUFFERSIZE-x*2:] =  1
+        data[1,:BUFFERSIZE-x*2] = -1
 
-		# Write it down
-		w.write(data)
+        # Write it down
+        w.write(data)
 ```
 
 ### Block playback example (using pyaudio)
@@ -140,28 +141,29 @@ from wavefile import WaveReader
 p = pyaudio.PyAudio()
 with WaveReader(sys.argv[1]) as r:
 
-	# Print info
-	print "Title:", r.metadata.title
-	print "Artist:", r.metadata.artist
-	print "Channels:", r.channels
-	print "Format: 0x%x"%r.format
-	print "Sample Rate:", r.samplerate
+    # Print info
+    print("Title: {r.metadata.title}")
+    print("Artist: {r.metadata.artist}")
+    print(f"Channels: {r.channels}")
+    print(f"Format: 0x{r.format:x}")
+    print(f"Sample Rate: {r.samplerate}")
 
-	# open pyaudio stream
-	stream = p.open(
-			format = pyaudio.paFloat32,
-			channels = r.channels,
-			rate = r.samplerate,
-			frames_per_buffer = 512,
-			output = True)
+    # open pyaudio stream
+    stream = p.open(
+        format = pyaudio.paFloat32,
+        channels = r.channels,
+        rate = r.samplerate,
+        frames_per_buffer = 512,
+        output = True,
+    )
 
-	# iterator interface (reuses one array)
-	# beware of the frame size, not always 512, but 512 at least
-	for frame in r.read_iter(size=512):
-		stream.write(frame.flatten(), frame.shape[1])
-		sys.stdout.write("."); sys.stdout.flush()
+    # iterator interface (reuses one array)
+    # beware of the frame size, not always 512, but 512 at least
+    for frame in r.read_iter(size=512):
+        stream.write(frame.flatten(), frame.shape[1])
+        sys.stdout.write("."); sys.stdout.flush()
 
-	stream.close()
+    stream.close()
 ```
 
 ### Block processing example
@@ -171,17 +173,17 @@ import sys
 from wavefile import WaveReader, WaveWriter
 
 with WaveReader(sys.argv[1]) as r:
-	with WaveWriter(
-			'output.wav',
-			channels=r.channels,
-			samplerate=r.samplerate,
-			) as w:
-		w.metadata.title = r.metadata.title + " II"
-		w.metadata.artist = r.metadata.artist
+    with WaveWriter(
+        'output.wav',
+        channels=r.channels,
+        samplerate=r.samplerate,
+    ) as w:
+        w.metadata.title = r.metadata.title + " II"
+        w.metadata.artist = r.metadata.artist
 
-		for data in r.read_iter(size=512):
-			sys.stdout.write("."); sys.stdout.flush()
-			w.write(.8*data)
+        for data in r.read_iter(size=512):
+            sys.stdout.write("."); sys.stdout.flush()
+            w.write(.8*data)
 ```
 
 While `read_iter` is simpler and recommended,
@@ -193,20 +195,20 @@ import sys, numpy as np
 from wavefile import WaveReader, WaveWriter
 
 with WaveReader(sys.argv[1]) as r:
-	with WaveWriter(
-			'output.wav',
-			channels=r.channels,
-			samplerate=r.samplerate,
-			) as w:
-		w.metadata.title = r.metadata.title + " II"
-		w.metadata.artist = r.metadata.artist
+    with WaveWriter(
+        'output.wav',
+        channels=r.channels,
+        samplerate=r.samplerate,
+    ) as w:
+        w.metadata.title = r.metadata.title + " II"
+        w.metadata.artist = r.metadata.artist
 
-		data = np.zeros((r.channels,512), np.float32, order='F')
-		nframes = r.read(data)
-		while nframes:
-			sys.stdout.write("."); sys.stdout.flush()
-			w.write(.8*data[:,:nframes])
-			nframes = r.read(data)
+        data = np.zeros((r.channels,512), np.float32, order='F')
+        nframes = r.read(data)
+        while nframes:
+            sys.stdout.write("."); sys.stdout.flush()
+            w.write(.8*data[:,:nframes])
+            nframes = r.read(data)
 ```
 
 Notice that with ```read``` you have to reallocate the data yourself,
