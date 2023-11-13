@@ -63,12 +63,10 @@ pip install wavefile
 
 ### From sources
 
-A setup.py script is provided so the common procedure for
-installing python packages in you platfrom will work.
-For example in Debian/Ubuntu systems:
+If you want to develop, installing editable is recomended. From the source directory:
 
 ```bash
-python setup.py install
+pip install -e .
 ```
 
 Examples
