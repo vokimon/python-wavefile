@@ -10,16 +10,16 @@ Pythonic libsndfile wrapper to read and write audio files.
 Features
 --------
 
-- Wave file resources allocated as context managers (`with`)
+- Wave file resources open and close as context managers (`with`)
 - Format, channels, length, sample rate... are accessed as properties
-- Real multichannel (not just mono/stereo, surround, ambisonics and virtually any number of channels)
-- All libsndfile formats supported, floating point encodings by default
+- Real multichannel (not just mono/stereo, but also surround, ambisonics and virtually any number of channels)
+- All libsndfile formats supported, floating point encodings used by default
 - Numpy based interface
-- Generators for block by block access (streaming without loading the full audio into memory)
-- Reading reuses the same data block to avoid many data allocations
-- Matlab-like whole-file interface (not recommended in production code but quite convenient for quick scripting)
+- Generators for efficient block-by-block access
+- Alternative Matlab-like whole-file interface. Less efficient, but convenient for quick and dirty scripts.
 - Shortened constant names for formats (Using namespaces instead of prefixes)
-- Transparent UTF-8 handling for filenames and text strings
+- Tools for listing available formats
+- Transparent Unicode handling for filenames and text strings
 - No module compilation required (wraps the dll using ctypes)
 - Compatible with Python >= 3.8
 
