@@ -7,11 +7,10 @@
 
 Pythonic libsndfile wrapper to read and write audio files.
 
-Features
---------
+## Features
 
 - Wave file resources open and close as context managers (`with`)
-- Format, channels, length, sample rate... are accessed as properties
+- Property accessors for format, channels, length, sample rate... and metadata (ID3...)
 - Real multichannel (not just mono/stereo, but also surround, ambisonics and virtually any number of channels)
 - All libsndfile formats supported, floating point encodings used by default
 - Numpy based interface
@@ -38,8 +37,7 @@ https://github.com/vokimon/python-wavefile
 
 
 
-Installation
-------------
+## Installation
 
 [![Latest Version](https://img.shields.io/pypi/v/wavefile.svg)](https://pypi.python.org/pypi/wavefile/)
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/wavefile.svg)](https://pypi.python.org/pypi/wavefile/)
@@ -69,8 +67,7 @@ If you want to develop, installing editable is recomended. From the source direc
 pip install -e .
 ```
 
-Examples
---------
+## Examples
 
 ### Whole file (slow) processing
 
@@ -192,9 +189,14 @@ with WaveReader(sys.argv[1]) as r:
 - reusing it for each block, and
 - slicing it when the last incomplete block arrives.
 
+## Arquitecture
 
-Existing alternatives (what i like and dislike)
------------------------------------------------
+The library consists of two layers
+
+- `libsndfile.py`: a plain ctypes based wrapper that provides 1:1 access to the functions of the sndlib library
+- `wavefile.py`: an interface layer that provides the Pythonic sugar calling the former one.
+
+## Existing alternatives (what i like and dislike)
 
 This is 'yet another' wrapper for sndfile.
 A lot of them appeared just because the standard
