@@ -186,43 +186,11 @@ with WaveReader(sys.argv[1]) as r:
             w.write(.8*data)
 ```
 
-While `read_iter` is simpler and recommended,
-you can still use the read function,
-which is closer to the C one.
-
-```python
-import sys, numpy as np
-from wavefile import WaveReader, WaveWriter
-
-with WaveReader(sys.argv[1]) as r:
-    with WaveWriter(
-        'output.wav',
-        channels=r.channels,
-        samplerate=r.samplerate,
-    ) as w:
-        w.metadata.title = r.metadata.title + " II"
-        w.metadata.artist = r.metadata.artist
-
-        data = np.zeros((r.channels,512), np.float32, order='F')
-        nframes = r.read(data)
-        while nframes:
-            sys.stdout.write("."); sys.stdout.flush()
-            w.write(.8*data[:,:nframes])
-            nframes = r.read(data)
-```
-
-Notice that with ```read``` you have to reallocate the data yourself,
-the loop structure is somewhat more complex,
-and you have to slice to the actual ```nframes``` because
-the last block usually does not have the size you asked for.
-
 ```read_iter``` simplifies the code by transparently:
 
 - allocating the data block for you,
 - reusing it for each block, and
 - slicing it when the last incomplete block arrives.
-
-
 
 
 Existing alternatives (what i like and dislike)
