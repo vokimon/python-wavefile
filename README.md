@@ -74,10 +74,9 @@ Examples
 
 ### Whole file (slow) processing
 
-This is the quick and dirty way (mathlab like) of reading and saving audio.
-
-While is quite convenient to get things done,
-DO NO USE IT, if you are concerned with performance.
+Writing and reading whole audio files (like Mathlab primitives do)
+is not as efficient than block based processing to process long audios.
+But it could be quite convenient on occassions to have quickly something working.
 
 ```python
 import wavefile
@@ -105,7 +104,7 @@ loaded.shape() # 3, 100000
 ```
 
 
-### Writing example
+### Block writing example
 
 ```python
 from wavefile import WaveWriter, Format
@@ -132,7 +131,7 @@ with WaveWriter('synth.ogg',
 		w.write(data)
 ```
 
-### Playback example (using pyaudio)
+### Block playback example (using pyaudio)
 
 ```python
 import pyaudio, sys
@@ -165,7 +164,7 @@ with WaveReader(sys.argv[1]) as r:
 	stream.close()
 ```
 
-### Processing example
+### Block processing example
 
 ```python
 import sys
@@ -214,9 +213,12 @@ Notice that with ```read``` you have to reallocate the data yourself,
 the loop structure is somewhat more complex,
 and you have to slice to the actual ```nframes``` because
 the last block usually does not have the size you asked for.
-```read_iter``` simplifies the code by transparently
-allocating the data block for you, reusing it for each block
-and slicing it when the last incomplete block arrives.
+
+```read_iter``` simplifies the code by transparently:
+
+- allocating the data block for you,
+- reusing it for each block, and
+- slicing it when the last incomplete block arrives.
 
 
 
