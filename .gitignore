@@ -4,3 +4,7 @@
 options.cache
 .sconsign.dblite
 *.sw?
+.venv
+.eggs
+*.egg-info
+.coverage
