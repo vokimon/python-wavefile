@@ -1,8 +1,10 @@
 # Version history
 
-## Unreleased
+## 1.6.3 2024-12-04
 
 - Migrated to pyproject.toml
+- Using `packaging` instead deprecated `pkg_resources`
+- Dropped travis ci support
 
 ## 1.6.2 2023-10-10
 

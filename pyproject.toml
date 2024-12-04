@@ -4,7 +4,7 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "wavefile"
-version = "1.6.2"
+version = "1.6.3"
 description = "Pythonic wave file reader and writer"
 authors = [
     { name="David García Garzón", email="voki@canvoki.net" },
