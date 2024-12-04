@@ -26,19 +26,15 @@ sys.path.append(os.path.join(os.path.dirname(__file__),"../"))
 from . import wavefile
 import unittest
 import numpy as np
+from packaging.version import Version as v
 from numpy.testing import (
     assert_almost_equal as np_assert_almost_equal,
 )
-
-def v(versiontext):
-    import pkg_resources
-    return pkg_resources.parse_version(versiontext)
 
 class WavefileTest(unittest.TestCase):
 
     def setUp(self):
         self.filestoremove = []
-        import pkg_resources
         self.sfversion = wavefile._lib.sf_version_string().decode()
         self.version = v(self.sfversion[len('libsndfile-'):])
 
@@ -587,7 +583,6 @@ class WavefileTest(unittest.TestCase):
 class Format_Test(unittest.TestCase):
 
     def setUp(self):
-        import pkg_resources
         self.sfversion = wavefile._lib.sf_version_string().decode()
         self.version = v(self.sfversion[len('libsndfile-'):])
         self.maxDiff = None
